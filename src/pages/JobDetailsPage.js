@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import Header from "components/Header";
 
 
-const JobDetailsPage = ({ match }) => {
+const JobDetailsPage = () => {
     const [job, setJob] = useState({});
     let { id } = useParams();
 
