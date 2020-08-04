@@ -53,18 +53,8 @@ const Header = () => {
                                             <li className="nav-item">
                                                 <NavLink activeClassName='active' className='nav-link' to='/login'>Login</NavLink>
                                             </li>
-                                            <li className="nav-item dropdown">
-                                                <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Register
-                                            </a>
-                                                <ul className="dropdown-menu">
-                                                    <li>
-                                                        <a className="dropdown-item" href="post-job.html">As Employer</a>
-                                                    </li>
-                                                    <li>
-                                                        <a className="dropdown-item" href="manage-jobs.html">As Employee</a>
-                                                    </li>
-                                                </ul>
+                                            <li className="nav-item">
+                                                <NavLink activeClassName='active' className='nav-link' to='/register'>Register</NavLink>
                                             </li>
                                         </React.Fragment>
                                     )
