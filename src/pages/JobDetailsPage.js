@@ -21,7 +21,7 @@ const JobDetailsPage = () => {
 
     return (
         <React.Fragment>
-            <Header/>
+            <Header />
             <Helmet>
                 <title>Job details</title>
             </Helmet>
@@ -32,22 +32,22 @@ const JobDetailsPage = () => {
                         <div className="col-lg-8 col-md-6 col-xs-12">
                             <div className="breadcrumb-wrapper">
                                 <div className="img-wrapper">
-                                    <img src="assets/img/about/company-logo.png" alt="" />
+                                    <img src="/assets/img/about/company-logo.png" alt="" />
                                 </div>
                                 <div className="content">
-                                    <h3 className="product-title">Hiring UI Designer</h3>
-                                    <p className="brand">UIDeck Inc.</p>
+                                    <h3 className="product-title">{job.title}</h3>
+                                    <p className="brand">{job.company}</p>
                                     <div className="tags">
-                                        <span><i className="lni-map-marker"></i> New York</span>
-                                        <span><i className="lni-calendar"></i> Posted 26 June, 2020</span>
+                                        <span><i className="lni-map-marker"></i> {job.location}</span>
+                                        <span><i className="lni-calendar"></i> Posted {moment(job.created_at).format('MM-DD-YY')}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className="col-lg-4 col-md-6 col-xs-12">
                             <div className="month-price">
-                                <span className="year">Yearly</span>
-                                <div className="price">$65,000</div>
+                                <span className="year">Monthly</span>
+                                <div className="price">{job.salary} Tk</div>
                             </div>
                         </div>
                     </div>
@@ -61,25 +61,15 @@ const JobDetailsPage = () => {
                         <div className="col-lg-8 col-md-12 col-xs-12">
                             <div className="content-area">
                                 <h4>Job Description</h4>
-                                <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor,
-                                nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis sed odio sit amet nibh
-                                vulputate cursus a sit amet mauris. Morbi umsan ipsum velit. Nam nec tellus a odio tincidunt
-                                auctor a ornare odio. Sed non mauris vitae erat consequat auctor eu in elit. className aptent
-                                taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris in
-                                erat justo. Nullam ac urna eu felis dapibus condimentum sit amet a augue. Sed non neque elit
-                        </p>
-                                <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor,
-                                nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis sed odio sit amet nibh
-                                vulputate cursus a sit amet mauris. Morbi umsan ipsum velit. Nam nec tellus a odio tincidunt
-                            auctor a ornare odio.</p>
-                                <h5>What You Need for this Position</h5>
+                                <p>{job.description}</p>
+                                {/* <h5>What You Need for this Position</h5>
                                 <ul>
                                     <li>- Objective-C</li>
                                     <li>- iOS SDK</li>
                                     <li>- XCode</li>
                                     <li>- Cocoa</li>
                                     <li>- ClojureScript</li>
-                                </ul>
+                                </ul> */}
                                 <h5>How To Apply</h5>
                                 <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor,
                                 nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis sed odio sit amet nibh
@@ -105,7 +95,7 @@ const JobDetailsPage = () => {
                                         <form method="post" className="subscribe-form">
                                             <div className="form-group">
                                                 <input type="email" name="Email" className="form-control"
-                                                    placeholder="https://joburl.com" required="" />
+                                                    placeholder={window.location} required="" />
                                                 <button type="submit" name="subscribe" className="btn btn-common sub-btn"><i
                                                     className="lni-files"></i></button>
                                                 <div className="clearfix"></div>
