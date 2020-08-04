@@ -1,9 +1,35 @@
 /* eslint-disable */
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
+import jwtDecode from 'jwt-decode';
 import BaseRouter from "./routes";
+import { AuthContext } from "contexts/AuthContext";
+
 
 function App() {
+    const authContext = useContext(AuthContext);
+
+    useEffect(() => {
+
+        let user = JSON.parse(localStorage.getItem("user"));
+        const token = JSON.parse(localStorage.getItem("token"));
+
+        if (!user && token) {
+            let decoded = jwtDecode(token);
+            user = decoded.user; localStorage.setItem('user', user);
+        }
+        if (user && token) {
+            authContext.dispatch({
+                type: authContext.ActionTypes.LOGIN,
+                payload: {
+                    user,
+                    token,
+                },
+            });
+        }
+
+    }, []);
+
     return (
         <Router>
             <div
@@ -13,6 +39,7 @@ function App() {
                 <BaseRouter />
             </div>
         </Router>
+
     );
 }
 

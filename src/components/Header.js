@@ -1,10 +1,28 @@
 /* eslint-disable */
-import React from "react";
-import { NavLink } from 'react-router-dom';
+import React, { useContext, useState } from "react";
+import { NavLink, Redirect } from 'react-router-dom';
 import Jumbotron from "./Jumbotron";
+import { AuthContext } from "contexts/AuthContext";
 
 
-const Header = (props) => {
+const Header = () => {
+
+    const [redirect, setRedirect] = useState(false);
+    const authContext = useContext(AuthContext);
+    const { isAuthenticated } = authContext.state;
+
+    const handleLogout = () => {
+        authContext.dispatch({
+            type: authContext.ActionTypes.LOGOUT,
+            payload: {},
+        });
+
+        setRedirect(true);
+    }
+
+    if (redirect) {
+        return <Redirect to="/" />;
+    }
 
     return (
         <header id="home" className="hero-area">
@@ -19,7 +37,7 @@ const Header = (props) => {
                                 <span className="lni-menu"></span>
                                 <span className="lni-menu"></span>
                             </button>
-                            <a href="" className="navbar-brand" style={{fontWeight: 'bold'}}>Job portal</a>
+                            <a href="" className="navbar-brand" style={{ fontWeight: 'bold' }}>Job portal</a>
                         </div>
                         <div className="collapse navbar-collapse" id="main-navbar">
                             <ul className="navbar-nav mr-auto w-100 justify-content-end">
@@ -29,9 +47,35 @@ const Header = (props) => {
                                 <li className="nav-item">
                                     <NavLink activeClassName='active' className='nav-link' to='/jobs'>Jobs</NavLink>
                                 </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" href="login.html">Sign In</a>
-                                </li>
+                                {
+                                    !isAuthenticated && (
+                                        <React.Fragment>
+                                            <li className="nav-item">
+                                                <NavLink activeClassName='active' className='nav-link' to='/login'>Login</NavLink>
+                                            </li>
+                                            <li className="nav-item dropdown">
+                                                <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Register
+                                            </a>
+                                                <ul className="dropdown-menu">
+                                                    <li>
+                                                        <a className="dropdown-item" href="post-job.html">As Employer</a>
+                                                    </li>
+                                                    <li>
+                                                        <a className="dropdown-item" href="manage-jobs.html">As Employee</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </React.Fragment>
+                                    )
+                                }
+                                {
+                                    isAuthenticated && (
+                                        <li className="nav-item" onClick={handleLogout}>
+                                            <a className='nav-link'>Logout</a>
+                                        </li>
+                                    )
+                                }
                                 <li className="button-group">
                                     <a href="" className="button btn btn-common">Post a Job</a>
                                 </li>
@@ -43,7 +87,7 @@ const Header = (props) => {
             </nav>
             {
                 ['/'].includes(window.location.pathname) ? (
-                    <Jumbotron/>
+                    <Jumbotron />
                 ) : ''
             }
         </header>
