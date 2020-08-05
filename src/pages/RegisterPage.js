@@ -34,13 +34,6 @@ const RegisterPage = () => {
 
         AxiosConfig.post('register/', postData)
             .then(res => {
-                authContext.dispatch({
-                    type: authContext.ActionTypes.LOGIN,
-                    payload: {
-                        user: null,
-                        token: res.data.access,
-                    },
-                });
                 if(res.status == 200) setRedirect(true);
             })
             .catch(err => console.log(err));

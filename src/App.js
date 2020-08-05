@@ -12,7 +12,7 @@ function App() {
     useEffect(() => {
 
         let user = JSON.parse(localStorage.getItem("user"));
-        const token = JSON.parse(localStorage.getItem("token"));
+        let token = JSON.parse(localStorage.getItem("token"));
 
         if (!user && token) {
             let decoded = jwtDecode(token);
