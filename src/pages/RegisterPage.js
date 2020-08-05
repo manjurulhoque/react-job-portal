@@ -5,6 +5,8 @@ import { Helmet } from "react-helmet";
 import AxiosConfig from "../AxiosConfig";
 import { AuthContext } from "contexts/AuthContext";
 import { Redirect } from "react-router-dom";
+import swal from 'sweetalert';
+
 
 const RegisterPage = () => {
 
@@ -34,7 +36,8 @@ const RegisterPage = () => {
 
         AxiosConfig.post('register/', postData)
             .then(res => {
-                if(res.status == 200) setRedirect(true);
+                swal("Good job!", "Successfully registered!", "success");
+                if(res.status == 201) setRedirect(true);
             })
             .catch(err => console.log(err));
     }

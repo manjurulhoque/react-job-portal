@@ -9,7 +9,7 @@ const Header = () => {
 
     const [redirect, setRedirect] = useState(false);
     const authContext = useContext(AuthContext);
-    const { isAuthenticated } = authContext.state;
+    const { isAuthenticated, user } = authContext.state;
 
     const handleLogout = () => {
         authContext.dispatch({
@@ -67,7 +67,7 @@ const Header = () => {
                                     )
                                 }
                                 <li className="button-group">
-                                    <a href="" className="button btn btn-common">Post a Job</a>
+                                    <NavLink activeClassName='active' className="button btn btn-common" to='/post-job'>Post a Job</NavLink>
                                 </li>
                             </ul>
                         </div>
