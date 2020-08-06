@@ -1,34 +1,49 @@
 /* eslint-disable */
-import React, { useContext, useEffect } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { BrowserRouter as Router, useHistory } from "react-router-dom";
 import jwtDecode from 'jwt-decode';
+import moment from "moment";
 import BaseRouter from "./routes";
 import { AuthContext } from "contexts/AuthContext";
+import history from "./history.js";
 
 
-function App() {
+
+const App = () => {
     const authContext = useContext(AuthContext);
+    const [token, setToken] = useState('');
 
     useEffect(() => {
-
-        let user = JSON.parse(localStorage.getItem("user"));
-        let token = JSON.parse(localStorage.getItem("token"));
-
-        if (!user && token) {
-            let decoded = jwtDecode(token);
-            user = decoded.user; localStorage.setItem('user', user);
+        setToken(localStorage.getItem("token"));
+        let user = localStorage.getItem("user");
+        let decoded = {};
+        console.log(moment().format());
+        console.log(moment(decoded.exp).format());
+        if(token) {
+            decoded = jwtDecode(token);
+            // if(moment(decoded.exp).format() < moment().format()) {
+            //     localStorage.clear();
+            //     history.push('/');
+            // }
         }
-        if (user && token) {
-            authContext.dispatch({
-                type: authContext.ActionTypes.LOGIN,
-                payload: {
-                    user,
-                    token,
-                },
-            });
+        else {
+            history.push('/');
         }
 
-    }, []);
+        if (!user) {
+            user = decoded.user; 
+        }
+        // if (user && token) {
+        //     authContext.dispatch({
+        //         type: authContext.ActionTypes.LOGIN,
+        //         payload: {
+        //             user,
+        //             token,
+        //         },
+        //     });
+        // }
+
+    }, [token]);
 
     return (
         <React.Fragment>

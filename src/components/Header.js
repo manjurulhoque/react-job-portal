@@ -60,6 +60,45 @@ const Header = () => {
                                     )
                                 }
                                 {
+                                    isAuthenticated && user.role == 'employee' && (
+                                        <li className="nav-item dropdown">
+                                            <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                                Candidates
+                                            </a>
+                                            <ul className="dropdown-menu">
+                                                <li>
+                                                    <NavLink className="dropdown-item" to='/'>Browse Jobs</NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink className="dropdown-item" to='/'>Applied jobs</NavLink>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    )
+                                }
+                                {
+                                    isAuthenticated && user.role == 'employer' && (
+                                        <li className="nav-item dropdown">
+                                            <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                                Employers
+                                            </a>
+                                            <ul className="dropdown-menu">
+                                                <li>
+                                                    <NavLink className="dropdown-item" to='/post-job'>Post a Job</NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink className="dropdown-item" to='/'>Manage Jobs</NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink className="dropdown-item" to='/'>Manage Applications</NavLink>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    )
+                                }
+                                {
                                     isAuthenticated && (
                                         <li className="nav-item" onClick={handleLogout}>
                                             <a className='nav-link'>Logout</a>
@@ -67,7 +106,7 @@ const Header = () => {
                                     )
                                 }
                                 <li className="button-group">
-                                    <NavLink activeClassName='active' className="button btn btn-common" to='/post-job'>Post a Job</NavLink>
+                                    <NavLink className="button btn btn-common" to='/post-job'>Post a Job</NavLink>
                                 </li>
                             </ul>
                         </div>

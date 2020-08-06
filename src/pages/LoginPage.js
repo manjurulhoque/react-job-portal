@@ -5,6 +5,7 @@ import { Helmet } from "react-helmet";
 import AxiosConfig from "../AxiosConfig";
 import { AuthContext } from "contexts/AuthContext";
 import { Redirect } from "react-router-dom";
+import jwtDecode from 'jwt-decode';
 
 const LoginPage = () => {
     
@@ -28,10 +29,11 @@ const LoginPage = () => {
 
         AxiosConfig.post('login/', postData)
             .then(res => {
+                let decoded = jwtDecode(res.data.access);
                 authContext.dispatch({
                     type: authContext.ActionTypes.LOGIN,
                     payload: {
-                        user: null,
+                        user: decoded.user || {},
                         token: res.data.access,
                     },
                 });

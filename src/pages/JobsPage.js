@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import AxiosConfig from "../AxiosConfig";
 import Header from "components/Header";
 import JobItem from "components/job/JobItem";
+import { Helmet } from "react-helmet";
 
 const JobsPage = () => {
     const [jobs, setJobs] = useState([]);
@@ -19,6 +20,10 @@ const JobsPage = () => {
     return (
         <React.Fragment>
             <Header />
+            <Helmet>
+                <title>All jobs</title>
+            </Helmet>
+
             <div className="page-header">
                 <div className="container">
                     <div className="row">

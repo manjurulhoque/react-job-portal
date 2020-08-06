@@ -119,7 +119,7 @@ const RegisterPage = () => {
                                         <div className="input-icon">
                                             <select className="form-control" onChange={e => setRole(e.target.value)}>
                                                 <option value="" defaultValue>Select role</option>
-                                                <option value="emplyoer">Emplyoee</option>
+                                                <option value="emplyoee">Emplyoee</option>
                                                 <option value="emplyoer">Emplyoer</option>
                                             </select>
                                         </div>
