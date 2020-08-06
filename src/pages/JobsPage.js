@@ -1,19 +1,24 @@
 /* eslint-disable */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AxiosConfig from "../AxiosConfig";
 import Header from "components/Header";
 import JobItem from "components/job/JobItem";
 import { Helmet } from "react-helmet";
+import { JobContext } from "contexts/JobContext";
 
 const JobsPage = () => {
     const [jobs, setJobs] = useState([]);
+    const jobContext = useContext(JobContext);
 
     useEffect(() => {
-        AxiosConfig.get('jobs')
-            .then(res => {
-                setJobs(res.data);
-            })
-            .catch(err => console.log(err));
+        jobContext.jobDispatch({type: jobContext.ActionTypes.ALL_JOBS});
+        console.log(jobContext);
+        setJobs(jobContext.jobState.jobs);
+        // AxiosConfig.get('jobs')
+        //     .then(res => {
+        //         setJobs(res.data);
+        //     })
+        //     .catch(err => console.log(err));
     }, []);
 
 

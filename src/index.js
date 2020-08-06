@@ -9,12 +9,16 @@ import ReactDOM from "react-dom";
 // import "./assets/css/main.css";
 // import "./assets/css/responsive.css";
 import App from "./App";
+import './App.css';
 import * as serviceWorker from "./serviceWorker";
 import { AuthContextProvider } from "contexts/AuthContext";
+import { JobContextProvider } from "contexts/JobContext";
 
 ReactDOM.render(
     <AuthContextProvider>
-        <App />
+        <JobContextProvider>
+            <App />
+        </JobContextProvider>
     </AuthContextProvider>
     , document.getElementById("root"));
 

@@ -30,7 +30,7 @@ const LoginPage = () => {
         AxiosConfig.post('login/', postData)
             .then(res => {
                 let decoded = jwtDecode(res.data.access);
-                authContext.dispatch({
+                authContext.authDispatch({
                     type: authContext.ActionTypes.LOGIN,
                     payload: {
                         user: decoded.user || {},

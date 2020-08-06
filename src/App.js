@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useContext, useEffect, useState } from "react";
-import { BrowserRouter as Router, useHistory } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import jwtDecode from 'jwt-decode';
 import moment from "moment";
 import BaseRouter from "./routes";
@@ -11,37 +11,32 @@ import history from "./history.js";
 
 const App = () => {
     const authContext = useContext(AuthContext);
+    const { isLoading } = authContext;
     const [token, setToken] = useState('');
 
     useEffect(() => {
         setToken(localStorage.getItem("token"));
-        let user = localStorage.getItem("user");
         let decoded = {};
-        console.log(moment().format());
-        console.log(moment(decoded.exp).format());
         if(token) {
             decoded = jwtDecode(token);
-            // if(moment(decoded.exp).format() < moment().format()) {
-            //     localStorage.clear();
-            //     history.push('/');
-            // }
+            if(moment(decoded.exp).format() < moment().format()) {
+                localStorage.clear();
+                history.push('/');
+            }
         }
         else {
             history.push('/');
         }
-
-        if (!user) {
-            user = decoded.user; 
+        if (decoded.user && token) {
+            let user = decoded.user;
+            authContext.authDispatch({
+                type: authContext.ActionTypes.LOGIN,
+                payload: {
+                    user,
+                    token,
+                },
+            });
         }
-        // if (user && token) {
-        //     authContext.dispatch({
-        //         type: authContext.ActionTypes.LOGIN,
-        //         payload: {
-        //             user,
-        //             token,
-        //         },
-        //     });
-        // }
 
     }, [token]);
 
@@ -55,6 +50,7 @@ const App = () => {
                     <BaseRouter />
                 </div>
             </Router>
+            {/* <Spinner isLoading={isLoading}/> */}
         </React.Fragment>
     );
 }
