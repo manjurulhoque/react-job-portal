@@ -12,7 +12,7 @@ const Header = () => {
     const { isAuthenticated, user } = authContext.state;
 
     const handleLogout = () => {
-        authContext.dispatch({
+        authContext.authDispatch({
             type: authContext.ActionTypes.LOGOUT,
             payload: {},
         });
@@ -42,19 +42,19 @@ const Header = () => {
                         <div className="collapse navbar-collapse" id="main-navbar">
                             <ul className="navbar-nav mr-auto w-100 justify-content-end">
                                 <li className="nav-item">
-                                    <NavLink exact={true} activeClassName='active' className='nav-link' to='/'>Home</NavLink>
+                                    <NavLink exact className='nav-link' activeClassName='' to='/'>Home</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink activeClassName='active' className='nav-link' to='/jobs'>Jobs</NavLink>
+                                    <NavLink exact className='nav-link' activeClassName='' to='/jobs'>Jobs</NavLink>
                                 </li>
                                 {
                                     !isAuthenticated && (
                                         <React.Fragment>
                                             <li className="nav-item">
-                                                <NavLink activeClassName='active' className='nav-link' to='/login'>Login</NavLink>
+                                                <NavLink exact className='nav-link' activeClassName='' to='/login'>Login</NavLink>
                                             </li>
                                             <li className="nav-item">
-                                                <NavLink activeClassName='active' className='nav-link' to='/register'>Register</NavLink>
+                                                <NavLink exact className='nav-link' activeClassName='' to='/register'>Register</NavLink>
                                             </li>
                                         </React.Fragment>
                                     )
@@ -68,17 +68,17 @@ const Header = () => {
                                             </a>
                                             <ul className="dropdown-menu">
                                                 <li>
-                                                    <NavLink className="dropdown-item" to='/'>Browse Jobs</NavLink>
+                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/jobs'>Browse Jobs</NavLink>
                                                 </li>
                                                 <li>
-                                                    <NavLink className="dropdown-item" to='/'>Applied jobs</NavLink>
+                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/'>Applied jobs</NavLink>
                                                 </li>
                                             </ul>
                                         </li>
                                     )
                                 }
                                 {
-                                    isAuthenticated && user.role == 'employer' && (
+                                    isAuthenticated && user.role == "emplyoer" && (
                                         <li className="nav-item dropdown">
                                             <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
                                                 aria-expanded="false">
@@ -86,13 +86,13 @@ const Header = () => {
                                             </a>
                                             <ul className="dropdown-menu">
                                                 <li>
-                                                    <NavLink className="dropdown-item" to='/post-job'>Post a Job</NavLink>
+                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/post-job'>Post a Job</NavLink>
                                                 </li>
                                                 <li>
-                                                    <NavLink className="dropdown-item" to='/'>Manage Jobs</NavLink>
+                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/'>Manage Jobs</NavLink>
                                                 </li>
                                                 <li>
-                                                    <NavLink className="dropdown-item" to='/'>Manage Applications</NavLink>
+                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/'>Manage Applications</NavLink>
                                                 </li>
                                             </ul>
                                         </li>
@@ -100,13 +100,13 @@ const Header = () => {
                                 }
                                 {
                                     isAuthenticated && (
-                                        <li className="nav-item" onClick={handleLogout}>
+                                        <li className="nav-item" onClick={handleLogout} style={{cursor: 'pointer'}}>
                                             <a className='nav-link'>Logout</a>
                                         </li>
                                     )
                                 }
                                 <li className="button-group">
-                                    <NavLink className="button btn btn-common" to='/post-job'>Post a Job</NavLink>
+                                    <NavLink className="button btn btn-common" activeClassName='' to='/post-job'>Post a Job</NavLink>
                                 </li>
                             </ul>
                         </div>

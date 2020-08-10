@@ -14,6 +14,7 @@ const jobReducer = (state, action) => {
                     };
                 })
                 .catch(err => console.log(err));
+            break;
         default:
             return state;
     }

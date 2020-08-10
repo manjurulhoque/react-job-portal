@@ -8,17 +8,17 @@ import { JobContext } from "contexts/JobContext";
 
 const JobsPage = () => {
     const [jobs, setJobs] = useState([]);
-    const jobContext = useContext(JobContext);
+    // const jobContext = useContext(JobContext);
 
     useEffect(() => {
-        jobContext.jobDispatch({type: jobContext.ActionTypes.ALL_JOBS});
-        console.log(jobContext);
-        setJobs(jobContext.jobState.jobs);
-        // AxiosConfig.get('jobs')
-        //     .then(res => {
-        //         setJobs(res.data);
-        //     })
-        //     .catch(err => console.log(err));
+        // jobContext.jobDispatch({type: jobContext.ActionTypes.ALL_JOBS});
+        // console.log(jobContext);
+        // setJobs(jobContext.jobState.jobs);
+        AxiosConfig.get('jobs')
+            .then(res => {
+                setJobs(res.data);
+            })
+            .catch(err => console.log(err));
     }, []);
 
 
