@@ -1,23 +1,64 @@
 /* eslint-disable */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AxiosConfig from "../AxiosConfig";
 import moment from "moment";
 import { Helmet } from "react-helmet";
 import { useParams } from 'react-router-dom';
 import Header from "components/Header";
+import { AuthContext } from "contexts/AuthContext";
+import swal from 'sweetalert';
 
 
 const JobDetailsPage = () => {
     const [job, setJob] = useState({});
+    const [isApplied, setIsApplied] = useState(false);
     let { id } = useParams();
+    const authContext = useContext(AuthContext);
+    const { token, isAuthenticated } = authContext.state;
 
     useEffect(() => {
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        };
         AxiosConfig.get(`jobs/${id}`)
             .then(res => {
                 setJob(res.data);
+                if (isAuthenticated) {
+                    AxiosConfig.get(`applied-for-job/${id}`, config)
+                        .then(res => {
+                            setIsApplied(res.data.is_applied);
+                        })
+                }
             })
             .catch(err => console.log(err));
     }, []);
+
+    const applyJobHandle = (e) => {
+        e.preventDefault();
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        };
+
+        swal({
+            title: "Are you sure?",
+            text: "Once applied, you will not be able to remove it!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((apply) => {
+                if (apply) {
+                    
+                    AxiosConfig.post(`apply-job/${id}`, config)
+                        .then(res => {
+                            setIsApplied(true);
+                            swal("Successfully applied for this position", {
+                                icon: "success",
+                            });
+                        })
+                }
+            });
+    }
 
     return (
         <React.Fragment>
@@ -70,11 +111,24 @@ const JobDetailsPage = () => {
                                     <li>- Cocoa</li>
                                     <li>- ClojureScript</li>
                                 </ul> */}
-                                <h5>How To Apply</h5>
-                                <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor,
-                                nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis sed odio sit amet nibh
-                            vulputate cursus a sit amet mauris.</p>
-                                <a href="#" className="btn btn-common">Apply job</a>
+                                {
+                                    !isApplied &&
+                                    (
+                                        <>
+                                            <h5>How To Apply</h5>
+                                            <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor,
+                                            nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis sed odio sit amet nibh
+                                                vulputate cursus a sit amet mauris.</p>
+                                            <button onClick={applyJobHandle} className="btn btn-common">Apply job</button>
+                                        </>
+                                    )
+                                }
+                                {
+                                    isApplied &&
+                                    (
+                                        <a href="#!" className="btn btn-primary">Already applied</a>
+                                    )
+                                }
                             </div>
                         </div>
                         <div className="col-lg-4 col-md-12 col-xs-12">
