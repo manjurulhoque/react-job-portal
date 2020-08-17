@@ -8,7 +8,6 @@ import { AuthContext } from "contexts/AuthContext";
 import history from "./history.js";
 
 
-
 const App = () => {
     const authContext = useContext(AuthContext);
     const [token, setToken] = useState('');

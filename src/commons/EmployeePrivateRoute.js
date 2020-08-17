@@ -1,11 +1,20 @@
 /* eslint-disable */
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { AuthContext } from 'contexts/AuthContext';
 
 
-const EmployerPrivateRoute = ({ component: Component, ...rest }) => {
+const EmployeePrivateRoute = ({ component: Component, ...rest }) => {
     const authContext = useContext(AuthContext);
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const result = await authContext.user;
+            
+    //         console.log(result);
+    //     };
+    //     fetchData();
+    // }, []);
 
     return (
         <Route
@@ -17,7 +26,7 @@ const EmployerPrivateRoute = ({ component: Component, ...rest }) => {
                     } else if (!authContext.state.isAuthenticated) {
                         return <Redirect to="/login" />
                     }
-                    else if (!authContext.state.user && authContext.state.user.role != 'employer') {
+                    else if (!authContext.state.user && authContext.state.user.role != 'employee') {
                         return <Redirect to="/" />
                     }
                     else {
@@ -29,4 +38,4 @@ const EmployerPrivateRoute = ({ component: Component, ...rest }) => {
     )
 }
 
-export default EmployerPrivateRoute;
+export default EmployeePrivateRoute;

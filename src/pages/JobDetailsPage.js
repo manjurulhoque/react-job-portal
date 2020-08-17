@@ -3,18 +3,19 @@ import React, { useState, useEffect, useContext } from "react";
 import AxiosConfig from "../AxiosConfig";
 import moment from "moment";
 import { Helmet } from "react-helmet";
-import { useParams } from 'react-router-dom';
+import { useParams, Redirect, useHistory } from 'react-router-dom';
 import Header from "components/Header";
 import { AuthContext } from "contexts/AuthContext";
 import swal from 'sweetalert';
 
 
-const JobDetailsPage = () => {
+const JobDetailsPage = (props) => {
     const [job, setJob] = useState({});
     const [isApplied, setIsApplied] = useState(false);
     let { id } = useParams();
     const authContext = useContext(AuthContext);
     const { token, isAuthenticated } = authContext.state;
+    let history = useHistory();
 
     useEffect(() => {
         const config = {
@@ -38,26 +39,29 @@ const JobDetailsPage = () => {
         const config = {
             headers: { Authorization: `Bearer ${token}` }
         };
+        if (isAuthenticated) {
+            swal({
+                title: "Are you sure?",
+                text: "Once applied, you will not be able to remove it!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((apply) => {
+                    if (apply) {
 
-        swal({
-            title: "Are you sure?",
-            text: "Once applied, you will not be able to remove it!",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        })
-            .then((apply) => {
-                if (apply) {
-                    
-                    AxiosConfig.post(`apply-job/${id}`, config)
-                        .then(res => {
-                            setIsApplied(true);
-                            swal("Successfully applied for this position", {
-                                icon: "success",
-                            });
-                        })
-                }
-            });
+                        AxiosConfig.post(`apply-job/${id}`, config)
+                            .then(res => {
+                                setIsApplied(true);
+                                swal("Successfully applied for this position", {
+                                    icon: "success",
+                                });
+                            })
+                    }
+                });
+        } else {
+            history.push('/login');
+        }
     }
 
     return (

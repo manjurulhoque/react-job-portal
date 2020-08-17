@@ -71,7 +71,7 @@ const Header = () => {
                                                     <NavLink exact className="dropdown-item" activeClassName='' to='/jobs'>Browse Jobs</NavLink>
                                                 </li>
                                                 <li>
-                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/'>Applied jobs</NavLink>
+                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/applied-jobs'>Applied jobs</NavLink>
                                                 </li>
                                             </ul>
                                         </li>
