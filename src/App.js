@@ -15,7 +15,7 @@ const App = () => {
     useEffect(() => {
         setToken(localStorage.getItem("token"));
         let decoded = {};
-        let exceptRoutes = ["/jobs"];
+        let exceptRoutes = ["/jobs", "/applied-jobs"];
         if (token) {
             decoded = jwtDecode(token);
             if (moment.unix(decoded.exp).format() < moment().format()) {
