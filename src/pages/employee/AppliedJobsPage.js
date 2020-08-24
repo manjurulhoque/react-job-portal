@@ -4,6 +4,7 @@ import { AuthContext } from 'contexts/AuthContext';
 import AxiosConfig from 'AxiosConfig';
 import Header from 'components/Header';
 import { Helmet } from 'react-helmet';
+import { Link } from 'react-router-dom';
 
 
 const AppliedJobsPage = () => {
@@ -49,7 +50,7 @@ const AppliedJobsPage = () => {
                             {
                                 jobs.map(job => {
                                     return (
-                                        <a className="job-listings" href="">
+                                        <Link className="job-listings" to={`/jobs/${job.id}`} key={job.id}>
                                             <div className="row">
                                                 <div className="col-lg-4 col-md-4 col-xs-12">
                                                     <div className="job-company-logo">
@@ -63,9 +64,20 @@ const AppliedJobsPage = () => {
                                                     </div>
                                                 </div>
                                                 <div className="col-lg-2 col-md-2 col-xs-12 text-center">
-                                                    <span className="btn-open">
-                                                        0 Open Jobs
-                                                    </span>
+                                                    {
+                                                        job.filled && (
+                                                            <span className="btn-open">
+                                                                Position filled
+                                                            </span>
+                                                        )
+                                                    }
+                                                    {
+                                                        !job.filled && (
+                                                            <span className="btn-open">
+                                                                Position open
+                                                            </span>
+                                                        )
+                                                    }
                                                 </div>
                                                 <div className="col-lg-2 col-md-2 col-xs-12 text-right">
                                                     <div className="location">
@@ -73,10 +85,30 @@ const AppliedJobsPage = () => {
                                                     </div>
                                                 </div>
                                                 <div className="col-lg-2 col-md-2 col-xs-12 text-right">
-                                                    <span className="btn-full-time">Full Time</span>
+                                                    {
+                                                        job.type == "1" && (
+                                                            <span className="btn-full-time">
+                                                                Full Time
+                                                            </span>
+                                                        )
+                                                    }
+                                                    {
+                                                        job.type == "2" && (
+                                                            <span className="btn-full-time">
+                                                                Part Time
+                                                            </span>
+                                                        )
+                                                    }
+                                                    {
+                                                        job.type == "3" && (
+                                                            <span className="btn-full-time">
+                                                                Internship
+                                                            </span>
+                                                        )
+                                                    }
                                                 </div>
                                             </div>
-                                        </a>
+                                        </Link>
                                     )
                                 })
                             }
