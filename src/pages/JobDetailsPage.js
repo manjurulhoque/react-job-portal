@@ -1,25 +1,25 @@
 /* eslint-disable */
-import React, { useState, useEffect, useContext } from "react";
+import React, {useState, useEffect, useContext} from "react";
 import AxiosConfig from "../AxiosConfig";
 import moment from "moment";
-import { Helmet } from "react-helmet";
-import { useParams, Redirect, useHistory } from 'react-router-dom';
+import {Helmet} from "react-helmet";
+import {useParams, Redirect, useHistory} from 'react-router-dom';
 import Header from "components/Header";
-import { AuthContext } from "contexts/AuthContext";
+import {AuthContext} from "contexts/AuthContext";
 import swal from 'sweetalert';
 
 
 const JobDetailsPage = (props) => {
     const [job, setJob] = useState({});
     const [isApplied, setIsApplied] = useState(false);
-    let { id } = useParams();
+    let {id} = useParams();
     const authContext = useContext(AuthContext);
-    const { token, isAuthenticated } = authContext.state;
+    const {token, isAuthenticated} = authContext.state;
     let history = useHistory();
 
     useEffect(() => {
         const config = {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: {Authorization: `Bearer ${token}`}
         };
         AxiosConfig.get(`jobs/${id}`)
             .then(res => {
@@ -37,7 +37,7 @@ const JobDetailsPage = (props) => {
     const applyJobHandle = (e) => {
         e.preventDefault();
         const config = {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: {Authorization: `Bearer ${token}`}
         };
         if (isAuthenticated) {
             swal({
@@ -50,11 +50,16 @@ const JobDetailsPage = (props) => {
                 .then((apply) => {
                     if (apply) {
 
-                        AxiosConfig.post(`apply-job/${id}`, config)
+                        AxiosConfig.post(`apply-job/${id}`, {'job': id}, config)
                             .then(res => {
                                 setIsApplied(true);
                                 swal("Successfully applied for this position", {
                                     icon: "success",
+                                });
+                            })
+                            .then(err => {
+                                swal(err, {
+                                    icon: "error",
                                 });
                             })
                     }
@@ -66,7 +71,7 @@ const JobDetailsPage = (props) => {
 
     return (
         <React.Fragment>
-            <Header />
+            <Header/>
             <Helmet>
                 <title>Job details</title>
             </Helmet>
@@ -77,7 +82,7 @@ const JobDetailsPage = (props) => {
                         <div className="col-lg-8 col-md-6 col-xs-12">
                             <div className="breadcrumb-wrapper">
                                 <div className="img-wrapper">
-                                    <img src="/assets/img/about/company-logo.png" alt="" />
+                                    <img src="/assets/img/about/company-logo.png" alt=""/>
                                 </div>
                                 <div className="content">
                                     <h3 className="product-title">{job.title}</h3>
@@ -121,7 +126,7 @@ const JobDetailsPage = (props) => {
                                         <>
                                             <h5>How To Apply</h5>
                                             <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor,
-                                            nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis sed odio sit amet nibh
+                                                nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis sed odio sit amet nibh
                                                 vulputate cursus a sit amet mauris.</p>
                                             <button onClick={applyJobHandle} className="btn btn-common">Apply job</button>
                                         </>
@@ -153,7 +158,7 @@ const JobDetailsPage = (props) => {
                                         <form method="post" className="subscribe-form">
                                             <div className="form-group">
                                                 <input type="email" name="Email" className="form-control"
-                                                    placeholder={window.location} required="" />
+                                                       placeholder={window.location} required=""/>
                                                 <button type="submit" name="subscribe" className="btn btn-common sub-btn"><i
                                                     className="lni-files"></i></button>
                                                 <div className="clearfix"></div>
@@ -187,7 +192,7 @@ const JobDetailsPage = (props) => {
                         <div className="col-lg-4 col-md-6 col-xs-12">
                             <div className="job-featured">
                                 <div className="icon">
-                                    <img src="assets/img/features/img1.png" alt="" />
+                                    <img src="assets/img/features/img1.png" alt=""/>
                                 </div>
                                 <div className="content">
                                     <h3><a href="job-page.html">Software Engineer</a></h3>
@@ -203,7 +208,7 @@ const JobDetailsPage = (props) => {
                         <div className="col-lg-4 col-md-6 col-xs-12">
                             <div className="job-featured">
                                 <div className="icon">
-                                    <img src="assets/img/features/img2.png" alt="" />
+                                    <img src="assets/img/features/img2.png" alt=""/>
                                 </div>
                                 <div className="content">
                                     <h3><a href="job-page.html">Graphic Designer</a></h3>
@@ -219,7 +224,7 @@ const JobDetailsPage = (props) => {
                         <div className="col-lg-4 col-md-6 col-xs-12">
                             <div className="job-featured">
                                 <div className="icon">
-                                    <img src="assets/img/features/img3.png" alt="" />
+                                    <img src="assets/img/features/img3.png" alt=""/>
                                 </div>
                                 <div className="content">
                                     <h3><a href="job-page.html">Managing Director</a></h3>
