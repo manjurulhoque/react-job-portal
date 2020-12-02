@@ -20,10 +20,10 @@ const BaseRouter = () => {
                 <Route exact path="/login" component={LoginPage} />
                 <Route exact path="/register" component={RegisterPage} />
                 {/* Employer routes */}
-                <EmployerPrivateRoute exact path="/post-job" component={PostJobPage} />
+                <EmployerPrivateRoute exact path="/post-job/" component={PostJobPage} />
 
                 {/* Employee routes */}
-                <EmployeePrivateRoute exact path="/applied-jobs" component={AppliedJobsPage} />
+                <EmployeePrivateRoute exact path="/applied-jobs/" component={AppliedJobsPage} />
             </Switch>
         </div>
     );

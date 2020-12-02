@@ -18,7 +18,7 @@ const AppliedJobsPage = () => {
             headers: { Authorization: `Bearer ${token}` }
         };
 
-        AxiosConfig.get(`applied-jobs`, config)
+        AxiosConfig.get(`applied-jobs/`, config)
             .then(res => {
                 setJobs(res.data);
             })

@@ -5,9 +5,8 @@ import AxiosConfig from "AxiosConfig";
 const jobReducer = (state, action) => {
     switch (action.type) {
         case ActionTypes.ALL_JOBS:
-            AxiosConfig.get('jobs')
+            AxiosConfig.get('jobs/')
                 .then(res => {
-                    //setJobs(res.data);
                     return {
                         ...state,
                         jobs: res.data

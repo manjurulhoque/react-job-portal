@@ -11,6 +11,7 @@ const authReducer = (state, action) => {
                 isAuthenticated: true,
                 user: action.payload.user,
                 token: action.payload.token,
+                isLoading: false
             };
         case ActionTypes.LOGOUT:
             localStorage.clear();
