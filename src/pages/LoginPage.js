@@ -4,7 +4,7 @@ import Header from "components/Header";
 import { Helmet } from "react-helmet";
 import AxiosConfig from "../AxiosConfig";
 import { AuthContext } from "contexts/AuthContext";
-import { Redirect } from "react-router-dom";
+import { Redirect, NavLink } from "react-router-dom";
 import jwtDecode from 'jwt-decode';
 
 const LoginPage = () => {
@@ -35,6 +35,7 @@ const LoginPage = () => {
                     payload: {
                         user: decoded.user || {},
                         token: res.data.access,
+                        refreshToken: res.data.refresh,
                     },
                 });
                 setRedirect(true);
@@ -102,7 +103,7 @@ const LoginPage = () => {
                                     <button className="btn btn-common log-btn">Submit</button>
                                 </form>
                                 <ul className="form-links">
-                                    <li className="text-center"><a href="register.html">Don't have an account?</a></li>
+                                    <li className="text-center"><NavLink to='/register'>Don't have an account?</NavLink></li>
                                 </ul>
                             </div>
                         </div>

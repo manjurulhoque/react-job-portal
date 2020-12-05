@@ -11,9 +11,10 @@ import {useTranslation} from "react-i18next";
 const AppliedJobsPage = () => {
 
     const [jobs, setJobs] = useState([]);
+    const [filtered_jobs, setFilteredJobs] = useState([]);
     const authContext = useContext(AuthContext);
     const {token, isAuthenticated} = authContext.state;
-    const {status, setStatus} = useState(0);
+    const [status, setStatus] = useState(0);
     const {t} = useTranslation();
 
     useEffect(() => {
@@ -24,10 +25,20 @@ const AppliedJobsPage = () => {
         AxiosConfig.get(`applied-jobs/`, config)
             .then(res => {
                 setJobs(res.data);
+                setFilteredJobs(res.data);
             })
     }, []);
 
     const onFilter = (e) => {
+        if (["1", "2", "3"].includes(status.toString())) {
+            let filtered_jobs2 = filtered_jobs.filter(job => job.applicant.status == status);
+            setFilteredJobs(filtered_jobs2);
+        } else {
+            setFilteredJobs(jobs);
+        }
+    }
+
+    const onClearFilter = (e) => {
         console.log(status);
     }
 
@@ -65,15 +76,16 @@ const AppliedJobsPage = () => {
                                         </select>
                                     </div>
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-4">
                                     <div className="form-group">
                                         <button className="btn btn-success" onClick={onFilter}>Filter</button>
+                                        <button className="btn btn-primary" onClick={onClearFilter}>Clear Filter</button>
                                     </div>
                                 </div>
                             </div>
 
                             {
-                                jobs.map(job => {
+                                filtered_jobs.map(job => {
                                     return (
                                         <Link className="job-listings" to={`/jobs/${job.id}`} key={job.id}>
                                             <div className="row">

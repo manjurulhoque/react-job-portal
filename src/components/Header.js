@@ -9,10 +9,6 @@ const Header = () => {
 
     const {t, i18n} = useTranslation();
 
-    function handleClick(lang) {
-        i18n.changeLanguage(lang);
-    }
-
     const [redirect, setRedirect] = useState(false);
     const authContext = useContext(AuthContext);
     const {isAuthenticated, user} = authContext.state;
@@ -24,6 +20,10 @@ const Header = () => {
         });
 
         setRedirect(true);
+    }
+
+    const getFullName = () => {
+        return `${user.first_name} ${user.last_name}`;
     }
 
     if (redirect) {
@@ -38,10 +38,10 @@ const Header = () => {
                     <div className="theme-header clearfix">
                         <div className="navbar-header">
                             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
-                                <span className="navbar-toggler-icon"></span>
-                                <span className="lni-menu"></span>
-                                <span className="lni-menu"></span>
-                                <span className="lni-menu"></span>
+                                <span className="navbar-toggler-icon"/>
+                                <span className="lni-menu"/>
+                                <span className="lni-menu"/>
+                                <span className="lni-menu"/>
                             </button>
                             <a href="" className="navbar-brand" style={{fontWeight: 'bold'}}>Job portal</a>
                         </div>
@@ -67,21 +67,37 @@ const Header = () => {
                                 }
                                 {
                                     isAuthenticated && user.role == 'employee' && (
-                                        <li className="nav-item dropdown">
-                                            <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
-                                               aria-expanded="false">
-                                                Candidates
-                                            </a>
-                                            <ul className="dropdown-menu">
-                                                <li>
-                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/applied-jobs'>Applied jobs</NavLink>
-                                                </li>
-                                            </ul>
-                                        </li>
+                                        <>
+                                            <li className="nav-item dropdown">
+                                                <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
+                                                   aria-expanded="false">
+                                                    Candidates
+                                                </a>
+                                                <ul className="dropdown-menu">
+                                                    <li>
+                                                        <NavLink exact className="dropdown-item" activeClassName='' to='/applied-jobs'>Applied jobs</NavLink>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li className="nav-item dropdown">
+                                                <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
+                                                   aria-expanded="false">
+                                                    {getFullName()}
+                                                </a>
+                                                <ul className="dropdown-menu">
+                                                    <li>
+                                                        <NavLink exact className="dropdown-item" activeClassName='' to='/edit-profile'>Edit Profile</NavLink>
+                                                    </li>
+                                                    <li onClick={handleLogout} style={{cursor: 'pointer'}}>
+                                                        <a className='dropdown-item'>Logout</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </>
                                     )
                                 }
                                 {
-                                    isAuthenticated && user.role == "emplyoer" && (
+                                    isAuthenticated && user.role == "employer" && (
                                         <li className="nav-item dropdown">
                                             <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
@@ -102,7 +118,7 @@ const Header = () => {
                                     )
                                 }
                                 {
-                                    isAuthenticated && (
+                                    isAuthenticated && user.role == "employer" && (
                                         <li className="nav-item" onClick={handleLogout} style={{cursor: 'pointer'}}>
                                             <a className='nav-link'>Logout</a>
                                         </li>
@@ -119,10 +135,10 @@ const Header = () => {
                                     </a>
                                     <ul className="dropdown-menu">
                                         <li>
-                                            <a className="dropdown-item" onClick={() => handleClick("en")}>English</a>
+                                            <a className="dropdown-item" onClick={() => i18n.changeLanguage("en")}>English</a>
                                         </li>
                                         <li>
-                                            <a className="dropdown-item" onClick={() => handleClick("bn")}>Bengali</a>
+                                            <a className="dropdown-item" onClick={() => i18n.changeLanguage("bn")}>Bengali</a>
                                         </li>
                                     </ul>
                                 </li>

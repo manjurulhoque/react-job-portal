@@ -9,6 +9,8 @@ import moment from "moment";
 export const AuthContext = createContext();
 
 let jwtToken = localStorage.getItem("token");
+let refreshToken = localStorage.getItem("refreshToken");
+let user = JSON.parse(localStorage.getItem("user"));
 let decoded = {};
 
 if (jwtToken) {
@@ -26,6 +28,7 @@ const initialState = {
     isAuthenticated: !!decoded.user,
     user: decoded.user,
     token: jwtToken,
+    refreshToken: refreshToken,
     isLoading: false,
 };
 
