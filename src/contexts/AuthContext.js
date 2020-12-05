@@ -15,8 +15,11 @@ if (jwtToken) {
     decoded = jwtDecode(jwtToken);
     if (moment.unix(decoded.exp).format() < moment().format()) {
         localStorage.clear();
-        // history.push('/');
+        history.push('/');
     }
+}
+else {
+    history.push('/');
 }
 
 const initialState = {

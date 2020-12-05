@@ -103,7 +103,7 @@ const Header = () => {
                                     )
                                 }
                                 <li className="button-group">
-                                    <NavLink className="button btn btn-common" activeClassName='' to='/post-job'>Post a Job</NavLink>
+                                    <NavLink className="button btn btn-common" activeClassName='' to='/post-job/'>Post a Job</NavLink>
                                 </li>
                             </ul>
                         </div>

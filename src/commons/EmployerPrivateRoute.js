@@ -17,7 +17,7 @@ const EmployerPrivateRoute = ({ component: Component, ...rest }) => {
                     } else if (!authContext.state.isAuthenticated) {
                         return <Redirect to="/login" />
                     }
-                    else if (!authContext.state.user && authContext.state.user.role != 'employer') {
+                    else if (!authContext.state.user || authContext.state.user.role != 'employer') {
                         return <Redirect to="/" />
                     }
                     else {
