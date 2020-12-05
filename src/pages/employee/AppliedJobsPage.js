@@ -5,6 +5,7 @@ import AxiosConfig from 'AxiosConfig';
 import Header from 'components/Header';
 import {Helmet} from 'react-helmet';
 import {Link} from 'react-router-dom';
+import {useTranslation} from "react-i18next";
 
 
 const AppliedJobsPage = () => {
@@ -13,6 +14,7 @@ const AppliedJobsPage = () => {
     const authContext = useContext(AuthContext);
     const {token, isAuthenticated} = authContext.state;
     const {status, setStatus} = useState(0);
+    const {t} = useTranslation();
 
     useEffect(() => {
         const config = {
@@ -33,7 +35,7 @@ const AppliedJobsPage = () => {
         <React.Fragment>
             <Header/>
             <Helmet>
-                <title>Applied jobs</title>
+                <title>{t('employee:applied-jobs')}</title>
             </Helmet>
 
             <div className="page-header">
@@ -41,7 +43,7 @@ const AppliedJobsPage = () => {
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="inner-header">
-                                <h3>Applied Jobs</h3>
+                                <h3>{t('employee:applied-jobs')}</h3>
                             </div>
                         </div>
                     </div>
