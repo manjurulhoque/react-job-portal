@@ -1,15 +1,21 @@
 /* eslint-disable */
-import React, { useContext, useState } from "react";
-import { NavLink, Redirect } from 'react-router-dom';
+import React, {useContext, useState} from "react";
+import {NavLink, Redirect} from 'react-router-dom';
 import Jumbotron from "./Jumbotron";
-import { AuthContext } from "contexts/AuthContext";
-
+import {AuthContext} from "contexts/AuthContext";
+import {useTranslation} from "react-i18next";
 
 const Header = () => {
 
+    const {t, i18n} = useTranslation();
+
+    function handleClick(lang) {
+        i18n.changeLanguage(lang);
+    }
+
     const [redirect, setRedirect] = useState(false);
     const authContext = useContext(AuthContext);
-    const { isAuthenticated, user } = authContext.state;
+    const {isAuthenticated, user} = authContext.state;
 
     const handleLogout = () => {
         authContext.authDispatch({
@@ -21,7 +27,7 @@ const Header = () => {
     }
 
     if (redirect) {
-        return <Redirect to="/" />;
+        return <Redirect to="/"/>;
     }
 
     return (
@@ -37,7 +43,7 @@ const Header = () => {
                                 <span className="lni-menu"></span>
                                 <span className="lni-menu"></span>
                             </button>
-                            <a href="" className="navbar-brand" style={{ fontWeight: 'bold' }}>Job portal</a>
+                            <a href="" className="navbar-brand" style={{fontWeight: 'bold'}}>Job portal</a>
                         </div>
                         <div className="collapse navbar-collapse" id="main-navbar">
                             <ul className="navbar-nav mr-auto w-100 justify-content-end">
@@ -63,7 +69,7 @@ const Header = () => {
                                     isAuthenticated && user.role == 'employee' && (
                                         <li className="nav-item dropdown">
                                             <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
+                                               aria-expanded="false">
                                                 Candidates
                                             </a>
                                             <ul className="dropdown-menu">
@@ -78,7 +84,7 @@ const Header = () => {
                                     isAuthenticated && user.role == "emplyoer" && (
                                         <li className="nav-item dropdown">
                                             <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
+                                               aria-expanded="false">
                                                 Employers
                                             </a>
                                             <ul className="dropdown-menu">
@@ -105,6 +111,21 @@ const Header = () => {
                                 <li className="button-group">
                                     <NavLink className="button btn btn-common" activeClassName='' to='/post-job/'>Post a Job</NavLink>
                                 </li>
+
+                                <li className="nav-item dropdown">
+                                    <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
+                                       aria-expanded="false">
+                                        Language
+                                    </a>
+                                    <ul className="dropdown-menu">
+                                        <li>
+                                            <a className="dropdown-item" onClick={() => handleClick("en")}>English</a>
+                                        </li>
+                                        <li>
+                                            <a className="dropdown-item" onClick={() => handleClick("bn")}>Bengali</a>
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -113,7 +134,7 @@ const Header = () => {
             </nav>
             {
                 ['/'].includes(window.location.pathname) ? (
-                    <Jumbotron />
+                    <Jumbotron/>
                 ) : ''
             }
         </header>

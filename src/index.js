@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Suspense} from "react";
 import ReactDOM from "react-dom";
 // import "./assets/css/bootstrap.min.css";
 // import "./assets/css/line-icons.css";
@@ -11,13 +11,16 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import './App.css';
 import * as serviceWorker from "./serviceWorker";
-import { AuthContextProvider } from "contexts/AuthContext";
-import { JobContextProvider } from "contexts/JobContext";
+import {AuthContextProvider} from "contexts/AuthContext";
+import {JobContextProvider} from "contexts/JobContext";
+import "./i18next"
 
 ReactDOM.render(
     <AuthContextProvider>
         <JobContextProvider>
-            <App />
+            <Suspense fallback={<div>Loading...</div>}>
+                <App/>
+            </Suspense>
         </JobContextProvider>
     </AuthContextProvider>
     , document.getElementById("root"));
