@@ -1,8 +1,11 @@
 /* eslint-disable */
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import Header from "../components/Header";
 import AxiosConfig from "../AxiosConfig";
-import { Helmet } from "react-helmet";
+import {Helmet} from "react-helmet";
+import CategoryItems from "../components/category/CategoryItems";
+import HowItWorks from "../components/HowItWorks";
+import BaseLayout from "../components/BaseLayout";
 
 const HomePage = () => {
     // const [jobs, setJobs] = useState([]);
@@ -16,13 +19,11 @@ const HomePage = () => {
     // }, []);
 
     return (
-        <React.Fragment>
-            <Header />
-            <Helmet>
-                <title>Home</title>
-            </Helmet>
+        <BaseLayout title={'Home'}>
+            <CategoryItems/>
 
-        </React.Fragment>
+            <HowItWorks/>
+        </BaseLayout>
     );
 };
 

@@ -1,23 +1,16 @@
+/* eslint-disable */
 import React from "react";
 
-const CategoryItem = ({ category }) => {
+const CategoryItem = ({category, index}) => {
+    let classes = `icon bg-color-${index + 1}`
     return (
-        <div className="col-md-6 col-xl-3">
-            <a
-                className="block block-rounded block-link-shadow d-flex justify-content-center align-items-start text-center bg-xinspire"
-                href="#!"
-            >
-                <div className="block-content block-content-full bg-white mt-1 align-self-stretchv">
-                    <div className="py-4">
-                        <i className={category.icon}></i>
-                        <p className="font-size-lg font-w600 mt-3 mb-1">
-                            {category.name}
-                        </p>
-                        <p className="text-muted mb-0">
-                            Graphic, Web, Brand, Product, Packaging etc
-                        </p>
-                    </div>
+        <div className="col-lg-4 col-md-6 col-xs-12 f-category">
+            <a href="#">
+                <div className={classes}>
+                    <i className={category.icon}/>
                 </div>
+                <h3>{category.name}</h3>
+                <p>(5079 jobs)</p>
             </a>
         </div>
     );
