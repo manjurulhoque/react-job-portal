@@ -134,10 +134,10 @@ const Header = () => {
                                         Language
                                     </a>
                                     <ul className="dropdown-menu">
-                                        <li>
+                                        <li style={{cursor: 'pointer'}}>
                                             <a className="dropdown-item" onClick={() => i18n.changeLanguage("en")}>English</a>
                                         </li>
-                                        <li>
+                                        <li style={{cursor: 'pointer'}}>
                                             <a className="dropdown-item" onClick={() => i18n.changeLanguage("bn")}>Bengali</a>
                                         </li>
                                     </ul>

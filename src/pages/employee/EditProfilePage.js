@@ -6,14 +6,17 @@ import {useTranslation} from "react-i18next";
 import {AuthContext} from "../../contexts/AuthContext";
 import AxiosConfig from "../../AxiosConfig";
 import jwtDecode from 'jwt-decode';
+import {useToasts} from 'react-toast-notifications';
 
 const EditProfilePage = () => {
     const {t} = useTranslation();
     const [gender, setGender] = useState('');
     const [first_name, setFirstName] = useState('');
     const [last_name, setLastName] = useState('');
+    const [submitted, setSubmitted] = useState(false);
     const authContext = useContext(AuthContext);
     const {isAuthenticated, user, token, refreshToken} = authContext.state;
+    const {addToast} = useToasts();
 
     useEffect(() => {
         setFirstName(user.first_name);
@@ -23,6 +26,7 @@ const EditProfilePage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setSubmitted(true);
 
         if (!first_name && !last_name && !gender) {
             alert('All fields are required');
@@ -41,29 +45,31 @@ const EditProfilePage = () => {
 
         AxiosConfig.put(`employee/profile/`, data, config)
             .then(res => {
-                console.log(res);
-                const refresh_data = {
-                    "refresh": refreshToken
-                };
-                AxiosConfig.post(`token/refresh/`, refresh_data)
-                    .then(response => {
-                        let decoded = jwtDecode(response.data.access);
-                        console.log(decoded);
-                        authContext.authDispatch({
-                            type: authContext.ActionTypes.LOGIN,
-                            payload: {
-                                user: {
-                                    first_name,
-                                    last_name,
-                                    gender
-                                },
-                                token: response.data.access,
-                                refreshToken: response.data.refresh
-                            },
-                        });
-                    });
+                // const refresh_data = {
+                //     "refresh": refreshToken
+                // };
+                // AxiosConfig.post(`token/refresh/`, refresh_data)
+                //     .then(response => {
+                //         let decoded = jwtDecode(response.data.access);
+                //         authContext.authDispatch({
+                //             type: authContext.ActionTypes.LOGIN,
+                //             payload: {
+                //                 user: {
+                //                     ...user,
+                //                     first_name,
+                //                     last_name,
+                //                     gender
+                //                 },
+                //                 token: response.data.access,
+                //                 refreshToken: response.data.refresh
+                //             },
+                //         });
+                //     }).catch(err => console.log(err))
+                //     .finally(() => setSubmitted(false))
+                addToast('Profile updated successfully', {appearance: 'success'});
             })
-            .catch(err => console.log(err))
+            .catch(err => addToast(err, {appearance: 'error'}))
+            .finally(() => setSubmitted(false))
     }
 
     return (
@@ -122,7 +128,13 @@ const EditProfilePage = () => {
                                             </select>
                                         </div>
                                     </div>
-                                    <button type="submit" className="btn btn-primary log-btn">Update profile</button>
+                                    <button type="submit" hidden={submitted} className="btn btn-primary log-btn">
+                                        Update profile
+                                    </button>
+                                    <button type="submit" hidden={!submitted} className="btn btn-primary log-btn">
+                                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"/>
+                                         Loading...
+                                    </button>
                                 </form>
                             </div>
                         </div>
