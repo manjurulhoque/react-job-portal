@@ -16,8 +16,8 @@ const JobItem = ({ job }) => {
                     </h3>
                     <p className="brand">{job.company}</p>
                     <div className="tags">
-                        <span><i className="lni-map-marker"></i> {job.location}</span>
-                        <span><i className="lni-user"></i>{job.user.first_name} {job.user.last_name}</span>
+                        <span><i className="lni-map-marker"/> {job.location}</span>
+                        <span><i className="lni-user"/>{job.user.first_name} {job.user.last_name}</span>
                     </div>
                     <span className="full-time">Full Time</span>
                 </div>

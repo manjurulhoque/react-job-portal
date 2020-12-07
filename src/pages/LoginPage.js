@@ -6,16 +6,20 @@ import AxiosConfig from "../AxiosConfig";
 import { AuthContext } from "contexts/AuthContext";
 import { Redirect, NavLink } from "react-router-dom";
 import jwtDecode from 'jwt-decode';
+import {useToasts} from 'react-toast-notifications';
 
 const LoginPage = () => {
     
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [redirect, setRedirect] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
     const authContext = useContext(AuthContext);
+    const {addToast} = useToasts();
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
+        setSubmitted(true);
 
         if (!email && !password) {
             alert('All fields are required');
@@ -38,15 +42,22 @@ const LoginPage = () => {
                         refreshToken: res.data.refresh,
                     },
                 });
+                addToast('Logged in successfully', {appearance: 'success'});
+                setSubmitted(false);
                 setRedirect(true);
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                if (err.response && err.response.status === 401) {
+                    console.log(err.response);
+                    addToast('Login failed', {appearance: 'error'});
+                }
+                setSubmitted(false);
+            });
     }
 
     if (redirect || authContext.state.isAuthenticated) {
         return <Redirect to="/" />;
     }
-
     return (
         <React.Fragment>
             <Header />
@@ -100,7 +111,13 @@ const LoginPage = () => {
                                         <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                                         <label className="form-check-label" htmlFor="exampleCheck1">Keep Me Signed In</label>
                                     </div>
-                                    <button className="btn btn-common log-btn">Submit</button>
+                                    <button type="submit" hidden={submitted} className="btn btn-primary log-btn">
+                                        Login
+                                    </button>
+                                    <button type="submit" hidden={!submitted} className="btn btn-primary log-btn">
+                                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"/>
+                                         Loading...
+                                    </button>
                                 </form>
                                 <ul className="form-links">
                                     <li className="text-center"><NavLink to='/register'>Don't have an account?</NavLink></li>

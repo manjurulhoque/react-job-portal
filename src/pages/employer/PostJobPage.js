@@ -1,8 +1,20 @@
 /* eslint-disable */
-import React from "react";
+import React, {useEffect, useState} from "react";
 import BaseLayout from "../../components/BaseLayout";
+import AxiosConfig from "../../AxiosConfig";
+// import Select2 from "react-select2-wrapper";
 
 const PostJobPage = () => {
+    const [tags, setTags] = useState([]);
+
+    useEffect(() => {
+        AxiosConfig.get('jobs/')
+            .then(res => {
+                setTags(res.data);
+                console.log(tags);
+            })
+    }, []);
+
     return (
         <BaseLayout title={'Post new job'}>
 
@@ -28,6 +40,32 @@ const PostJobPage = () => {
                                     <div className="form-group">
                                         <label className="control-label">Job Title</label>
                                         <input type="text" className="form-control" placeholder="Write job title"/>
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="control-label">Job Title</label>
+                                        <textarea className="form-control" placeholder="Write job description" rows={4}/>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label className="control-label">Salary</label>
+                                                <input type="text" className="form-control" placeholder="Write job title"/>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label className="control-label">Required skills</label>
+                                                {/*<Select2*/}
+                                                {/*    multiple*/}
+                                                {/*    data={['bug', 'feature', 'documents', 'discussion']}*/}
+                                                {/*    options={*/}
+                                                {/*        {*/}
+                                                {/*            placeholder: 'search by tags',*/}
+                                                {/*        }*/}
+                                                {/*    }*/}
+                                                {/*/>*/}
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className="form-group">
                                         <label className="control-label">Company</label>

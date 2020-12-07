@@ -13,15 +13,17 @@ let refreshToken = localStorage.getItem("refreshToken");
 let user = JSON.parse(localStorage.getItem("user"));
 let decoded = {};
 
+const excluded_routes = ['/login', '/register', '/jobs']
+
 if (jwtToken) {
     decoded = jwtDecode(jwtToken);
     if (moment.unix(decoded.exp).format() < moment().format()) {
         localStorage.clear();
-        history.push('/');
+        if (!excluded_routes.includes(history.location.pathname)) history.push('/');
     }
 }
 else {
-    history.push('/');
+    if (!excluded_routes.includes(history.location.pathname)) history.push('/');
 }
 
 const initialState = {

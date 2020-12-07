@@ -5,6 +5,9 @@ import Header from "components/Header";
 import JobItem from "components/job/JobItem";
 import {Helmet} from "react-helmet";
 import {JobContext} from "contexts/JobContext";
+import Skeleton, {SkeletonTheme} from 'react-loading-skeleton';
+import JobItemSkeleton from "../components/skeletons/JobItemSkeleton";
+import BaseLayout from "../components/BaseLayout";
 
 const JobsPage = () => {
     const [jobs, setJobs] = useState([]);
@@ -30,17 +33,11 @@ const JobsPage = () => {
 
     const onSearch = (e) => {
         e.preventDefault();
-
     }
 
 
     return (
-        <React.Fragment>
-            <Header/>
-            <Helmet>
-                <title>All jobs</title>
-            </Helmet>
-
+        <BaseLayout title={'All jobs'}>
             <div className="page-header">
                 <div className="container">
                     <div className="row">
@@ -59,11 +56,11 @@ const JobsPage = () => {
                                         <div className="col-lg-5 col-md-5 col-xs-12">
                                             <div className="form-group">
                                                 <input className="form-control" type="text" placeholder="Location"/>
-                                                <i className="lni-map-marker"></i>
+                                                <i className="lni-map-marker"/>
                                             </div>
                                         </div>
                                         <div className="col-lg-1 col-md-1 col-xs-12">
-                                            <button type="button" onClick={onSearch} className="button"><i className="lni-search"></i></button>
+                                            <button type="button" onClick={onSearch} className="button"><i className="lni-search"/></button>
                                         </div>
                                     </div>
                                 </form>
@@ -78,14 +75,24 @@ const JobsPage = () => {
                 <div className="container">
                     <div className="row">
                         {
-                            jobs.map(job => {
+                            jobs.length === 0 &&
+                            <>
+                                {Array(6)
+                                    .fill()
+                                    .map((_, index) => (
+                                        <JobItemSkeleton key={index}/>
+                                    ))}
+                            </>
+                        }
+                        {
+                            jobs.length && jobs.map(job => {
                                 return <JobItem job={job} key={job.id}/>;
                             })
                         }
                     </div>
                 </div>
             </section>
-        </React.Fragment>
+        </BaseLayout>
     );
 };
 
