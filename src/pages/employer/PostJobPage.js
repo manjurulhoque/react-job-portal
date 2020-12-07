@@ -3,17 +3,24 @@ import React, {useEffect, useState} from "react";
 import BaseLayout from "../../components/BaseLayout";
 import AxiosConfig from "../../AxiosConfig";
 // import Select2 from "react-select2-wrapper";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+import CreatableSelect from "react-select/creatable";
 
 const PostJobPage = () => {
     const [tags, setTags] = useState([]);
 
     useEffect(() => {
-        AxiosConfig.get('jobs/')
+        AxiosConfig.get('tags/')
             .then(res => {
-                setTags(res.data);
-                console.log(tags);
+
+                let my_tags = [];
+                res.data.forEach(tag => my_tags.push({"value": tag.id, "label": tag.name}));
+                setTags(my_tags);
             })
     }, []);
+
+    const animatedComponents = makeAnimated();
 
     return (
         <BaseLayout title={'Post new job'}>
@@ -55,15 +62,15 @@ const PostJobPage = () => {
                                         <div className="col-md-6">
                                             <div className="form-group">
                                                 <label className="control-label">Required skills</label>
-                                                {/*<Select2*/}
-                                                {/*    multiple*/}
-                                                {/*    data={['bug', 'feature', 'documents', 'discussion']}*/}
-                                                {/*    options={*/}
-                                                {/*        {*/}
-                                                {/*            placeholder: 'search by tags',*/}
-                                                {/*        }*/}
-                                                {/*    }*/}
-                                                {/*/>*/}
+                                                <Select
+                                                    closeMenuOnSelect={false}
+                                                    components={animatedComponents}
+                                                    // defaultValue={[colourOptions[4], colourOptions[5]]}
+                                                    isMulti
+                                                    options={tags}
+                                                    className="React"
+                                                    classNamePrefix="select"
+                                                />
                                             </div>
                                         </div>
                                     </div>
