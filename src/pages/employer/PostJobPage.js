@@ -57,7 +57,6 @@ const PostJobPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(job_tags);
 
         const new_job_data = {
             'title': title,
