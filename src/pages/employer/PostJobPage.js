@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, {useEffect, useState, Fragment} from "react";
+import React, {useEffect, useState, Fragment, useContext} from "react";
 import BaseLayout from "../../components/BaseLayout";
 import AxiosConfig from "../../AxiosConfig";
 import Select from "react-select";
@@ -7,6 +7,9 @@ import makeAnimated from "react-select/animated";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/light.css";
 import Loader from 'react-loader-spinner';
+import {AuthContext} from "../../contexts/AuthContext";
+import {useToasts} from "react-toast-notifications";
+import {Redirect} from "react-router-dom";
 
 const PostJobPage = () => {
     const [tags, setTags] = useState([]);
@@ -35,6 +38,10 @@ const PostJobPage = () => {
     const [company_name, setCompanyName] = useState();
     const [company_description, setCompanyDescription] = useState();
     const [website, setWebsite] = useState();
+    const authContext = useContext(AuthContext);
+    const {token, isAuthenticated} = authContext.state;
+    const {addToast} = useToasts();
+    const [redirect, setRedirect] = useState(false);
 
     useEffect(() => {
         AxiosConfig.get('tags/')
@@ -43,7 +50,7 @@ const PostJobPage = () => {
                 let my_tags = [];
                 res.data.forEach(tag => my_tags.push({"value": tag.id, "label": tag.name}));
                 setTags(my_tags);
-            })
+            }).catch(err => addToast(err, {appearance: 'error'}))
     }, []);
 
     const animatedComponents = makeAnimated();
@@ -64,14 +71,26 @@ const PostJobPage = () => {
             'company_name': company_name,
             'company_description': company_description,
             'website': website,
-        }
+        };
 
-        console.log(new_job_data);
+        const config = {
+            headers: {Authorization: `Bearer ${token}`}
+        };
+
+        AxiosConfig.post(`employer/jobs/create/`, new_job_data, config)
+            .then(res => {
+                addToast('Job were successfully posted', {appearance: 'success'});
+                setRedirect(true);
+            }).catch(err => addToast('Something went wrong!', {appearance: 'error'}));
     }
 
     const handleSkillsChange = selectedOptions => {
         let my_tags = selectedOptions.map(selected => selected.value);
         setJobTags([...my_tags]);
+    }
+
+    if (redirect) {
+        return <Redirect to="/"/>;
     }
 
     return (
@@ -184,7 +203,7 @@ const PostJobPage = () => {
                                                                     className="React"
                                                                     classNamePrefix="select"
                                                                     name="type"
-                                                                    onChange={event => setType(event.target.value)}
+                                                                    onChange={type => setType(type.value)}
                                                                     required
                                                                     options={types}
                                                                 />
@@ -199,7 +218,7 @@ const PostJobPage = () => {
                                                             className="React"
                                                             classNamePrefix="select"
                                                             name="category"
-                                                            onChange={event => setCategory(event.target.value)}
+                                                            onChange={category => setCategory(category.value)}
                                                             required
                                                             options={categories}
                                                         />
@@ -224,7 +243,7 @@ const PostJobPage = () => {
                                                             value={new Date()}
                                                             options={{'minDate': new Date()}}
                                                             required
-                                                            onChange={event => setLastDate(event.target.value)}/>
+                                                            onChange={date => setLastDate(date[0])}/>
                                                     </div>
                                                 </div>
                                                 <div className="form-group">

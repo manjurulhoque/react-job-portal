@@ -5,7 +5,6 @@ import {Helmet} from "react-helmet";
 import {useTranslation} from "react-i18next";
 import {AuthContext} from "../../contexts/AuthContext";
 import AxiosConfig from "../../AxiosConfig";
-import jwtDecode from 'jwt-decode';
 import {useToasts} from 'react-toast-notifications';
 
 const EditProfilePage = () => {
