@@ -1,0 +1,19 @@
+.internship {
+    font-size: 11px;
+    font-weight: 500;
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 50px;
+    cursor: pointer;
+    text-transform: uppercase;
+    -webkit-transition: all .3s ease-in-out;
+    -moz-transition: all .3s ease-in-out;
+    -o-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+    color: #c846ff;
+    background: #f2d2ff
+}
+
+.internship:hover {
+    box-shadow: 0 3px 9px rgba(96, 94, 94, .17)
+}

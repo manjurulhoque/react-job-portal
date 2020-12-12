@@ -8,13 +8,25 @@ const JobItem = ({job}) => {
         return `assets/img/features/img${n}.png`;
     }
 
-    const getType = (type) => {
+    const get_type = (type) => {
         const types = {
             "1": "Full Time",
             "2": "Part Time",
             "3": "Internship",
         }
         return types[type];
+    }
+
+    const get_class = (type) => {
+        const class_name = {
+            "1": "Full Time",
+            "2": "Part Time",
+            "3": "Internship",
+        }[type];
+
+        return class_name.toLowerCase()
+            .replace(/ /g, '-')
+            .replace(/[^\w-]+/g, '');
     }
 
     return (
@@ -33,7 +45,17 @@ const JobItem = ({job}) => {
                         <br/>
                         <span><i className="lni-user"/>{job.company_name}</span>
                     </div>
-                    <span className="full-time">{getType(job.type)}</span>
+                    <span className={get_class(job.type)}>{get_type(job.type)}</span>
+                    <br/>
+                    <br/>
+                    Tags:
+                    {
+                        job.job_tags.map(tag => {
+                            return (
+                                <span key={tag.id} className="full-time" style={{color: '#fff', backgroundColor: '#000'}}>{tag.name}</span>
+                            )
+                        })
+                    }
                 </div>
             </div>
         </div>
