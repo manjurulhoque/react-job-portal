@@ -105,13 +105,13 @@ const Header = () => {
                                             </a>
                                             <ul className="dropdown-menu">
                                                 <li>
-                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/post-job'>Post a Job</NavLink>
-                                                </li>
-                                                <li>
-                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/'>Manage Jobs</NavLink>
+                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/employer/dashboard/'>Dashboard</NavLink>
                                                 </li>
                                                 <li>
                                                     <NavLink exact className="dropdown-item" activeClassName='' to='/'>Manage Applications</NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/post-job'>Post a Job</NavLink>
                                                 </li>
                                             </ul>
                                         </li>

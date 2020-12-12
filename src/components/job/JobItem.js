@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 
 const JobItem = ({job}) => {
     const randomIntFromInterval = () => {
-        let n = Math.floor(Math.random() * (6 - 1 + 1) + 1);
+        let n = Math.floor(Math.random() * 6 + 1);
         return `assets/img/features/img${n}.png`;
     }
 
