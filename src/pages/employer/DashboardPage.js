@@ -11,6 +11,7 @@ const DashboardPage = () => {
     const [jobs, setJobs] = useState([]);
     const authContext = useContext(AuthContext);
     const {token, isAuthenticated} = authContext.state;
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
 
@@ -18,12 +19,19 @@ const DashboardPage = () => {
             headers: {Authorization: `Bearer ${token}`}
         };
 
-        AxiosConfig.get('employer/dashboard/', config)
-            .then(res => {
+        const fetchJobs = async () => {
+            try {
+                const res = await AxiosConfig.get('employer/dashboard/', config);
                 setJobs(res.data);
-            })
-            .catch(err => console.log(err))
-    }, []);
+                setLoading(false);
+            } catch (e) {
+                setLoading(false);
+                console.log(e);
+            }
+        };
+
+        fetchJobs();
+    }, [jobs]);
 
     const get_type = (type) => {
         const types = {
@@ -50,13 +58,14 @@ const DashboardPage = () => {
         <BaseLayout title={'Dashboard'}>
             <EmployerSidebarLayout>
                 {
-                    jobs.length === 0 && (
-                        <div className="row">
-                            <div className="col-md-6 mx-auto">
-                                <div className="col-lg-9 col-md-9 col-xs-12">
+                    loading && (
+                        <div className="col-lg-9 col-md-9 col-xs-12">
+                            <div className="row">
+                                <div className="col-md-6 mx-auto">
                                     <Loader
                                         type="Grid"
                                         color="#00BFFF"
+                                        style={{textAlign: 'center'}}
                                         height={100}
                                         width={100}
                                     />
@@ -66,7 +75,7 @@ const DashboardPage = () => {
                     )
                 }
                 {
-                    jobs.length > 0 && (
+                    !loading && (
                         <div className="col-lg-9 col-md-9 col-xs-12">
                             <div className="job-alerts-item candidates">
                                 <h3 className="alerts-title">Manage Jobs</h3>
