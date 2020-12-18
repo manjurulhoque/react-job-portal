@@ -10,7 +10,7 @@ const CategoryItem = ({category, index}) => {
                     <i className={category.icon}/>
                 </div>
                 <h3>{category.name}</h3>
-                <p>(5079 jobs)</p>
+                <p>({category.total_jobs} jobs)</p>
             </a>
         </div>
     );

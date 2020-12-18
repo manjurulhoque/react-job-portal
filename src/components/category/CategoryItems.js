@@ -1,40 +1,60 @@
 /* eslint-disable */
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import CategoryItem from "./CategoryItem";
+import AxiosConfig from "../../AxiosConfig";
+import CategoryItemSkeleton from "../skeletons/CategoryItemSkeleton";
 
 const CategoryItems = () => {
-    const [categories, setCategories] = useState([
-        {
-            name: "Web design",
-            slug: "web-design",
-            icon: "lni-brush"
-        },
-        {
-            name: "Graphic design",
-            slug: "graphic-design",
-            icon: "lni-heart"
-        },
-        {
-            name: "Web development",
-            slug: "web-development",
-            icon: "lni-funnel"
-        },
-        {
-            name: "Human Resource",
-            slug: "human-resource",
-            icon: "lni-cup"
-        },
-        {
-            name: "Support",
-            slug: "support",
-            icon: "lni-home"
-        },
-        {
-            name: "Android Development",
-            slug: "android",
-            icon: "lni-world"
-        }
-    ]);
+    // const [categories, setCategories] = useState([
+    //     {
+    //         name: "Web design",
+    //         slug: "web-design",
+    //         icon: "lni-brush"
+    //     },
+    //     {
+    //         name: "Graphic design",
+    //         slug: "graphic-design",
+    //         icon: "lni-heart"
+    //     },
+    //     {
+    //         name: "Web development",
+    //         slug: "web-development",
+    //         icon: "lni-funnel"
+    //     },
+    //     {
+    //         name: "Human Resource",
+    //         slug: "human-resource",
+    //         icon: "lni-cup"
+    //     },
+    //     {
+    //         name: "Support",
+    //         slug: "support",
+    //         icon: "lni-home"
+    //     },
+    //     {
+    //         name: "Android Development",
+    //         slug: "android",
+    //         icon: "lni-world"
+    //     }
+    // ]);
+
+    const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await AxiosConfig.get("categories/");
+                setCategories(res.data);
+                setLoading(false);
+            } catch (e) {
+                console.log(e);
+                setLoading(false);
+            }
+        };
+
+        fetchCategories();
+    }, []);
 
     return (
         <section className="category section bg-gray">
@@ -44,9 +64,21 @@ const CategoryItems = () => {
                     <p>Most popular categories of portal, sorted by popularity</p>
                 </div>
                 <div className="row">
-                    {categories.map((category, index) => (
-                        <CategoryItem category={category} index={index} key={category.name}/>
-                    ))}
+                    {
+                        loading && (
+                            Array(6)
+                                .fill()
+                                .map((_, index) => (
+                                    <CategoryItemSkeleton key={index}/>
+                                ))
+                        )
+                    }
+                    {
+                        !loading &&
+                        categories.map((category, index) => (
+                            <CategoryItem category={category} index={index} key={category.name}/>
+                        ))
+                    }
                 </div>
             </div>
         </section>
