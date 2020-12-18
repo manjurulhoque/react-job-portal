@@ -1,7 +1,15 @@
 /* eslint-disable */
 import React from "react";
+import {NavLink, useHistory} from "react-router-dom";
 
 const EmployerSidebarLayout = ({children, title = 'Dashboard'}) => {
+
+    const history = useHistory();
+
+    const getActiveClass = (url) => {
+        return url === history.location.pathname ? 'active' : '';
+    }
+
     return (
         <React.Fragment>
             <div className="page-header">
@@ -24,8 +32,12 @@ const EmployerSidebarLayout = ({children, title = 'Dashboard'}) => {
                             <div className="right-sideabr">
                                 <h4>Manage Account</h4>
                                 <ul className="list-item">
-                                    <li><a className="active" href="job-alerts.html">Dashboard</a></li>
-                                    <li><a href="manage-applications.html">Manage Applications</a></li>
+                                    <li>
+                                        <NavLink exact className={getActiveClass('/employer/dashboard/')} activeClassName='active' to='/employer/dashboard/'>Dashboard</NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink exact className={getActiveClass('/employer/applicants/')} to='/employer/applicants/'>Applicants</NavLink>
+                                    </li>
                                     <li><a href="change-password.html">Change Password</a></li>
                                     <li><a href="index-2.html">Sing Out</a></li>
                                 </ul>

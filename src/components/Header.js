@@ -66,7 +66,7 @@ const Header = () => {
                                     )
                                 }
                                 {
-                                    isAuthenticated && user.role == 'employee' && (
+                                    isAuthenticated && user.role === 'employee' && (
                                         <>
                                             <li className="nav-item dropdown">
                                                 <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
@@ -97,7 +97,7 @@ const Header = () => {
                                     )
                                 }
                                 {
-                                    isAuthenticated && user.role == "employer" && (
+                                    isAuthenticated && user.role === "employer" && (
                                         <li className="nav-item dropdown">
                                             <a className="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true"
                                                aria-expanded="false">
@@ -108,7 +108,7 @@ const Header = () => {
                                                     <NavLink exact className="dropdown-item" activeClassName='' to='/employer/dashboard/'>Dashboard</NavLink>
                                                 </li>
                                                 <li>
-                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/'>Manage Applications</NavLink>
+                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/'>Applicants</NavLink>
                                                 </li>
                                                 <li>
                                                     <NavLink exact className="dropdown-item" activeClassName='' to='/post-job'>Post a Job</NavLink>
