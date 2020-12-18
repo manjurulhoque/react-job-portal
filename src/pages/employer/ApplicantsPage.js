@@ -41,7 +41,7 @@ const ApplicantsPage = () => {
 
     return (
         <BaseLayout title={'Applicants'}>
-            <EmployerSidebarLayout>
+            <EmployerSidebarLayout title={'Applicants'}>
                 {
                     loading && (
                         <div className="col-lg-9 col-md-9 col-xs-12">
@@ -111,8 +111,12 @@ const ApplicantsPage = () => {
                                                             {
                                                                 applicant.status === 'Pending' && (
                                                                     <>
-                                                                        <button onClick={onUpdateApplicant(applicant)} className="btn btn-primary btn-sm">Accept</button>
-                                                                        <button onClick={onUpdateApplicant(applicant)} className="btn btn-danger btn-sm">Reject</button>
+                                                                        <button onClick={onUpdateApplicant(applicant, "accept")} className="btn btn-primary btn-xs mr-2">
+                                                                            <i className="fa fa-check" aria-hidden="true"/>
+                                                                        </button>
+                                                                        <button onClick={onUpdateApplicant(applicant, "reject")} className="btn btn-danger btn-xs">
+                                                                            <i className="fa fa-window-close" aria-hidden="true"/>
+                                                                        </button>
                                                                     </>
                                                                 )
                                                             }

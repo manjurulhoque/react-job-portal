@@ -118,7 +118,7 @@ const Header = () => {
                                     )
                                 }
                                 {
-                                    isAuthenticated && user.role == "employer" && (
+                                    isAuthenticated && user.role ==="employer" && (
                                         <li className="nav-item" onClick={handleLogout} style={{cursor: 'pointer'}}>
                                             <a className='nav-link'>Logout</a>
                                         </li>

@@ -1,13 +1,31 @@
 /* eslint-disable */
-import React from "react";
-import {NavLink, useHistory} from "react-router-dom";
+import React, {useContext, useState} from "react";
+import {NavLink, Redirect, useHistory} from "react-router-dom";
+import {AuthContext} from "../../contexts/AuthContext";
 
 const EmployerSidebarLayout = ({children, title = 'Dashboard'}) => {
 
     const history = useHistory();
 
+    const authContext = useContext(AuthContext);
+    const {isAuthenticated, user} = authContext.state;
+    const [redirect, setRedirect] = useState(false);
+
+    const handleLogout = () => {
+        authContext.authDispatch({
+            type: authContext.ActionTypes.LOGOUT,
+            payload: {},
+        });
+
+        setRedirect(true);
+    }
+
     const getActiveClass = (url) => {
         return url === history.location.pathname ? 'active' : '';
+    }
+
+    if (redirect) {
+        return <Redirect to="/"/>;
     }
 
     return (
@@ -38,8 +56,10 @@ const EmployerSidebarLayout = ({children, title = 'Dashboard'}) => {
                                     <li>
                                         <NavLink exact className={getActiveClass('/employer/applicants/')} to='/employer/applicants/'>Applicants</NavLink>
                                     </li>
-                                    <li><a href="change-password.html">Change Password</a></li>
-                                    <li><a href="index-2.html">Sing Out</a></li>
+                                    <li><a href="javascript:void(0)">Change Password</a></li>
+                                    <li onClick={handleLogout} style={{cursor: 'pointer'}}>
+                                        <a>Sing Out</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>

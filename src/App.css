@@ -17,3 +17,10 @@
 .internship:hover {
     box-shadow: 0 3px 9px rgba(96, 94, 94, .17)
 }
+
+.btn-xs {
+    padding: .25rem .4rem;
+    font-size: .875rem;
+    line-height: .5;
+    border-radius: .2rem;
+}
