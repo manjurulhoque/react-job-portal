@@ -12,6 +12,7 @@ import EmployeePrivateRoute from "commons/EmployeePrivateRoute";
 import EditProfilePage from "./pages/employee/EditProfilePage";
 import DashboardPage from "./pages/employer/DashboardPage";
 import ApplicantsPage from "./pages/employer/ApplicantsPage";
+import ApplicantsPerJobPage from "./pages/employer/ApplicantsPerJobPage";
 
 const BaseRouter = () => {
     return (
@@ -26,6 +27,7 @@ const BaseRouter = () => {
                 <EmployerPrivateRoute exact path="/post-job/" component={PostJobPage} />
                 <EmployerPrivateRoute exact path="/employer/dashboard/" component={DashboardPage} />
                 <EmployerPrivateRoute exact path="/employer/applicants/" component={ApplicantsPage} />
+                <EmployerPrivateRoute exact path="/employer/applicants/:job_id" component={ApplicantsPerJobPage} />
 
                 {/* Employee routes */}
                 <EmployeePrivateRoute exact path="/edit-profile/" component={EditProfilePage} />

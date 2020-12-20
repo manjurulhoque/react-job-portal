@@ -108,7 +108,7 @@ const Header = () => {
                                                     <NavLink exact className="dropdown-item" activeClassName='' to='/employer/dashboard/'>Dashboard</NavLink>
                                                 </li>
                                                 <li>
-                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/'>Applicants</NavLink>
+                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/employer/applicants/'>Applicants</NavLink>
                                                 </li>
                                                 <li>
                                                     <NavLink exact className="dropdown-item" activeClassName='' to='/post-job'>Post a Job</NavLink>

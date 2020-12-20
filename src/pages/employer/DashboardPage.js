@@ -31,7 +31,7 @@ const DashboardPage = () => {
         };
 
         fetchJobs();
-    }, [jobs]);
+    }, []);
 
     const get_type = (type) => {
         const types = {
@@ -122,7 +122,11 @@ const DashboardPage = () => {
                                                             </div>
                                                         </div>
                                                         <div className="col-lg-3 col-md-2 col-xs-12">
-                                                            <p>{job.total_candidates} candidates</p>
+                                                            <p>
+                                                                <Link to={`/employer/applicants/${job.id}`}>
+                                                                    {job.total_candidates} candidates
+                                                                </Link>
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -132,15 +136,15 @@ const DashboardPage = () => {
                                 }
                                 <br/>
 
-                                <ul className="pagination">
-                                    <li className="active"><a href="#" className="btn-prev"><i className="lni-angle-left"/> prev</a></li>
-                                    <li><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">4</a></li>
-                                    <li><a href="#">5</a></li>
-                                    <li className="active"><a href="#" className="btn-next">Next <i className="lni-angle-right"/></a></li>
-                                </ul>
+                                {/*<ul className="pagination">*/}
+                                {/*    <li className="active"><a href="#" className="btn-prev"><i className="lni-angle-left"/> prev</a></li>*/}
+                                {/*    <li><a href="#">1</a></li>*/}
+                                {/*    <li><a href="#">2</a></li>*/}
+                                {/*    <li><a href="#">3</a></li>*/}
+                                {/*    <li><a href="#">4</a></li>*/}
+                                {/*    <li><a href="#">5</a></li>*/}
+                                {/*    <li className="active"><a href="#" className="btn-next">Next <i className="lni-angle-right"/></a></li>*/}
+                                {/*</ul>*/}
 
                             </div>
                         </div>
