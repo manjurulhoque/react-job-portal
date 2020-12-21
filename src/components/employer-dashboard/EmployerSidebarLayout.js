@@ -56,7 +56,7 @@ const EmployerSidebarLayout = ({children, title = 'Dashboard'}) => {
                                     <li>
                                         <NavLink exact className={getActiveClass('/employer/applicants/')} to='/employer/applicants/'>Applicants</NavLink>
                                     </li>
-                                    <li><a href="javascript:void(0)">Change Password</a></li>
+                                    <li><a href="#!">Change Password</a></li>
                                     <li onClick={handleLogout} style={{cursor: 'pointer'}}>
                                         <a>Sing Out</a>
                                     </li>

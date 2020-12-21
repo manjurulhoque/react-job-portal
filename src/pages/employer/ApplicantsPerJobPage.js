@@ -14,14 +14,14 @@ const ApplicantsPerJobPage = ({ match }) => {
     const [loading, setLoading] = useState(true);
     const authContext = useContext(AuthContext);
     const {token, isAuthenticated} = authContext.state;
-    const params = useParams();
+    // const params = useParams();
 
     useEffect(() => {
         const config = {
             headers: {Authorization: `Bearer ${token}`}
         };
 
-        let job_id = params.job_id;
+        let job_id = match.params.job_id;
 
         const fetchApplicants = async () => {
             try {
