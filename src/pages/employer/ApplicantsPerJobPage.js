@@ -8,12 +8,16 @@ import Loader from "react-loader-spinner";
 import {Link} from "react-router-dom";
 import * as moment from "moment";
 import {useParams} from "react-router";
+import AcceptRejectModal from "../../components/modals/AcceptRejectModal";
 
-const ApplicantsPerJobPage = ({ match }) => {
+const ApplicantsPerJobPage = ({match}) => {
     const [applicants, setApplicants] = useState([]);
     const [loading, setLoading] = useState(true);
     const authContext = useContext(AuthContext);
     const {token, isAuthenticated} = authContext.state;
+    const [acceptModalShow, setAcceptModalShow] = useState(false);
+    const [type, setType] = useState('');
+    const [applicant, setApplicant] = useState({});
     // const params = useParams();
 
     useEffect(() => {
@@ -39,8 +43,10 @@ const ApplicantsPerJobPage = ({ match }) => {
 
     const getFullname = user => `${user.first_name} ${user.last_name}`
 
-    const onUpdateApplicant = (applicant) => {
-
+    const onUpdateApplicant = (applicant, type) => {
+        setAcceptModalShow(true);
+        setType(type);
+        setApplicant(applicant);
     }
 
     return (
@@ -115,10 +121,10 @@ const ApplicantsPerJobPage = ({ match }) => {
                                                             {
                                                                 applicant.status === 'Pending' && (
                                                                     <>
-                                                                        <button onClick={onUpdateApplicant(applicant, "accept")} className="btn btn-primary btn-xs mr-2">
+                                                                        <button onClick={() => onUpdateApplicant(applicant, "accept")} className="btn btn-primary btn-xs mr-2">
                                                                             <i className="fa fa-check" aria-hidden="true"/>
                                                                         </button>
-                                                                        <button onClick={onUpdateApplicant(applicant, "reject")} className="btn btn-danger btn-xs">
+                                                                        <button onClick={() => onUpdateApplicant(applicant, "reject")} className="btn btn-danger btn-xs">
                                                                             <i className="fa fa-window-close" aria-hidden="true"/>
                                                                         </button>
                                                                     </>
@@ -135,6 +141,12 @@ const ApplicantsPerJobPage = ({ match }) => {
                         </div>
                     )
                 }
+                <AcceptRejectModal
+                    show={acceptModalShow}
+                    type={type}
+                    applicant={applicant}
+                    onHide={() => setAcceptModalShow(false)}
+                />
             </EmployerSidebarLayout>
         </BaseLayout>
     )
