@@ -1,4 +1,12 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Job Portal using Reactjs
+
+#### An open source online job portal.
+
+### Screenshots
+
+## Home page
+<img src="screenshots/one.png" height="800">
+
 
 ## Available Scripts
 

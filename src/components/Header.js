@@ -43,7 +43,7 @@ const Header = () => {
                                 <span className="lni-menu"/>
                                 <span className="lni-menu"/>
                             </button>
-                            <a href="" className="navbar-brand" style={{fontWeight: 'bold'}}>Job portal</a>
+                            <NavLink exact className='navbar-brand' style={{fontWeight: 'bold'}} to='/'>Job portal</NavLink>
                         </div>
                         <div className="collapse navbar-collapse" id="main-navbar">
                             <ul className="navbar-nav mr-auto w-100 justify-content-end">
