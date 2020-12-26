@@ -1,8 +1,12 @@
 /* eslint-disable */
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Modal, Button} from "react-bootstrap";
+import {AuthContext} from "../../contexts/AuthContext";
+import AxiosConfig from "../../AxiosConfig";
 
 const AcceptRejectModal = ({show, onHide, type, applicant}) => {
+    const authContext = useContext(AuthContext);
+    const {token, isAuthenticated} = authContext.state;
     const [comment, setComment] = useState('');
     let title = '';
     let variant = '';
@@ -14,10 +18,32 @@ const AcceptRejectModal = ({show, onHide, type, applicant}) => {
         variant = 'danger';
     }
 
+    useEffect(() => {
+        setComment(applicant.comment);
+    }, []);
+
     const onSubmit = e => {
         e.preventDefault();
+        const config = {
+            headers: {Authorization: `Bearer ${token}`}
+        };
 
         console.log(applicant);
+        let status_id = type === 'accept' ? 2 : 3;
+
+        const updateApplicantStatus = async () => {
+            try {
+                const res = await AxiosConfig.post(`/employer/applicants/${applicant.id}/${status_id}/update/`, {comment}, config);
+                if (res.status === 200) {
+                    applicant.status = type === 'accept' ? 'Accepted' : 'Rejected';
+                }
+                show = false;
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
+        updateApplicantStatus();
     }
 
     return (
@@ -39,7 +65,12 @@ const AcceptRejectModal = ({show, onHide, type, applicant}) => {
 
                     <div className="form-group">
                         <label htmlFor="comment">Comment(Optional)</label>
-                        <textarea id="comment" name="comment" rows="5" className="form-control" onChange={(event) => setComment(event.target.value)}/>
+                        <textarea
+                            id="comment"
+                            name="comment"
+                            rows="5"
+                            className="form-control"
+                            onChange={(event) => setComment(event.target.value)}/>
                     </div>
 
                 </Modal.Body>
