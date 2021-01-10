@@ -7,6 +7,8 @@ import {AuthContext} from "contexts/AuthContext";
 import {Redirect, NavLink} from "react-router-dom";
 import jwtDecode from 'jwt-decode';
 import {useToasts} from 'react-toast-notifications';
+import GoogleSocialAuth from "../components/social/GoogleSocialAuth";
+import FacebookSocialAuth from "../components/social/FacebookSocialAuth";
 
 const LoginPage = ({history, location}) => {
 
@@ -55,8 +57,7 @@ const LoginPage = ({history, location}) => {
                 setSubmitted(false);
                 if (_isMounted.current) {
                     history.push('/');
-                }
-                else {
+                } else {
                     _isMounted.current = false
                 }
             } catch (err) {
@@ -162,6 +163,14 @@ const LoginPage = ({history, location}) => {
                                     <li className="text-center"><NavLink to='/register'>Don't have an account?</NavLink></li>
                                 </ul>
                             </div>
+                        </div>
+                    </div>
+                    <div className="row justify-content-center my-2">
+                        <div className="col-md-4">
+                            <FacebookSocialAuth/>
+                        </div>
+                        <div className="col-md-4">
+                            <GoogleSocialAuth/>
                         </div>
                     </div>
                 </div>
