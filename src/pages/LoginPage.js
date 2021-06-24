@@ -53,7 +53,7 @@ const LoginPage = ({history, location}) => {
                         refreshToken: res.data.refresh,
                     },
                 });
-                addToast('Logged in successfully', {appearance: 'success'});
+                addToast('Logged in successfully', {appearance: 'success', autoDismiss: true,});
                 setSubmitted(false);
                 if (_isMounted.current) {
                     history.push('/');
@@ -63,13 +63,13 @@ const LoginPage = ({history, location}) => {
             } catch (err) {
                 if (err.response && err.response.status === 401) {
                     console.log(err.response);
-                    addToast('Login failed', {appearance: 'error'});
+                    addToast('Login failed', {appearance: 'error', autoDismiss: true,});
                 }
                 setSubmitted(false);
             }
         }
 
-        loginUser();
+        loginUser().then();
 
         // AxiosConfig.post('login/', postData)
         //     .then(res => {

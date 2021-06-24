@@ -6,40 +6,64 @@ import Header from 'components/Header';
 import {Helmet} from 'react-helmet';
 import {Link} from 'react-router-dom';
 import {useTranslation} from "react-i18next";
+import {ClapSpinner} from "react-spinners-kit";
+import styled from "styled-components";
 
+const LoadingStyle = styled.div`
+      h2 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        vertical-align: center;
+        margin-top: 25%;
+      }
+`;
 
 const AppliedJobsPage = () => {
 
+    const [loading, setLoading] = useState(false);
     const [jobs, setJobs] = useState([]);
     const [filtered_jobs, setFilteredJobs] = useState([]);
     const authContext = useContext(AuthContext);
     const {token, isAuthenticated} = authContext.state;
-    const [status, setStatus] = useState(0);
+    const [status, setStatus] = useState("");
     const {t} = useTranslation();
 
     useEffect(() => {
-        const config = {
-            headers: {Authorization: `Bearer ${token}`}
-        };
+        (async () => {
+            const config = {
+                headers: {Authorization: `Bearer ${token}`}
+            };
 
-        AxiosConfig.get(`applied-jobs/`, config)
-            .then(res => {
+            setLoading(true);
+            try {
+                const res = await AxiosConfig.get(`applied-jobs/`, config);
                 setJobs(res.data);
                 setFilteredJobs(res.data);
-            })
+
+            } catch (e) {
+                console.log(e);
+            }
+
+            setLoading(false);
+        })();
     }, []);
 
     const onFilter = (e) => {
+        setLoading(true);
         if (["1", "2", "3"].includes(status.toString())) {
-            let filtered_jobs2 = filtered_jobs.filter(job => job.applicant.status == status);
+            let filtered_jobs2 = filtered_jobs.filter(job => job.applicant.status === status);
             setFilteredJobs(filtered_jobs2);
         } else {
             setFilteredJobs(jobs);
         }
+        setTimeout(() => setLoading(false), 1000);
     }
 
     const onClearFilter = (e) => {
         console.log(status);
+        setStatus("");
+        setFilteredJobs(jobs);
     }
 
     return (
@@ -85,69 +109,93 @@ const AppliedJobsPage = () => {
                             </div>
 
                             {
-                                filtered_jobs.map(job => {
-                                    return (
-                                        <Link className="job-listings" to={`/jobs/${job.id}`} key={job.id}>
-                                            <div className="row">
-                                                <div className="col-lg-4 col-md-4 col-xs-12">
-                                                    <div className="job-company-logo">
-                                                        <img src="assets/img/features/img1.png" alt=""/>
-                                                    </div>
-                                                    <div className="job-details">
-                                                        <h3>{job.title}</h3>
-                                                        <span className="company-neme">
+                                loading && (
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <LoadingStyle>
+                                                <h2>
+                                                    <ClapSpinner
+                                                        size={160}
+                                                        color="#686769"
+                                                        loading={loading}
+                                                    />
+                                                </h2>
+                                            </LoadingStyle>
+                                        </div>
+                                    </div>
+                                )
+                            }
+                            {
+                                !loading && filtered_jobs.length === 0 && (
+                                    <h2>No jobs found</h2>
+                                )
+                            }
+                            {
+                                !loading && filtered_jobs.length > 0 && (
+                                    filtered_jobs.map(job => {
+                                        return (
+                                            <Link className="job-listings" to={`/jobs/${job.id}`} key={job.id}>
+                                                <div className="row">
+                                                    <div className="col-lg-4 col-md-4 col-xs-12">
+                                                        <div className="job-company-logo">
+                                                            <img src="assets/img/features/img1.png" alt=""/>
+                                                        </div>
+                                                        <div className="job-details">
+                                                            <h3>{job.title}</h3>
+                                                            <span className="company-neme">
                                                             {job.company_name}
                                                         </span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="col-lg-2 col-md-2 col-xs-12 text-center">
-                                                    {
-                                                        job.filled && (
-                                                            <span className="btn-open">
+                                                    <div className="col-lg-2 col-md-2 col-xs-12 text-center">
+                                                        {
+                                                            job.filled && (
+                                                                <span className="btn-open">
                                                                 Position filled
                                                             </span>
-                                                        )
-                                                    }
-                                                    {
-                                                        !job.filled && (
-                                                            <span className="btn-open">
+                                                            )
+                                                        }
+                                                        {
+                                                            !job.filled && (
+                                                                <span className="btn-open">
                                                                 Position open
                                                             </span>
-                                                        )
-                                                    }
-                                                </div>
-                                                <div className="col-lg-2 col-md-2 col-xs-12 text-right">
-                                                    <div className="location">
-                                                        <i className="lni-map-marker"></i> {job.location}
+                                                            )
+                                                        }
                                                     </div>
-                                                </div>
-                                                <div className="col-lg-2 col-md-2 col-xs-12 text-right">
-                                                    {
-                                                        job.type == "1" && (
-                                                            <span className="btn-full-time">
+                                                    <div className="col-lg-2 col-md-2 col-xs-12 text-right">
+                                                        <div className="location">
+                                                            <i className="lni-map-marker"/> {job.location}
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-lg-2 col-md-2 col-xs-12 text-right">
+                                                        {
+                                                            job.type === "1" && (
+                                                                <span className="btn-full-time">
                                                                 Full Time
                                                             </span>
-                                                        )
-                                                    }
-                                                    {
-                                                        job.type == "2" && (
-                                                            <span className="btn-full-time">
+                                                            )
+                                                        }
+                                                        {
+                                                            job.type === "2" && (
+                                                                <span className="btn-full-time">
                                                                 Part Time
                                                             </span>
-                                                        )
-                                                    }
-                                                    {
-                                                        job.type == "3" && (
-                                                            <span className="btn-full-time">
+                                                            )
+                                                        }
+                                                        {
+                                                            job.type === "3" && (
+                                                                <span className="btn-full-time">
                                                                 Internship
                                                             </span>
-                                                        )
-                                                    }
+                                                            )
+                                                        }
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </Link>
-                                    )
-                                })
+                                            </Link>
+                                        )
+                                    })
+                                )
                             }
                         </div>
                     </div>
