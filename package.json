@@ -55,5 +55,6 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://django-job.herokuapp.com"
+  "proxy2": "https://django-job.herokuapp.com",
+  "proxy": "http://127.0.0.1:8000"
 }

@@ -18,21 +18,24 @@ const JobDetailsPage = (props) => {
     let history = useHistory();
 
     useEffect(() => {
+        getJobDetails().then();
+    }, []);
+
+    const getJobDetails = async () => {
         const config = {
             headers: {Authorization: `Bearer ${token}`}
         };
-        AxiosConfig.get(`jobs/${id}`)
-            .then(res => {
-                setJob(res.data);
-                if (isAuthenticated) {
-                    AxiosConfig.get(`applied-for-job/${id}`, config)
-                        .then(res => {
-                            setIsApplied(res.data.is_applied);
-                        })
-                }
-            })
-            .catch(err => console.log(err));
-    }, []);
+
+        const { data } = await AxiosConfig.get(`jobs/${id}/`).then(res => res);
+
+        setJob(data);
+
+        if (isAuthenticated) {
+            const { data } = await AxiosConfig.get(`applied-for-job/${id}/`, config).then(res => res);
+
+            setIsApplied(data.is_applied);
+        }
+    }
 
     const applyJobHandle = (e) => {
         e.preventDefault();
@@ -50,7 +53,7 @@ const JobDetailsPage = (props) => {
                 .then((apply) => {
                     if (apply) {
 
-                        AxiosConfig.post(`apply-job/${id}`, {'job': id}, config)
+                        AxiosConfig.post(`apply-job/${id}/`, {'job': id}, config)
                             .then(res => {
                                 setIsApplied(true);
                                 swal("Successfully applied for this position", {
@@ -88,8 +91,8 @@ const JobDetailsPage = (props) => {
                                     <h3 className="product-title">{job.title}</h3>
                                     <p className="brand">{job.company}</p>
                                     <div className="tags">
-                                        <span><i className="lni-map-marker"></i> {job.location}</span>
-                                        <span><i className="lni-calendar"></i> Posted {moment(job.created_at).format('MM-DD-YY')}</span>
+                                        <span><i className="lni-map-marker"/> {job.location}</span>
+                                        <span><i className="lni-calendar"/> Posted {moment(job.created_at).format('MM-DD-YY')}</span>
                                     </div>
                                 </div>
                             </div>
