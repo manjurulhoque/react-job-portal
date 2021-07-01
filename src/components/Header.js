@@ -2,7 +2,7 @@
 import React, {useContext, useState} from "react";
 import {NavLink, Redirect} from 'react-router-dom';
 import Jumbotron from "./Jumbotron";
-import {AuthContext} from "contexts/AuthContext";
+import {AuthContext} from "../contexts/AuthContext";
 import {useTranslation} from "react-i18next";
 
 const Header = () => {

@@ -1,13 +1,15 @@
 /* eslint-disable */
-import React, {useState, useEffect, useContext} from 'react';
-import {AuthContext} from 'contexts/AuthContext';
-import AxiosConfig from 'AxiosConfig';
-import Header from 'components/Header';
-import {Helmet} from 'react-helmet';
-import {Link} from 'react-router-dom';
-import {useTranslation} from "react-i18next";
-import {ClapSpinner} from "react-spinners-kit";
+import React, { useState, useEffect, useContext, FC } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
+import AxiosConfig from '../../AxiosConfig';
+import Header from '../../components/Header';
+import { Helmet } from 'react-helmet';
+import { Link } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
+
+const {ClapSpinner} = require("react-spinners-kit");
 import styled from "styled-components";
+import { IJob } from "../../interfaces";
 
 const LoadingStyle = styled.div`
       h2 {
@@ -19,7 +21,7 @@ const LoadingStyle = styled.div`
       }
 `;
 
-const AppliedJobsPage = () => {
+const AppliedJobsPage: FC = () => {
 
     const [loading, setLoading] = useState(false);
     const [jobs, setJobs] = useState([]);
@@ -49,10 +51,10 @@ const AppliedJobsPage = () => {
         })();
     }, []);
 
-    const onFilter = (e) => {
+    const onFilter = (e: React.ChangeEvent<HTMLSelectElement | any>) => {
         setLoading(true);
         if (["1", "2", "3"].includes(status.toString())) {
-            let filtered_jobs2 = filtered_jobs.filter(job => job.applicant.status === status);
+            let filtered_jobs2 = filtered_jobs.filter((job: any) => job.applicant.status === status);
             setFilteredJobs(filtered_jobs2);
         } else {
             setFilteredJobs(jobs);
@@ -60,7 +62,7 @@ const AppliedJobsPage = () => {
         setTimeout(() => setLoading(false), 1000);
     }
 
-    const onClearFilter = (e) => {
+    const onClearFilter: React.MouseEventHandler<HTMLButtonElement | HTMLAnchorElement> = () => {
         console.log(status);
         setStatus("");
         setFilteredJobs(jobs);
@@ -93,7 +95,7 @@ const AppliedJobsPage = () => {
                                 <div className="col-md-3">
                                     <div className="form-group">
                                         <select className="form-control" onChange={event => setStatus(event.target.value)}>
-                                            <option defaultValue>Select status</option>
+                                            <option defaultValue="">Select status</option>
                                             <option value="1">Pending</option>
                                             <option value="2">Accepted</option>
                                             <option value="3">Rejected</option>
@@ -132,7 +134,7 @@ const AppliedJobsPage = () => {
                             }
                             {
                                 !loading && filtered_jobs.length > 0 && (
-                                    filtered_jobs.map(job => {
+                                    filtered_jobs.map((job: IJob) => {
                                         return (
                                             <Link className="job-listings" to={`/jobs/${job.id}`} key={job.id}>
                                                 <div className="row">

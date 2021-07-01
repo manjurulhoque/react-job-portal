@@ -1,13 +1,12 @@
 /* eslint-disable */
-import React, {useContext, useEffect, useState} from "react";
-import {BrowserRouter as Router, useLocation} from "react-router-dom";
-import jwtDecode from 'jwt-decode';
+import React, { useContext, useEffect, useState, FC } from "react";
+import { BrowserRouter as Router, useLocation } from "react-router-dom";
 import moment from "moment";
 import BaseRouter from "./routes";
-import {AuthContext} from "contexts/AuthContext";
+import { AuthContext } from "./contexts/AuthContext";
 import history from "./history.js";
 
-const App = () => {
+const App: FC = () => {
     const authContext = useContext(AuthContext);
     const [token, setToken] = useState('');
 

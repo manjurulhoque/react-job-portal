@@ -1,16 +1,22 @@
 /* eslint-disable */
-import React, {useState, useContext, useRef, useEffect} from "react";
-import Header from "components/Header";
-import {Helmet} from "react-helmet";
+import React, { useState, useContext, useRef, useEffect, FC } from "react";
+import Header from "../components/Header";
+import { Helmet } from "react-helmet";
 import AxiosConfig from "../AxiosConfig";
-import {AuthContext} from "contexts/AuthContext";
-import {Redirect, NavLink} from "react-router-dom";
-import jwtDecode from 'jwt-decode';
-import {useToasts} from 'react-toast-notifications';
+import { AuthContext } from "../contexts/AuthContext";
+import { Redirect, NavLink, RouteComponentProps } from "react-router-dom";
+import jwtDecode, { JwtPayload } from 'jwt-decode';
+
 import GoogleSocialAuth from "../components/social/GoogleSocialAuth";
 import FacebookSocialAuth from "../components/social/FacebookSocialAuth";
 
-const LoginPage = ({history, location}) => {
+const {useToasts} = require('react-toast-notifications');
+
+interface IJwtPayload extends JwtPayload {
+    user: any
+}
+
+const LoginPage: FC<RouteComponentProps> = ({history, location}) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -26,7 +32,7 @@ const LoginPage = ({history, location}) => {
         }
     }, []);
 
-    const handleSubmit = (evt) => {
+    const handleSubmit: React.FormEventHandler<HTMLFormElement> = (evt) => {
         evt.preventDefault();
         setSubmitted(true);
 
@@ -44,7 +50,7 @@ const LoginPage = ({history, location}) => {
         const loginUser = async () => {
             try {
                 const res = await AxiosConfig.post('login/', postData);
-                let decoded = jwtDecode(res.data.access);
+                let decoded = jwtDecode<IJwtPayload>(res.data.access);
                 authContext.authDispatch({
                     type: authContext.ActionTypes.LOGIN,
                     payload: {
@@ -70,29 +76,6 @@ const LoginPage = ({history, location}) => {
         }
 
         loginUser().then();
-
-        // AxiosConfig.post('login/', postData)
-        //     .then(res => {
-        //         let decoded = jwtDecode(res.data.access);
-        //         authContext.authDispatch({
-        //             type: authContext.ActionTypes.LOGIN,
-        //             payload: {
-        //                 user: decoded.user || {},
-        //                 token: res.data.access,
-        //                 refreshToken: res.data.refresh,
-        //             },
-        //         });
-        //         addToast('Logged in successfully', {appearance: 'success'});
-        //         setSubmitted(false);
-        //         //setRedirect(true);
-        //     })
-        //     .catch(err => {
-        //         if (err.response && err.response.status === 401) {
-        //             console.log(err.response);
-        //             addToast('Login failed', {appearance: 'error'});
-        //         }
-        //         setSubmitted(false);
-        //     });
     }
 
     if (redirect || authContext.state.isAuthenticated) {

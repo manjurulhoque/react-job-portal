@@ -1,12 +1,14 @@
-import React, {Suspense} from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
-import {ToastProvider} from 'react-toast-notifications';
+
 import App from "./App";
 import './App.css';
 import * as serviceWorker from "./serviceWorker";
-import {AuthContextProvider} from "contexts/AuthContext";
-import {JobContextProvider} from "contexts/JobContext";
+import { AuthContextProvider } from "./contexts/AuthContext";
+import { JobContextProvider } from "./contexts/JobContext";
 import "./i18next"
+
+const {ToastProvider} = require('react-toast-notifications');
 
 ReactDOM.render(
     <ToastProvider autoDismiss={true} autoDismissTimeout={2000}>

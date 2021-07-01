@@ -1,6 +1,6 @@
-import {ActionTypes} from "store/actions/types";
+import { ActionTypes } from "../actions/types";
 
-const authReducer = (state, action) => {
+const authReducer = (state: any, action: any) => {
     switch (action.type) {
         case ActionTypes.LOGIN:
             localStorage.removeItem('user');

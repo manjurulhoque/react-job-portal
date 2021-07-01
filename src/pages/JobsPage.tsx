@@ -1,16 +1,17 @@
 /* eslint-disable */
-import React, {useState, useEffect, useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AxiosConfig from "../AxiosConfig";
-import Header from "components/Header";
-import JobItem from "components/job/JobItem";
-import {Helmet} from "react-helmet";
-import {JobContext} from "contexts/JobContext";
-import Skeleton, {SkeletonTheme} from 'react-loading-skeleton';
+import Header from "../components/Header";
+import JobItem from "../components/job/JobItem";
+import { Helmet } from "react-helmet";
+import { JobContext } from "../contexts/JobContext";
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import JobItemSkeleton from "../components/skeletons/JobItemSkeleton";
 import BaseLayout from "../components/BaseLayout";
+import { IJob } from "../interfaces";
 
 const JobsPage = () => {
-    const [jobs, setJobs] = useState([]);
+    const [jobs, setJobs] = useState<IJob[]>([]);
     const jobContext = useContext(JobContext);
     const [position, setPosition] = useState("");
     const [location, setLocation] = useState("");
@@ -31,7 +32,7 @@ const JobsPage = () => {
             .catch(err => setError(err));
     }, []);
 
-    const onSearch = (e) => {
+    const onSearch: React.MouseEventHandler<HTMLButtonElement> = (e) => {
         e.preventDefault();
     }
 
@@ -78,7 +79,7 @@ const JobsPage = () => {
                             jobs.length === 0 &&
                             <>
                                 {Array(6)
-                                    .fill()
+                                    .fill(0)
                                     .map((_, index) => (
                                         <JobItemSkeleton key={index}/>
                                     ))}

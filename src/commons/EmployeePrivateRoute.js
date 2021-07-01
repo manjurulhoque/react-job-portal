@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useContext, useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { AuthContext } from 'contexts/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 
 
 const EmployeePrivateRoute = ({ component: Component, ...rest }) => {

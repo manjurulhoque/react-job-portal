@@ -1,18 +1,26 @@
 /* eslint-disable */
-import React, {useState, useEffect, useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AxiosConfig from "../AxiosConfig";
 import moment from "moment";
-import {Helmet} from "react-helmet";
-import {useParams, Redirect, useHistory} from 'react-router-dom';
-import Header from "components/Header";
-import {AuthContext} from "contexts/AuthContext";
-import swal from 'sweetalert';
+import { Helmet } from "react-helmet";
+import { useParams, Redirect, useHistory } from 'react-router-dom';
+import Header from "../components/Header";
+import { AuthContext } from "../contexts/AuthContext";
 
+import { IJob } from "../interfaces";
 
-const JobDetailsPage = (props) => {
-    const [job, setJob] = useState({});
+const swal = require('sweetalert');
+
+interface Props {
+
+}
+
+type Job = {}
+
+const JobDetailsPage = (props: Props) => {
+    const [job, setJob] = useState<IJob>(Object);
     const [isApplied, setIsApplied] = useState(false);
-    let {id} = useParams();
+    let {id} = useParams<{ id: string | undefined }>();
     const authContext = useContext(AuthContext);
     const {token, isAuthenticated} = authContext.state;
     let history = useHistory();
@@ -26,18 +34,18 @@ const JobDetailsPage = (props) => {
             headers: {Authorization: `Bearer ${token}`}
         };
 
-        const { data } = await AxiosConfig.get(`jobs/${id}/`).then(res => res);
+        const {data} = await AxiosConfig.get(`jobs/${id}/`).then(res => res);
 
         setJob(data);
 
         if (isAuthenticated) {
-            const { data } = await AxiosConfig.get(`applied-for-job/${id}/`, config).then(res => res);
+            const {data} = await AxiosConfig.get(`applied-for-job/${id}/`, config).then(res => res);
 
             setIsApplied(data.is_applied);
         }
     }
 
-    const applyJobHandle = (e) => {
+    const applyJobHandle: React.MouseEventHandler<HTMLButtonElement> = (e) => {
         e.preventDefault();
         const config = {
             headers: {Authorization: `Bearer ${token}`}
@@ -50,7 +58,7 @@ const JobDetailsPage = (props) => {
                 buttons: true,
                 dangerMode: true,
             })
-                .then((apply) => {
+                .then((apply: boolean) => {
                     if (apply) {
 
                         AxiosConfig.post(`apply-job/${id}/`, {'job': id}, config)
@@ -89,7 +97,7 @@ const JobDetailsPage = (props) => {
                                 </div>
                                 <div className="content">
                                     <h3 className="product-title">{job.title}</h3>
-                                    <p className="brand">{job.company}</p>
+                                    <p className="brand">{job.company_name}</p>
                                     <div className="tags">
                                         <span><i className="lni-map-marker"/> {job.location}</span>
                                         <span><i className="lni-calendar"/> Posted {moment(job.created_at).format('MM-DD-YY')}</span>
@@ -151,7 +159,7 @@ const JobDetailsPage = (props) => {
                                         <div id="map" className="map-full">
                                             <iframe
                                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d405691.57240383344!2d-122.3212843181106!3d37.40247298383319!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb68ad0cfc739%3A0x7eb356b66bd4b50e!2sSilicon+Valley%2C+CA%2C+USA!5e0!3m2!1sen!2sbd!4v1538319316724"
-                                                allowFullScreen=""></iframe>
+                                                allowFullScreen={true}/>
                                         </div>
                                     </div>
                                 </div>
@@ -161,23 +169,24 @@ const JobDetailsPage = (props) => {
                                         <form method="post" className="subscribe-form">
                                             <div className="form-group">
                                                 <input type="email" name="Email" className="form-control"
-                                                       placeholder={window.location} required=""/>
-                                                <button type="submit" name="subscribe" className="btn btn-common sub-btn"><i
-                                                    className="lni-files"></i></button>
-                                                <div className="clearfix"></div>
+                                                       placeholder={window.location.href} required={true}/>
+                                                <button type="submit" name="subscribe" className="btn btn-common sub-btn">
+                                                    <i className="lni-files"/>
+                                                </button>
+                                                <div className="clearfix"/>
                                             </div>
                                         </form>
                                         <ul className="mt-4 footer-social">
-                                            <li><a className="facebook" href="#"><i className="lni-facebook-filled"></i></a></li>
-                                            <li><a className="twitter" href="#"><i className="lni-twitter-filled"></i></a></li>
-                                            <li><a className="linkedin" href="#"><i className="lni-linkedin-fill"></i></a></li>
-                                            <li><a className="google-plus" href="#"><i className="lni-google-plus"></i></a></li>
+                                            <li><a className="facebook" href="#"><i className="lni-facebook-filled"/></a></li>
+                                            <li><a className="twitter" href="#"><i className="lni-twitter-filled"/></a></li>
+                                            <li><a className="linkedin" href="#"><i className="lni-linkedin-fill"/></a></li>
+                                            <li><a className="google-plus" href="#"><i className="lni-google-plus"/></a></li>
                                         </ul>
                                         <div className="meta-tag">
-                                            <span className="meta-part"><a href="#"><i className="lni-star"></i> Write a
+                                            <span className="meta-part"><a href="#"><i className="lni-star"/> Write a
                                             Review</a></span>
-                                            <span className="meta-part"><a href="#"><i className="lni-warning"></i> Reports</a></span>
-                                            <span className="meta-part"><a href="#"><i className="lni-share"></i> Share</a></span>
+                                            <span className="meta-part"><a href="#"><i className="lni-warning"/> Reports</a></span>
+                                            <span className="meta-part"><a href="#"><i className="lni-share"/> Share</a></span>
                                         </div>
                                     </div>
                                 </div>
@@ -201,8 +210,8 @@ const JobDetailsPage = (props) => {
                                     <h3><a href="job-page.html">Software Engineer</a></h3>
                                     <p className="brand">MizTech</p>
                                     <div className="tags">
-                                        <span><i className="lni-map-marker"></i> New York</span>
-                                        <span><i className="lni-user"></i>John Smith</span>
+                                        <span><i className="lni-map-marker"/> New York</span>
+                                        <span><i className="lni-user"/>John Smith</span>
                                     </div>
                                     <span className="full-time">Full Time</span>
                                 </div>
@@ -217,8 +226,8 @@ const JobDetailsPage = (props) => {
                                     <h3><a href="job-page.html">Graphic Designer</a></h3>
                                     <p className="brand">Hunter Inc.</p>
                                     <div className="tags">
-                                        <span><i className="lni-map-marker"></i> New York</span>
-                                        <span><i className="lni-user"></i>John Smith</span>
+                                        <span><i className="lni-map-marker"/> New York</span>
+                                        <span><i className="lni-user"/>John Smith</span>
                                     </div>
                                     <span className="part-time">Part Time</span>
                                 </div>
@@ -233,8 +242,8 @@ const JobDetailsPage = (props) => {
                                     <h3><a href="job-page.html">Managing Director</a></h3>
                                     <p className="brand">MagNews</p>
                                     <div className="tags">
-                                        <span><i className="lni-map-marker"></i> New York</span>
-                                        <span><i className="lni-user"></i>John Smith</span>
+                                        <span><i className="lni-map-marker"/> New York</span>
+                                        <span><i className="lni-user"/>John Smith</span>
                                     </div>
                                     <span className="full-time">Full Time</span>
                                 </div>

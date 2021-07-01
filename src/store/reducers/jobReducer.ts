@@ -1,8 +1,8 @@
-import { ActionTypes } from "store/actions/types";
-import AxiosConfig from "AxiosConfig";
+import { ActionTypes } from "../actions/types";
+import AxiosConfig from "../../AxiosConfig";
 
 
-const jobReducer = (state, action) => {
+const jobReducer = (state: any, action: any) => {
     switch (action.type) {
         case ActionTypes.ALL_JOBS:
             AxiosConfig.get('jobs/')
