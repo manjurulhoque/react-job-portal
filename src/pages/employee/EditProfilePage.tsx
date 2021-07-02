@@ -1,13 +1,14 @@
 /* eslint-disable */
-import React, {useContext, useEffect, useState} from "react";
+import React, { FC, useContext, useEffect, useState } from "react";
 import Header from "../../components/Header";
-import {Helmet} from "react-helmet";
-import {useTranslation} from "react-i18next";
-import {AuthContext} from "../../contexts/AuthContext";
+import { Helmet } from "react-helmet";
+import { useTranslation } from "react-i18next";
+import { AuthContext } from "../../contexts/AuthContext";
 import AxiosConfig from "../../AxiosConfig";
-import {useToasts} from 'react-toast-notifications';
 
-const EditProfilePage = () => {
+const {useToasts} = require('react-toast-notifications');
+
+const EditProfilePage: FC = () => {
     const {t} = useTranslation();
     const [gender, setGender] = useState('');
     const [first_name, setFirstName] = useState('');
@@ -23,7 +24,7 @@ const EditProfilePage = () => {
         setGender(user.gender);
     }, [user.first_name, user.last_name, user.gender]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
         setSubmitted(true);
 
@@ -132,7 +133,7 @@ const EditProfilePage = () => {
                                     </button>
                                     <button type="submit" hidden={!submitted} className="btn btn-primary log-btn">
                                         <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"/>
-                                         Loading...
+                                        Loading...
                                     </button>
                                 </form>
                             </div>

@@ -1,35 +1,28 @@
 /* eslint-disable */
-import React, {useContext, useEffect, useState} from "react";
-import {AuthContext} from "../../contexts/AuthContext";
+import React, { FC, useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 import AxiosConfig from "../../AxiosConfig";
 import EmployerSidebarLayout from "../../components/employer-dashboard/EmployerSidebarLayout";
 import BaseLayout from "../../components/BaseLayout";
+import { Link } from "react-router-dom";
+import moment from 'moment';
+import { IApplicant, IUser } from "../../interfaces";
 import Loader from "react-loader-spinner";
-import {Link} from "react-router-dom";
-import * as moment from "moment";
-import {useParams} from "react-router";
-import AcceptRejectModal from "../../components/modals/AcceptRejectModal";
 
-const ApplicantsPerJobPage = ({match}) => {
-    const [applicants, setApplicants] = useState([]);
+const ApplicantsPage: FC = () => {
+    const [applicants, setApplicants] = useState<IApplicant[]>([]);
     const [loading, setLoading] = useState(true);
     const authContext = useContext(AuthContext);
     const {token, isAuthenticated} = authContext.state;
-    const [acceptModalShow, setAcceptModalShow] = useState(false);
-    const [type, setType] = useState('');
-    const [applicant, setApplicant] = useState({});
-    // const params = useParams();
 
     useEffect(() => {
         const config = {
             headers: {Authorization: `Bearer ${token}`}
         };
 
-        let job_id = match.params.job_id;
-
         const fetchApplicants = async () => {
             try {
-                const res = await AxiosConfig.get(`/employer/applicants/${job_id}/`, config);
+                const res = await AxiosConfig.get('/employer/applicants/', config);
                 setApplicants(res.data);
                 setLoading(false);
             } catch (e) {
@@ -38,20 +31,18 @@ const ApplicantsPerJobPage = ({match}) => {
             }
         };
 
-        fetchApplicants();
+        fetchApplicants().then();
     }, []);
 
-    const getFullname = user => `${user.first_name} ${user.last_name}`
+    const getFullname = (user: IUser) => `${user.first_name} ${user.last_name}`
 
-    const onUpdateApplicant = (applicant, type) => {
-        setAcceptModalShow(true);
-        setType(type);
-        setApplicant(applicant);
+    const onUpdateApplicant = (applicant: IApplicant, type: string) => (event: React.MouseEvent) => {
+
     }
 
     return (
-        <BaseLayout title={'Applicants Per Job'}>
-            <EmployerSidebarLayout title={'Applicants Per Job'}>
+        <BaseLayout title={'Applicants'}>
+            <EmployerSidebarLayout title={'Applicants'}>
                 {
                     loading && (
                         <div className="col-lg-9 col-md-9 col-xs-12">
@@ -60,7 +51,7 @@ const ApplicantsPerJobPage = ({match}) => {
                                     <Loader
                                         type="Grid"
                                         color="#00BFFF"
-                                        style={{textAlign: 'center'}}
+                                        // style={{textAlign: 'center'}}
                                         height={100}
                                         width={100}
                                     />
@@ -74,7 +65,7 @@ const ApplicantsPerJobPage = ({match}) => {
                     !loading && (
                         <div className="col-lg-9 col-md-9 col-xs-12">
                             <div className="job-alerts-item candidates">
-                                <h3 className="alerts-title">Manage Applicants for the job</h3>
+                                <h3 className="alerts-title">Manage Applicants</h3>
                                 <div className="alerts-list">
                                     <div className="row">
                                         <div className="col-lg-3 col-md-3 col-xs-12">
@@ -102,14 +93,16 @@ const ApplicantsPerJobPage = ({match}) => {
                                                     <div className="row">
                                                         <div className="col-lg-3 col-md-3 col-xs-12">
                                                             <h3>
-                                                                <Link to={`/jobs/${applicant.job.id}`}>{getFullname(applicant.applied_user)}</Link>
+                                                                <Link
+                                                                    to={`/jobs/${applicant.job.id}`}>{getFullname(applicant.applied_user)}</Link>
                                                             </h3>
                                                         </div>
                                                         <div className="col-lg-3 col-md-3 col-xs-12">
                                                             <h3>
                                                                 <Link to={`/jobs/${applicant.job.id}`}>{applicant.job.title}</Link>
                                                             </h3>
-                                                            <span className="location"><i className="lni-map-marker"/> {applicant.job.location}</span>
+                                                            <span className="location"><i
+                                                                className="lni-map-marker"/> {applicant.job.location}</span>
                                                         </div>
                                                         <div className="col-lg-2 col-md-2 col-xs-12">
                                                             <p>{applicant.status}</p>
@@ -121,10 +114,12 @@ const ApplicantsPerJobPage = ({match}) => {
                                                             {
                                                                 applicant.status === 'Pending' && (
                                                                     <>
-                                                                        <button onClick={() => onUpdateApplicant(applicant, "accept")} className="btn btn-primary btn-xs mr-2">
+                                                                        <button onClick={onUpdateApplicant(applicant, "accept")}
+                                                                                className="btn btn-primary btn-xs mr-2">
                                                                             <i className="fa fa-check" aria-hidden="true"/>
                                                                         </button>
-                                                                        <button onClick={() => onUpdateApplicant(applicant, "reject")} className="btn btn-danger btn-xs">
+                                                                        <button onClick={onUpdateApplicant(applicant, "reject")}
+                                                                                className="btn btn-danger btn-xs">
                                                                             <i className="fa fa-window-close" aria-hidden="true"/>
                                                                         </button>
                                                                     </>
@@ -141,17 +136,11 @@ const ApplicantsPerJobPage = ({match}) => {
                         </div>
                     )
                 }
-                <AcceptRejectModal
-                    show={acceptModalShow}
-                    type={type}
-                    applicant={applicant}
-                    onHide={() => setAcceptModalShow(false)}
-                />
             </EmployerSidebarLayout>
         </BaseLayout>
     )
 };
 
-export default ApplicantsPerJobPage;
+export default ApplicantsPage;
 
 

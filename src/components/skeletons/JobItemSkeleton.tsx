@@ -1,10 +1,8 @@
 /* eslint-disable */
-import React from "react";
-import moment from "moment";
-import {Link} from "react-router-dom";
+import React, { FC } from "react";
 import Skeleton from "react-loading-skeleton";
 
-const JobItemSkeleton = (props) => {
+const JobItemSkeleton: FC<any> = (props: any) => {
     return (
         <div className="col-lg-4 col-md-6 col-xs-12">
             <div className="job-featured">

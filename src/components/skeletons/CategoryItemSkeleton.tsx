@@ -1,8 +1,8 @@
 /* eslint-disable */
-import React from "react";
+import React, { FC } from "react";
 import Skeleton from "react-loading-skeleton";
 
-const CategoryItemSkeleton = (props) => {
+const CategoryItemSkeleton: FC<any> = (props: any) => {
     return (
         <div className="col-lg-4 col-md-6 col-xs-12 f-category">
             <a href="#">

@@ -8,8 +8,23 @@ export interface IUser {
     email: string
 }
 
-export interface IApplicant {
+export interface ITag {
+    id: number
+    name: string
+}
 
+export interface IApplicantJob extends IJob {
+    job_tags: ITag[]
+}
+
+export interface IApplicant {
+    id: number
+    job_id: number
+    applied_user: IUser
+    job: IApplicantJob
+    status: string
+    comment: string
+    created_at: Date
 }
 
 
@@ -29,5 +44,7 @@ export interface IJob {
     salary: number
     tags: Array<number> | undefined
     user: IUser
-    applicant: any
+    applicant: IApplicant | undefined
+    job_tags?: ITag[]
+    total_candidates?: number
 }

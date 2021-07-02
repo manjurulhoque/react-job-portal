@@ -1,14 +1,15 @@
 /* eslint-disable */
-import React, {useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import EmployerSidebarLayout from "../../components/employer-dashboard/EmployerSidebarLayout";
 import BaseLayout from "../../components/BaseLayout";
 import AxiosConfig from "../../AxiosConfig";
-import {AuthContext} from "../../contexts/AuthContext";
+import { AuthContext } from "../../contexts/AuthContext";
+import { Link } from "react-router-dom";
+import { IJob } from "../../interfaces";
 import Loader from "react-loader-spinner";
-import {Link, NavLink} from "react-router-dom";
 
 const DashboardPage = () => {
-    const [jobs, setJobs] = useState([]);
+    const [jobs, setJobs] = useState<IJob[]>([]);
     const authContext = useContext(AuthContext);
     const {token, isAuthenticated} = authContext.state;
     const [loading, setLoading] = useState(true);
@@ -30,11 +31,11 @@ const DashboardPage = () => {
             }
         };
 
-        fetchJobs();
+        fetchJobs().then();
     }, []);
 
-    const get_type = (type) => {
-        const types = {
+    const get_type = (type: string) => {
+        const types: any = {
             "1": "Full Time",
             "2": "Part Time",
             "3": "Internship",
@@ -42,8 +43,8 @@ const DashboardPage = () => {
         return types[type];
     }
 
-    const get_class = (type) => {
-        const class_name = {
+    const get_class = (type: string) => {
+        const class_name: any = {
             "1": "Full Time",
             "2": "Part Time",
             "3": "Internship",
@@ -65,7 +66,7 @@ const DashboardPage = () => {
                                     <Loader
                                         type="Grid"
                                         color="#00BFFF"
-                                        style={{textAlign: 'center'}}
+                                        // style={{textAlign: 'center'}}
                                         height={100}
                                         width={100}
                                     />
@@ -108,14 +109,18 @@ const DashboardPage = () => {
                                                             <span className="location"><i className="lni-map-marker"/> {job.location}</span>
                                                         </div>
                                                         <div className="col-lg-3 col-md-3 col-xs-12">
-                                                            <p><span className={get_class(job.type)}>{get_type(job.type)}</span></p>
+                                                            <p><span
+                                                                className={get_class(String(job.type))}>{get_type(String(job.type))}</span>
+                                                            </p>
                                                         </div>
                                                         <div className="col-lg-3 col-md-2 col-xs-12">
                                                             <div className="can-img">
                                                                 {
-                                                                    job.job_tags.map(tag => {
+                                                                    job.job_tags?.map(tag => {
                                                                         return (
-                                                                            <span key={tag.id} style={{color: '#fff', backgroundColor: '#000'}} className="full-time">{tag.name}</span>
+                                                                            <span key={tag.id}
+                                                                                  style={{color: '#fff', backgroundColor: '#000'}}
+                                                                                  className="full-time">{tag.name}</span>
                                                                         )
                                                                     })
                                                                 }

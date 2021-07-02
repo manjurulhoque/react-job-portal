@@ -1,12 +1,13 @@
 /* eslint-disable */
-import React, {useState, useContext} from "react";
+import React, { useState, useContext } from "react";
 import Header from "../components/Header";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 import AxiosConfig from "../AxiosConfig";
-import {AuthContext} from "../contexts/AuthContext";
-import {NavLink, Redirect} from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
+import { NavLink, Redirect } from "react-router-dom";
 import swal from 'sweetalert';
-import {useToasts} from "react-toast-notifications";
+
+const {useToasts} = require("react-toast-notifications");
 
 
 const RegisterPage = () => {
@@ -21,7 +22,7 @@ const RegisterPage = () => {
     const authContext = useContext(AuthContext);
     const {addToast} = useToasts();
 
-    const handleSubmit = (evt) => {
+    const handleSubmit: React.FormEventHandler<HTMLFormElement> = (evt) => {
         evt.preventDefault();
         setSubmitted(true);
 
@@ -83,7 +84,7 @@ const RegisterPage = () => {
                                 <form className="login-form" onSubmit={handleSubmit}>
                                     <div className="form-group">
                                         <div className="input-icon">
-                                            <i className="lni-user"></i>
+                                            <i className="lni-user"/>
                                             <input type="email"
                                                    id="sender-email"
                                                    className="form-control"
@@ -96,7 +97,7 @@ const RegisterPage = () => {
                                     </div>
                                     <div className="form-group">
                                         <div className="input-icon">
-                                            <i className="lni-lock"></i>
+                                            <i className="lni-lock"/>
                                             <input type="password"
                                                    className="form-control"
                                                    placeholder="Password"
@@ -107,7 +108,7 @@ const RegisterPage = () => {
                                     </div>
                                     <div className="form-group">
                                         <div className="input-icon">
-                                            <i className="lni-lock"></i>
+                                            <i className="lni-lock"/>
                                             <input type="password"
                                                    className="form-control"
                                                    placeholder="Confirm Password"
@@ -119,7 +120,7 @@ const RegisterPage = () => {
                                     <div className="form-group">
                                         <div className="input-icon">
                                             <select className="form-control" onChange={e => setGender(e.target.value)}>
-                                                <option value="" defaultValue>Select gender</option>
+                                                <option value="" defaultValue={""}>Select gender</option>
                                                 <option value="male">Male</option>
                                                 <option value="female">Female</option>
                                             </select>
@@ -128,9 +129,9 @@ const RegisterPage = () => {
                                     <div className="form-group">
                                         <div className="input-icon">
                                             <select className="form-control" onChange={e => setRole(e.target.value)}>
-                                                <option value="" defaultValue>Select role</option>
-                                                <option value="emplyoee">Emplyoee</option>
-                                                <option value="emplyoer">Emplyoer</option>
+                                                <option value="" defaultValue={""}>Select role</option>
+                                                <option value="employee">Employee</option>
+                                                <option value="employer">Employer</option>
                                             </select>
                                         </div>
                                     </div>

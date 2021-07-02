@@ -1,10 +1,18 @@
 /* eslint-disable */
-import React, {useContext, useEffect, useState} from "react";
-import {Modal, Button} from "react-bootstrap";
-import {AuthContext} from "../../contexts/AuthContext";
+import React, { FC, useContext, useEffect, useState } from "react";
+import { Modal, Button } from "react-bootstrap";
+import { AuthContext } from "../../contexts/AuthContext";
 import AxiosConfig from "../../AxiosConfig";
+import { IApplicant } from "../../interfaces";
 
-const AcceptRejectModal = ({show, onHide, type, applicant}) => {
+interface Props {
+    show: boolean
+    onHide: () => null
+    type: string
+    applicant: IApplicant
+}
+
+const AcceptRejectModal: FC<Props> = ({show, onHide, type, applicant}) => {
     const authContext = useContext(AuthContext);
     const {token, isAuthenticated} = authContext.state;
     const [comment, setComment] = useState('');
@@ -22,7 +30,7 @@ const AcceptRejectModal = ({show, onHide, type, applicant}) => {
         setComment(applicant.comment);
     }, []);
 
-    const onSubmit = e => {
+    const onSubmit: React.MouseEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
         const config = {
             headers: {Authorization: `Bearer ${token}`}
@@ -68,7 +76,7 @@ const AcceptRejectModal = ({show, onHide, type, applicant}) => {
                         <textarea
                             id="comment"
                             name="comment"
-                            rows="5"
+                            rows={5}
                             className="form-control"
                             onChange={(event) => setComment(event.target.value)}/>
                     </div>

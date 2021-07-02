@@ -51,10 +51,12 @@ const EmployerSidebarLayout = ({children, title = 'Dashboard'}) => {
                                 <h4>Manage Account</h4>
                                 <ul className="list-item">
                                     <li>
-                                        <NavLink exact className={getActiveClass('/employer/dashboard/')} activeClassName='active' to='/employer/dashboard/'>Dashboard</NavLink>
+                                        <NavLink exact className={getActiveClass('/employer/dashboard/')} activeClassName='active'
+                                                 to='/employer/dashboard/'>Dashboard</NavLink>
                                     </li>
                                     <li>
-                                        <NavLink exact className={getActiveClass('/employer/applicants/')} to='/employer/applicants/'>Applicants</NavLink>
+                                        <NavLink exact className={getActiveClass('/employer/applicants/')}
+                                                 to='/employer/applicants/'>Applicants</NavLink>
                                     </li>
                                     <li><a href="#!">Change Password</a></li>
                                     <li onClick={handleLogout} style={{cursor: 'pointer'}}>

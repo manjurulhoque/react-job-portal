@@ -1,18 +1,24 @@
 /* eslint-disable */
-import React, {useEffect, useState, Fragment, useContext} from "react";
+import React, { useEffect, useState, Fragment, useContext, FC } from "react";
 import BaseLayout from "../../components/BaseLayout";
 import AxiosConfig from "../../AxiosConfig";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/light.css";
-import Loader from 'react-loader-spinner';
-import {AuthContext} from "../../contexts/AuthContext";
-import {useToasts} from "react-toast-notifications";
-import {Redirect} from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthContext";
+import { Redirect } from "react-router-dom";
+import { ITag } from "../../interfaces";
+import Loader from "react-loader-spinner";
+import { useToasts } from "react-toast-notifications";
 
-const PostJobPage = () => {
-    const [tags, setTags] = useState([]);
+interface ICustomTag {
+    label: string
+    value: string | number
+}
+
+const PostJobPage: FC = () => {
+    const [tags, setTags] = useState<ICustomTag[]>([]);
     const [types, setTypes] = useState([
         {"value": 1, "label": "Full Time"},
         {"value": 2, "label": "Part Time"},
@@ -26,36 +32,36 @@ const PostJobPage = () => {
         {"value": "support", "label": "Support"},
         {"value": "android", "label": "Android Development"},
     ]);
-    const [submitted, setSubmitted] = useState(false);
-    const [title, setTitle] = useState();
-    const [description, setDescription] = useState();
-    const [salary, setSalary] = useState();
-    const [job_tags, setJobTags] = useState([]);
-    const [location, setLocation] = useState();
-    const [type, setType] = useState();
-    const [category, setCategory] = useState();
-    const [last_date, setLastDate] = useState();
-    const [company_name, setCompanyName] = useState();
-    const [company_description, setCompanyDescription] = useState();
-    const [website, setWebsite] = useState();
+    const [submitted, setSubmitted] = useState<boolean>(false);
+    const [title, setTitle] = useState<string>();
+    const [description, setDescription] = useState<string>();
+    const [salary, setSalary] = useState<number>();
+    const [job_tags, setJobTags] = useState<ICustomTag[]>([]);
+    const [location, setLocation] = useState<string>();
+    const [type, setType] = useState<string>();
+    const [category, setCategory] = useState<string>();
+    const [last_date, setLastDate] = useState<Date>();
+    const [company_name, setCompanyName] = useState<string>();
+    const [company_description, setCompanyDescription] = useState<string>();
+    const [website, setWebsite] = useState<string>();
     const authContext = useContext(AuthContext);
     const {token, isAuthenticated} = authContext.state;
     const {addToast} = useToasts();
-    const [redirect, setRedirect] = useState(false);
+    const [redirect, setRedirect] = useState<boolean>(false);
 
     useEffect(() => {
         AxiosConfig.get('tags/')
             .then(res => {
 
-                let my_tags = [];
-                res.data.forEach(tag => my_tags.push({"value": tag.id, "label": tag.name}));
+                let my_tags: ICustomTag[] = [];
+                res.data.forEach((tag: ITag) => my_tags.push({"value": tag.id, "label": tag.name}));
                 setTags(my_tags);
             }).catch(err => addToast(err, {appearance: 'error'}))
     }, []);
 
     const animatedComponents = makeAnimated();
 
-    const handleSubmit = (e) => {
+    const handleSubmit: React.MouseEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
 
         const new_job_data = {
@@ -83,8 +89,8 @@ const PostJobPage = () => {
             }).catch(err => addToast('Something went wrong!', {appearance: 'error'}));
     }
 
-    const handleSkillsChange = selectedOptions => {
-        let my_tags = selectedOptions.map(selected => selected.value);
+    const handleSkillsChange = (selectedOptions: any) => {
+        let my_tags: ICustomTag[] = selectedOptions.map((selected: any) => selected.value);
         setJobTags([...my_tags]);
     }
 
@@ -122,7 +128,7 @@ const PostJobPage = () => {
                                     />
                                 </div>
                                 {
-                                    tags.length > 0 && (
+                                    tags?.length > 0 && (
                                         <Fragment>
                                             <h3 className="job-title">Post a new Job</h3>
                                             <form className="form-ad" onSubmit={handleSubmit}>
@@ -149,9 +155,9 @@ const PostJobPage = () => {
                                                         <div className="form-group">
                                                             <label className="control-label">Salary</label>
                                                             <input
-                                                                type="text"
+                                                                type="number"
                                                                 className="form-control"
-                                                                onChange={event => setSalary(event.target.value)}
+                                                                onChange={event => setSalary(Number(event.target.value))}
                                                                 required
                                                                 placeholder="Salary(Optional for negotiable)"/>
                                                         </div>
@@ -202,7 +208,7 @@ const PostJobPage = () => {
                                                                     className="React"
                                                                     classNamePrefix="select"
                                                                     name="type"
-                                                                    onChange={type => setType(type.value)}
+                                                                    onChange={(type: any) => setType(type.value)}
                                                                     required
                                                                     options={types}
                                                                 />
@@ -217,7 +223,7 @@ const PostJobPage = () => {
                                                             className="React"
                                                             classNamePrefix="select"
                                                             name="category"
-                                                            onChange={category => setCategory(category.value)}
+                                                            onChange={(category: any) => setCategory(category.value)}
                                                             required
                                                             options={categories}
                                                         />
@@ -259,7 +265,9 @@ const PostJobPage = () => {
                                                 </div>
                                                 <div className="form-group">
                                                     <label className="control-label">Company description</label>
-                                                    <textarea className="form-control" required rows={6} onChange={event => setCompanyDescription(event.target.value)} placeholder="Company description"/>
+                                                    <textarea className="form-control" required rows={6}
+                                                              onChange={event => setCompanyDescription(event.target.value)}
+                                                              placeholder="Company description"/>
                                                 </div>
                                                 <button type="submit" hidden={submitted} className="btn btn-primary log-btn">
                                                     Submit your job

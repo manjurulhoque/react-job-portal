@@ -15,8 +15,6 @@ interface Props {
 
 }
 
-type Job = {}
-
 const JobDetailsPage = (props: Props) => {
     const [job, setJob] = useState<IJob>(Object);
     const [isApplied, setIsApplied] = useState(false);
