@@ -7,7 +7,7 @@ import { IApplicant } from "../../interfaces";
 
 interface Props {
     show: boolean
-    onHide: () => null
+    onHide: () => any
     type: string
     applicant: IApplicant
 }

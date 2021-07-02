@@ -1,11 +1,11 @@
 /* eslint-disable */
-import React, {useContext, useState} from "react";
-import {NavLink, Redirect} from 'react-router-dom';
+import React, { FC, useContext, useState } from "react";
+import { NavLink, Redirect } from 'react-router-dom';
 import Jumbotron from "./Jumbotron";
-import {AuthContext} from "../contexts/AuthContext";
-import {useTranslation} from "react-i18next";
+import { AuthContext } from "../contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 
-const Header = () => {
+const Header: FC = () => {
 
     const {t, i18n} = useTranslation();
 
@@ -37,7 +37,8 @@ const Header = () => {
                 <div className="container">
                     <div className="theme-header clearfix">
                         <div className="navbar-header">
-                            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-navbar"
+                                    aria-controls="main-navbar" aria-expanded="false" aria-label="Toggle navigation">
                                 <span className="navbar-toggler-icon"/>
                                 <span className="lni-menu"/>
                                 <span className="lni-menu"/>
@@ -75,7 +76,8 @@ const Header = () => {
                                                 </a>
                                                 <ul className="dropdown-menu">
                                                     <li>
-                                                        <NavLink exact className="dropdown-item" activeClassName='' to='/applied-jobs'>Applied jobs</NavLink>
+                                                        <NavLink exact className="dropdown-item" activeClassName='' to='/applied-jobs'>Applied
+                                                            jobs</NavLink>
                                                     </li>
                                                 </ul>
                                             </li>
@@ -86,7 +88,8 @@ const Header = () => {
                                                 </a>
                                                 <ul className="dropdown-menu">
                                                     <li>
-                                                        <NavLink exact className="dropdown-item" activeClassName='' to='/edit-profile'>Edit Profile</NavLink>
+                                                        <NavLink exact className="dropdown-item" activeClassName='' to='/edit-profile'>Edit
+                                                            Profile</NavLink>
                                                     </li>
                                                     <li onClick={handleLogout} style={{cursor: 'pointer'}}>
                                                         <a className='dropdown-item'>Logout</a>
@@ -105,20 +108,23 @@ const Header = () => {
                                             </a>
                                             <ul className="dropdown-menu">
                                                 <li>
-                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/employer/dashboard/'>Dashboard</NavLink>
+                                                    <NavLink exact className="dropdown-item" activeClassName=''
+                                                             to='/employer/dashboard/'>Dashboard</NavLink>
                                                 </li>
                                                 <li>
-                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/employer/applicants/'>Applicants</NavLink>
+                                                    <NavLink exact className="dropdown-item" activeClassName=''
+                                                             to='/employer/applicants/'>Applicants</NavLink>
                                                 </li>
                                                 <li>
-                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/post-job'>Post a Job</NavLink>
+                                                    <NavLink exact className="dropdown-item" activeClassName='' to='/post-job'>Post a
+                                                        Job</NavLink>
                                                 </li>
                                             </ul>
                                         </li>
                                     )
                                 }
                                 {
-                                    isAuthenticated && user.role ==="employer" && (
+                                    isAuthenticated && user.role === "employer" && (
                                         <li className="nav-item" onClick={handleLogout} style={{cursor: 'pointer'}}>
                                             <a className='nav-link'>Logout</a>
                                         </li>
@@ -146,7 +152,7 @@ const Header = () => {
                         </div>
                     </div>
                 </div>
-                <div className="mobile-menu" data-logo="assets/img/logo-mobile.png"></div>
+                <div className="mobile-menu" data-logo="assets/img/logo-mobile.png"/>
             </nav>
             {
                 ['/'].includes(window.location.pathname) ? (

@@ -1,7 +1,7 @@
-import React from 'react';
-import {useTranslation} from "react-i18next";
+import React, { FC } from 'react';
+import { useTranslation } from "react-i18next";
 
-function Jumbotron(props) {
+const Jumbotron: FC = () => {
     const {t} = useTranslation();
 
     return (
@@ -10,7 +10,8 @@ function Jumbotron(props) {
                 <div className="col-lg-7 col-md-12 col-xs-12">
                     <div className="contents">
                         <h2 className="head-title">{t('welcome.title1')} <br/> {t('welcome.title2')}</h2>
-                        <p>Aliquam vestibulum cursus felis. In iaculis iaculis sapien ac condimentum. Vestibulum congue posuere lacus, id tincidunt nisi porta sit amet. Suspendisse et sapien varius, pellentesque dui non.</p>
+                        <p>Aliquam vestibulum cursus felis. In iaculis iaculis sapien ac condimentum. Vestibulum congue posuere lacus, id
+                            tincidunt nisi porta sit amet. Suspendisse et sapien varius, pellentesque dui non.</p>
                         <div className="job-search-form">
                             <form>
                                 <div className="row">
@@ -34,11 +35,11 @@ function Jumbotron(props) {
                                                     </select>
                                                 </label>
                                             </div>
-                                            <i className="lni-map-marker"></i>
+                                            <i className="lni-map-marker"/>
                                         </div>
                                     </div>
                                     <div className="col-lg-2 col-md-2 col-xs-12">
-                                        <button type="submit" className="button"><i className="lni-search"></i></button>
+                                        <button type="submit" className="button"><i className="lni-search"/></button>
                                     </div>
                                 </div>
                             </form>

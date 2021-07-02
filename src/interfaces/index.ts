@@ -48,3 +48,11 @@ export interface IJob {
     job_tags?: ITag[]
     total_candidates?: number
 }
+
+export interface ICategory {
+    id: number | undefined
+    name: string
+    slug: string
+    icon: string
+    total_jobs: number
+}

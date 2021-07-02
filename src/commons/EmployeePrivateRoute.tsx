@@ -1,10 +1,10 @@
 /* eslint-disable */
-import React, { useContext, useEffect } from 'react';
+import React, { FC, useContext, useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 
 
-const EmployeePrivateRoute = ({ component: Component, ...rest }) => {
+const EmployeePrivateRoute: FC<any> = ({ component: Component, ...rest }) => {
     const authContext = useContext(AuthContext);
 
     // useEffect(() => {
@@ -26,7 +26,7 @@ const EmployeePrivateRoute = ({ component: Component, ...rest }) => {
                     } else if (!authContext.state.isAuthenticated) {
                         return <Redirect to="/login" />
                     }
-                    else if (!authContext.state.user || authContext.state.user.role != 'employee') {
+                    else if (!authContext.state.user || authContext.state.user.role !== 'employee') {
                         return <Redirect to="/" />
                     }
                     else {

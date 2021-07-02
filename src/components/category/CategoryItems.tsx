@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import CategoryItem from "./CategoryItem";
 import AxiosConfig from "../../AxiosConfig";
 import CategoryItemSkeleton from "../skeletons/CategoryItemSkeleton";
+import { ICategory } from "../../interfaces";
 
 const CategoryItems = () => {
     // const [categories, setCategories] = useState([
@@ -38,8 +39,8 @@ const CategoryItems = () => {
     //     }
     // ]);
 
-    const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [categories, setCategories] = useState<ICategory[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -53,7 +54,7 @@ const CategoryItems = () => {
             }
         };
 
-        fetchCategories();
+        fetchCategories().then();
     }, []);
 
     return (
@@ -67,7 +68,7 @@ const CategoryItems = () => {
                     {
                         loading && (
                             Array(6)
-                                .fill()
+                                .fill(0)
                                 .map((_, index) => (
                                     <CategoryItemSkeleton key={index}/>
                                 ))

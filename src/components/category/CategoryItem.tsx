@@ -1,7 +1,13 @@
 /* eslint-disable */
-import React from "react";
+import React, { FC } from "react";
+import { ICategory } from "../../interfaces";
 
-const CategoryItem = ({category, index}) => {
+interface Props {
+    category: ICategory
+    index: number
+}
+
+const CategoryItem: FC<Props> = ({category, index}) => {
     let classes = `icon bg-color-${index + 1}`
     return (
         <div className="col-lg-4 col-md-6 col-xs-12 f-category">

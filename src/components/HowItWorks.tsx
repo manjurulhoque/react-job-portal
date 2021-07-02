@@ -1,6 +1,6 @@
-import React from "react";
+import React, { FC } from "react";
 
-const HowItWorks = () => {
+const HowItWorks: FC = () => {
     return (
         <section className="how-it-works section">
             <div className="container">

@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-export const ExtractMessages = ({data, errors}) => {
+export const ExtractMessages = ({data, errors}: any) => {
     let messages = [];
 
     if (data) {

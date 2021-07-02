@@ -1,7 +1,7 @@
 /* eslint-disable */
-import React from 'react';
+import React, { FC } from 'react';
 
-const Footer = (props) => {
+const Footer: FC = () => {
     return (
         <footer>
             <section className="footer-Content">

@@ -1,9 +1,14 @@
 /* eslint-disable */
-import React, {useContext, useState} from "react";
+import React, { FC, useContext, useState } from "react";
 import {NavLink, Redirect, useHistory} from "react-router-dom";
 import {AuthContext} from "../../contexts/AuthContext";
 
-const EmployerSidebarLayout = ({children, title = 'Dashboard'}) => {
+interface Props {
+    children: React.ReactNode
+    title?: string
+}
+
+const EmployerSidebarLayout: FC<Props> = ({children, title = 'Dashboard'}) => {
 
     const history = useHistory();
 
@@ -20,7 +25,7 @@ const EmployerSidebarLayout = ({children, title = 'Dashboard'}) => {
         setRedirect(true);
     }
 
-    const getActiveClass = (url) => {
+    const getActiveClass = (url: string) => {
         return url === history.location.pathname ? 'active' : '';
     }
 

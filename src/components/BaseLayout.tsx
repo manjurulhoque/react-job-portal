@@ -1,10 +1,15 @@
 /* eslint-disable */
-import React from "react";
+import React, { FC } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 
-const BaseLayout = ({children, title}) => {
+interface Props {
+    children: React.ReactNode
+    title: string | undefined
+}
+
+const BaseLayout: FC<Props> = ({children, title}) => {
     return (
         <React.Fragment>
             <Header/>

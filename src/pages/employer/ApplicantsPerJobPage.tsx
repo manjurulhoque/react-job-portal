@@ -24,7 +24,7 @@ const ApplicantsPerJobPage: FC<MatchProps> = ({match}) => {
     const {token, isAuthenticated} = authContext.state;
     const [acceptModalShow, setAcceptModalShow] = useState(false);
     const [type, setType] = useState('');
-    const [applicant, setApplicant] = useState({});
+    const [applicant, setApplicant] = useState<IApplicant>(Object);
 
     useEffect(() => {
         const config = {
