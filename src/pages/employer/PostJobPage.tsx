@@ -33,6 +33,7 @@ const PostJobPage: FC = () => {
         {"value": "android", "label": "Android Development"},
     ]);
     const [submitted, setSubmitted] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const [title, setTitle] = useState<string>();
     const [description, setDescription] = useState<string>();
     const [salary, setSalary] = useState<number>();
@@ -50,12 +51,14 @@ const PostJobPage: FC = () => {
     const [redirect, setRedirect] = useState<boolean>(false);
 
     useEffect(() => {
+        setLoading(true);
         AxiosConfig.get('tags/')
             .then(res => {
 
                 let my_tags: ICustomTag[] = [];
                 res.data.forEach((tag: ITag) => my_tags.push({"value": tag.id, "label": tag.name}));
                 setTags(my_tags);
+                setLoading(false);
             }).catch(err => addToast(err, {appearance: 'error'}))
     }, []);
 
@@ -124,11 +127,11 @@ const PostJobPage: FC = () => {
                                         color="#00BFFF"
                                         height={100}
                                         width={100}
-                                        visible={tags.length === 0}
+                                        visible={loading}
                                     />
                                 </div>
                                 {
-                                    tags?.length > 0 && (
+                                    !loading && (
                                         <Fragment>
                                             <h3 className="job-title">Post a new Job</h3>
                                             <form className="form-ad" onSubmit={handleSubmit}>
