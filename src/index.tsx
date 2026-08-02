@@ -14,18 +14,18 @@ const container = document.getElementById("root");
 const root = createRoot(container!);
 
 root.render(
-  <React.StrictMode>
-    <HelmetProvider>
-      <AuthContextProvider>
-        <JobContextProvider>
-          <Suspense fallback={<div>Loading...</div>}>
-            <App />
-          </Suspense>
-        </JobContextProvider>
-      </AuthContextProvider>
-    </HelmetProvider>
-    <Toaster position="top-right" toastOptions={{ duration: 2000 }} />
-  </React.StrictMode>,
+	<React.StrictMode>
+		<HelmetProvider>
+			<AuthContextProvider>
+				<JobContextProvider>
+					<Suspense fallback={<div>Loading...</div>}>
+						<App />
+					</Suspense>
+				</JobContextProvider>
+			</AuthContextProvider>
+		</HelmetProvider>
+		<Toaster position="top-right" toastOptions={{ duration: 2000 }} />
+	</React.StrictMode>,
 );
 
 // If you want your app to work offline and load faster, you can change

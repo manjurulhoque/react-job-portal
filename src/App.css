@@ -1,26 +1,26 @@
 .internship {
-    font-size: 11px;
-    font-weight: 500;
-    display: inline-block;
-    padding: 5px 15px;
-    border-radius: 50px;
-    cursor: pointer;
-    text-transform: uppercase;
-    -webkit-transition: all .3s ease-in-out;
-    -moz-transition: all .3s ease-in-out;
-    -o-transition: all .3s ease-in-out;
-    transition: all .3s ease-in-out;
-    color: #c846ff;
-    background: #f2d2ff
+	font-size: 11px;
+	font-weight: 500;
+	display: inline-block;
+	padding: 5px 15px;
+	border-radius: 50px;
+	cursor: pointer;
+	text-transform: uppercase;
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+	color: #c846ff;
+	background: #f2d2ff;
 }
 
 .internship:hover {
-    box-shadow: 0 3px 9px rgba(96, 94, 94, .17)
+	box-shadow: 0 3px 9px rgba(96, 94, 94, 0.17);
 }
 
 .btn-xs {
-    padding: .25rem .4rem;
-    font-size: .875rem;
-    line-height: .5;
-    border-radius: .2rem;
+	padding: 0.25rem 0.4rem;
+	font-size: 0.875rem;
+	line-height: 0.5;
+	border-radius: 0.2rem;
 }

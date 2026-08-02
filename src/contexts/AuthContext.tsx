@@ -13,63 +13,64 @@ let user = JSON.parse(localStorage.getItem("user") || "{}");
 const excluded_routes = ["/login", "/register", "/jobs"];
 
 interface IJwtPayload extends JwtPayload {
-  user?: any;
+	user?: any;
 }
 
 let decoded: IJwtPayload = {};
 
 if (jwtToken) {
-  decoded = jwtDecode<IJwtPayload>(jwtToken);
-  if (dayjs.unix(decoded.exp!).isBefore(dayjs())) {
-    localStorage.clear();
-    if (!excluded_routes.includes(history.location.pathname)) history.push("/");
-  }
+	decoded = jwtDecode<IJwtPayload>(jwtToken);
+	if (dayjs.unix(decoded.exp!).isBefore(dayjs())) {
+		localStorage.clear();
+		if (!excluded_routes.includes(history.location.pathname))
+			history.push("/");
+	}
 } else {
-  if (!excluded_routes.includes(history.location.pathname)) history.push("/");
+	if (!excluded_routes.includes(history.location.pathname)) history.push("/");
 }
 
 interface initialState {
-  isAuthenticated: boolean;
-  user: any;
-  token: string | null;
-  refreshToken: string | null;
-  isLoading: false;
+	isAuthenticated: boolean;
+	user: any;
+	token: string | null;
+	refreshToken: string | null;
+	isLoading: false;
 }
 
 const initialInfo: initialState = {
-  isAuthenticated: !!decoded.user,
-  user: decoded.user,
-  token: jwtToken,
-  refreshToken: refreshToken,
-  isLoading: false,
+	isAuthenticated: !!decoded.user,
+	user: decoded.user,
+	token: jwtToken,
+	refreshToken: refreshToken,
+	isLoading: false,
 };
 
 export const AuthContext = createContext<{
-  state: initialState;
-  authDispatch: React.Dispatch<any>;
-  ActionTypes: IActionTypes;
+	state: initialState;
+	authDispatch: React.Dispatch<any>;
+	ActionTypes: IActionTypes;
 }>({
-  state: initialInfo,
-  authDispatch: () => null,
-  ActionTypes: ActionTypes,
+	state: initialInfo,
+	authDispatch: () => null,
+	ActionTypes: ActionTypes,
 });
 
 type contextProps = {
-  children: ReactNode;
+	children: ReactNode;
 };
 
 export const AuthContextProvider = (props: contextProps) => {
-  const [state, authDispatch] = useReducer(authReducer, initialInfo);
+	const [state, authDispatch] = useReducer(authReducer, initialInfo);
 
-  return (
-    <AuthContext.Provider
-      value={{
-        state,
-        authDispatch,
-        ActionTypes,
-      }}
-    >
-      {props.children}
-    </AuthContext.Provider>
-  );
+	return (
+		<AuthContext.Provider
+			value={{
+				state,
+				authDispatch,
+				ActionTypes,
+			}}
+		>
+			{props.children}
+		</AuthContext.Provider>
+	);
 };

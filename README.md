@@ -5,8 +5,8 @@
 ### Screenshots
 
 ## Home page
-<img src="screenshots/one.png" height="800">
 
+<img src="screenshots/one.png" height="800">
 
 ## Available Scripts
 

@@ -10,28 +10,28 @@ import employee_en from "./translations/en/employee.json";
 
 const Languages = ["en", "bn"];
 const resources = {
-  en: {
-    common: common_en,
-    employee: employee_en,
-  },
-  bn: {
-    common: common_bn,
-    employee: employee_bn,
-  },
+	en: {
+		common: common_en,
+		employee: employee_en,
+	},
+	bn: {
+		common: common_bn,
+		employee: employee_bn,
+	},
 };
 
 export default i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    fallbackLng: "en",
-    debug: true,
-    supportedLngs: Languages,
-    interpolation: {
-      escapeValue: false,
-    },
-    ns: ["common", "employee"],
-    // Set default namespace
-    defaultNS: "common",
-    resources,
-  });
+	.use(LanguageDetector)
+	.use(initReactI18next)
+	.init({
+		fallbackLng: "en",
+		debug: true,
+		supportedLngs: Languages,
+		interpolation: {
+			escapeValue: false,
+		},
+		ns: ["common", "employee"],
+		// Set default namespace
+		defaultNS: "common",
+		resources,
+	});

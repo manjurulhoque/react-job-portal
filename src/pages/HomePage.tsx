@@ -5,13 +5,13 @@ import HowItWorks from "../components/HowItWorks";
 import BaseLayout from "../components/BaseLayout";
 
 const HomePage: FC = () => {
-    return (
-        <BaseLayout title={'Home'}>
-            <CategoryItems/>
+	return (
+		<BaseLayout title={"Home"}>
+			<CategoryItems />
 
-            <HowItWorks/>
-        </BaseLayout>
-    );
+			<HowItWorks />
+		</BaseLayout>
+	);
 };
 
 export default HomePage;

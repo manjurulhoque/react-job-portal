@@ -4,24 +4,24 @@ import { Navigate } from "react-router";
 import { AuthContext } from "../contexts/AuthContext";
 
 interface Props {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }
 
 const EmployerPrivateRoute: FC<Props> = ({ children }) => {
-  const authContext = useContext(AuthContext);
+	const authContext = useContext(AuthContext);
 
-  if (authContext.state.isLoading) {
-    return <h2>Loading...</h2>;
-  } else if (!authContext.state.isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  } else if (
-    !authContext.state.user ||
-    authContext.state.user.role != "employer"
-  ) {
-    return <Navigate to="/" replace />;
-  }
+	if (authContext.state.isLoading) {
+		return <h2>Loading...</h2>;
+	} else if (!authContext.state.isAuthenticated) {
+		return <Navigate to="/login" replace />;
+	} else if (
+		!authContext.state.user ||
+		authContext.state.user.role != "employer"
+	) {
+		return <Navigate to="/" replace />;
+	}
 
-  return <>{children}</>;
+	return <>{children}</>;
 };
 
 export default EmployerPrivateRoute;
