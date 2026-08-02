@@ -1,62 +1,73 @@
 /* eslint-disable */
 import React, { FC, useContext, useEffect, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
+import toast from "react-hot-toast";
 import { AuthContext } from "../../contexts/AuthContext";
 import AxiosConfig from "../../AxiosConfig";
 import { IApplicant } from "../../interfaces";
 
 interface Props {
 	show: boolean;
-	onHide: () => any;
+	onHide: () => void;
 	type: string;
 	applicant: IApplicant;
+	onUpdated?: (id: number, status: string) => void;
 }
 
-const AcceptRejectModal: FC<Props> = ({ show, onHide, type, applicant }) => {
+const AcceptRejectModal: FC<Props> = ({
+	show,
+	onHide,
+	type,
+	applicant,
+	onUpdated,
+}) => {
 	const authContext = useContext(AuthContext);
-	const { token, isAuthenticated } = authContext.state;
+	const { token } = authContext.state;
 	const [comment, setComment] = useState("");
-	let title = "";
-	let variant = "";
-	if (type === "accept") {
-		title = "Accept the applicant";
-		variant = "success";
-	} else if (type === "reject") {
-		title = "Reject the applicant";
-		variant = "danger";
-	}
+	const [submitting, setSubmitting] = useState(false);
+
+	const isAccept = type === "accept";
+	const title = isAccept ? "Accept applicant" : "Reject applicant";
+	const variant = isAccept ? "success" : "danger";
 
 	useEffect(() => {
-		setComment(applicant.comment);
-	}, []);
+		if (show) {
+			setComment(applicant?.comment || "");
+			setSubmitting(false);
+		}
+	}, [show, applicant]);
 
-	const onSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+	const onSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
 		e.preventDefault();
+		if (submitting) return;
+
+		setSubmitting(true);
 		const config = {
 			headers: { Authorization: `Bearer ${token}` },
 		};
+		const status_id = isAccept ? 2 : 3;
+		const nextStatus = isAccept ? "Accepted" : "Rejected";
 
-		console.log(applicant);
-		let status_id = type === "accept" ? 2 : 3;
-
-		const updateApplicantStatus = async () => {
-			try {
-				const res = await AxiosConfig.post(
-					`/employer/applicants/${applicant.id}/${status_id}/update/`,
-					{ comment },
-					config,
+		try {
+			const res = await AxiosConfig.post(
+				`/employer/applicants/${applicant.id}/${status_id}/update/`,
+				{ comment },
+				config,
+			);
+			if (res.status === 200) {
+				onUpdated?.(applicant.id, nextStatus);
+				toast.success(
+					isAccept
+						? "Applicant accepted"
+						: "Applicant rejected",
 				);
-				if (res.status === 200) {
-					applicant.status =
-						type === "accept" ? "Accepted" : "Rejected";
-				}
-				show = false;
-			} catch (e) {
-				console.log(e);
+				onHide();
 			}
-		};
-
-		updateApplicantStatus();
+		} catch {
+			toast.error("Failed to update applicant");
+		} finally {
+			setSubmitting(false);
+		}
 	};
 
 	return (
@@ -64,32 +75,41 @@ const AcceptRejectModal: FC<Props> = ({ show, onHide, type, applicant }) => {
 			show={show}
 			onHide={onHide}
 			size="lg"
-			aria-labelledby="contained-modal-title-vcenter"
+			aria-labelledby="employer-modal-title"
 			centered
+			className="employer-modal"
 		>
 			<Modal.Header closeButton>
-				<Modal.Title id="contained-modal-title-vcenter">
-					{title}
-				</Modal.Title>
+				<Modal.Title id="employer-modal-title">{title}</Modal.Title>
 			</Modal.Header>
 
 			<form onSubmit={onSubmit}>
 				<Modal.Body>
-					<div className="form-group">
-						<label htmlFor="comment">Comment(Optional)</label>
+					<div className="form-group mb-0">
+						<label htmlFor="comment">
+							Comment{" "}
+							<span style={{ color: "#5a6b78", fontWeight: 500 }}>
+								(optional)
+							</span>
+						</label>
 						<textarea
 							id="comment"
 							name="comment"
 							rows={5}
 							className="form-control"
-							onChange={(event) => setComment(event.target.value)}
+							value={comment}
+							onChange={(event) =>
+								setComment(event.target.value)
+							}
 						/>
 					</div>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button onClick={onHide}>Close</Button>
-					<Button type={"submit"} variant={variant}>
-						Submit
+					<Button variant="secondary" onClick={onHide} disabled={submitting}>
+						Cancel
+					</Button>
+					<Button type="submit" variant={variant} disabled={submitting}>
+						{submitting ? "Saving..." : "Confirm"}
 					</Button>
 				</Modal.Footer>
 			</form>

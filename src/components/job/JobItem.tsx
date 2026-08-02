@@ -3,78 +3,71 @@ import React from "react";
 import { Link } from "react-router";
 import { IJob } from "../../interfaces";
 
+const TYPE_LABELS: Record<string, string> = {
+	"1": "Full time",
+	"2": "Part time",
+	"3": "Internship",
+};
+
+const TYPE_CLASS: Record<string, string> = {
+	"1": "",
+	"2": "is-part",
+	"3": "is-intern",
+};
+
 const JobItem = ({ job }: { job: IJob }) => {
-	const randomIntFromInterval = () => {
-		let n = Math.floor(Math.random() * 6 + 1);
-		return `assets/img/features/img${n}.png`;
-	};
-
-	const get_type = (type: string) => {
-		const types: any = {
-			"1": "Full Time",
-			"2": "Part Time",
-			"3": "Internship",
-		};
-		return types[type];
-	};
-
-	const get_class = (type: string) => {
-		const class_name: any = {
-			"1": "Full Time",
-			"2": "Part Time",
-			"3": "Internship",
-		}[type];
-
-		return class_name
-			.toLowerCase()
-			.replace(/ /g, "-")
-			.replace(/[^\w-]+/g, "");
-	};
+	const typeKey = String(job.type);
+	const typeLabel = TYPE_LABELS[typeKey] || "Job";
+	const typeClass = TYPE_CLASS[typeKey] || "";
+	const company = job.company_name || "Company";
+	const initials = company
+		.split(/\s+/)
+		.filter(Boolean)
+		.slice(0, 2)
+		.map((part) => part.charAt(0).toUpperCase())
+		.join("");
 
 	return (
-		<div className="col-lg-4 col-md-6 col-xs-12">
-			<div className="job-featured">
-				<div className="icon">
-					<img src={randomIntFromInterval()} alt="" />
-				</div>
-				<div className="content">
-					<h3>
-						<Link to={`/jobs/${job.id}`}>{job.title}</Link>
-					</h3>
-					<p className="brand">{job.company_name}</p>
-					<div className="tags">
-						<span>
-							<i className="lni-map-marker" /> {job.location}
-						</span>
-						<br />
-						<span>
-							<i className="lni-user" />
-							{job.company_name}
-						</span>
-					</div>
-					<span className={get_class(String(job.type))}>
-						{get_type(String(job.type))}
-					</span>
-					<br />
-					<br />
-					Tags:
-					{job.job_tags?.map((tag) => {
-						return (
-							<span
-								key={tag.id}
-								className="full-time"
-								style={{
-									color: "#fff",
-									backgroundColor: "#000",
-								}}
-							>
-								{tag.name}
-							</span>
-						);
-					})}
-				</div>
+		<Link className="job-card" to={`/jobs/${job.id}`}>
+			<div className="job-card__top">
+				<span className="job-card__mark" aria-hidden="true">
+					{initials || "JP"}
+				</span>
+				<span className={`job-card__type ${typeClass}`.trim()}>
+					{typeLabel}
+				</span>
 			</div>
-		</div>
+
+			<div>
+				<h3 className="job-card__title">{job.title}</h3>
+				<p className="job-card__company">{company}</p>
+			</div>
+
+			{job.job_tags && job.job_tags.length > 0 && (
+				<div className="job-card__tags">
+					{job.job_tags.slice(0, 3).map((tag) => (
+						<span className="job-card__tag" key={tag.id}>
+							{tag.name}
+						</span>
+					))}
+				</div>
+			)}
+
+			<div className="job-card__meta">
+				{job.location && (
+					<span>
+						<i className="lni-map-marker" aria-hidden="true" />
+						{job.location}
+					</span>
+				)}
+				{job.salary != null && Number(job.salary) > 0 && (
+					<span>
+						<i className="lni-briefcase" aria-hidden="true" />
+						{Number(job.salary).toLocaleString()}
+					</span>
+				)}
+			</div>
+		</Link>
 	);
 };
 

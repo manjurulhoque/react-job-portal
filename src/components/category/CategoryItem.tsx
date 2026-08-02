@@ -1,24 +1,26 @@
 /* eslint-disable */
 import React, { FC } from "react";
+import { Link } from "react-router";
 import { ICategory } from "../../interfaces";
 
 interface Props {
 	category: ICategory;
-	index: number;
 }
 
-const CategoryItem: FC<Props> = ({ category, index }) => {
-	let classes = `icon bg-color-${index + 1}`;
+const CategoryItem: FC<Props> = ({ category }) => {
 	return (
-		<div className="col-lg-4 col-md-6 col-xs-12 f-category">
-			<a href="#">
-				<div className={classes}>
-					<i className={category.icon} />
-				</div>
+		<Link className="jp-category" to="/jobs">
+			<span className="jp-category__icon" aria-hidden="true">
+				<i className={category.icon} />
+			</span>
+			<span className="jp-category__body">
 				<h3>{category.name}</h3>
-				<p>({category.total_jobs} jobs)</p>
-			</a>
-		</div>
+				<p>
+					{category.total_jobs}{" "}
+					{category.total_jobs === 1 ? "job" : "jobs"}
+				</p>
+			</span>
+		</Link>
 	);
 };
 

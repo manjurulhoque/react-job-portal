@@ -1,67 +1,55 @@
 /* eslint-disable */
 import React, { FC } from "react";
+import { Link } from "react-router";
 
 const Footer: FC = () => {
 	return (
-		<footer>
-			<section className="footer-Content">
-				<div className="container">
-					<div className="row">
-						<div className="col-lg-3 col-md-3 col-xs-12">
-							<div className="widget">
-								<div className="footer-logo">
-									React job portal
-								</div>
-								<div className="textwidget">
-									<p>React job portal with django backend</p>
-								</div>
-							</div>
-						</div>
-						<div className="col-lg-6 col-md-4 col-xs-12">
-							<div className="widget">
-								<h3 className="block-title">Quick Links</h3>
-								<ul className="menu">
-									<li>
-										<a href="#">About Us</a>
-									</li>
-									<li>
-										<a href="#">Support</a>
-									</li>
-									<li>
-										<a href="#">Contact</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-						<div className="col-lg-3 col-md-4 col-xs-12">
-							<div className="widget">
-								<ul className="mt-3 footer-social">
-									<li>
-										<a className="facebook" href="#">
-											<i className="lni-facebook-filled" />
-										</a>
-									</li>
-									<li>
-										<a className="twitter" href="#">
-											<i className="lni-twitter-filled" />
-										</a>
-									</li>
-									<li>
-										<a className="linkedin" href="#">
-											<i className="lni-linkedin-fill" />
-										</a>
-									</li>
-									<li>
-										<a className="google-plus" href="#">
-											<i className="lni-google-plus" />
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
+		<footer className="jp-footer">
+			<div className="container">
+				<div className="jp-footer__grid">
+					<div>
+						<Link className="jp-footer__brand" to="/">
+							<span aria-hidden="true">J</span>
+							Job Portal
+						</Link>
+						<p>
+							Find roles that fit your life, or hire people who
+							fit your team.
+						</p>
+					</div>
+					<div>
+						<h3>Explore</h3>
+						<ul>
+							<li>
+								<Link to="/jobs">Browse jobs</Link>
+							</li>
+							<li>
+								<Link to="/register">Create account</Link>
+							</li>
+							<li>
+								<Link to="/post-job">Post a job</Link>
+							</li>
+						</ul>
+					</div>
+					<div>
+						<h3>Account</h3>
+						<ul>
+							<li>
+								<Link to="/login">Sign in</Link>
+							</li>
+							<li>
+								<Link to="/edit-profile">Edit profile</Link>
+							</li>
+							<li>
+								<Link to="/applied-jobs">Applied jobs</Link>
+							</li>
+						</ul>
 					</div>
 				</div>
-			</section>
+				<div className="jp-footer__copy">
+					© {new Date().getFullYear()} Job Portal
+				</div>
+			</div>
 		</footer>
 	);
 };

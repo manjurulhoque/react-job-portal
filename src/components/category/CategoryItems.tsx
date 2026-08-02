@@ -6,39 +6,6 @@ import CategoryItemSkeleton from "../skeletons/CategoryItemSkeleton";
 import { ICategory } from "../../interfaces";
 
 const CategoryItems = () => {
-	// const [categories, setCategories] = useState([
-	//     {
-	//         name: "Web design",
-	//         slug: "web-design",
-	//         icon: "lni-brush"
-	//     },
-	//     {
-	//         name: "Graphic design",
-	//         slug: "graphic-design",
-	//         icon: "lni-heart"
-	//     },
-	//     {
-	//         name: "Web development",
-	//         slug: "web-development",
-	//         icon: "lni-funnel"
-	//     },
-	//     {
-	//         name: "Human Resource",
-	//         slug: "human-resource",
-	//         icon: "lni-cup"
-	//     },
-	//     {
-	//         name: "Support",
-	//         slug: "support",
-	//         icon: "lni-home"
-	//     },
-	//     {
-	//         name: "Android Development",
-	//         slug: "android",
-	//         icon: "lni-world"
-	//     }
-	// ]);
-
 	const [categories, setCategories] = useState<ICategory[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 
@@ -58,15 +25,15 @@ const CategoryItems = () => {
 	}, []);
 
 	return (
-		<section className="category section bg-gray">
+		<section className="jp-section">
 			<div className="container">
-				<div className="section-header">
-					<h2 className="section-title">Browse Categories</h2>
+				<div className="jp-section__head">
+					<h2>Browse categories</h2>
 					<p>
-						Most popular categories of portal, sorted by popularity
+						Popular job categories on Job Portal, ready to explore.
 					</p>
 				</div>
-				<div className="row">
+				<div className="jp-categories">
 					{loading &&
 						Array(6)
 							.fill(0)
@@ -74,10 +41,9 @@ const CategoryItems = () => {
 								<CategoryItemSkeleton key={index} />
 							))}
 					{!loading &&
-						categories.map((category, index) => (
+						categories.map((category) => (
 							<CategoryItem
 								category={category}
-								index={index}
 								key={category.name}
 							/>
 						))}

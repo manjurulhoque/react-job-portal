@@ -1,87 +1,83 @@
-import React, { FC } from "react";
+import React, { FC, FormEvent, useState } from "react";
+import { Link, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 
 const Jumbotron: FC = () => {
 	const { t } = useTranslation();
+	const navigate = useNavigate();
+	const [query, setQuery] = useState("");
+	const [location, setLocation] = useState("");
+
+	const handleSearch = (e: FormEvent) => {
+		e.preventDefault();
+		const params = new URLSearchParams();
+		if (query.trim()) params.set("q", query.trim());
+		if (location.trim()) params.set("location", location.trim());
+		const search = params.toString();
+		navigate(search ? `/jobs?${search}` : "/jobs");
+	};
 
 	return (
-		<div className="container">
-			<div className="row space-100">
-				<div className="col-lg-7 col-md-12 col-xs-12">
-					<div className="contents">
-						<h2 className="head-title">
-							{t("welcome.title1")} <br /> {t("welcome.title2")}
-						</h2>
+		<section className="jp-hero">
+			<div className="container">
+				<div className="jp-hero__grid">
+					<div className="jp-hero__copy">
+						<h1>
+							{t("welcome.title1")}
+							<span>{t("welcome.title2")}</span>
+						</h1>
 						<p>
-							Aliquam vestibulum cursus felis. In iaculis iaculis
-							sapien ac condimentum. Vestibulum congue posuere
-							lacus, id tincidunt nisi porta sit amet. Suspendisse
-							et sapien varius, pellentesque dui non.
+							Search open roles, apply in a few steps, and keep
+							your profile ready for employers.
 						</p>
-						<div className="job-search-form">
-							<form>
-								<div className="row">
-									<div className="col-lg-5 col-md-5 col-xs-12">
-										<div className="form-group">
-											<input
-												className="form-control"
-												type="text"
-												placeholder="Job Title or Company Name"
-											/>
-										</div>
-									</div>
-									<div className="col-lg-5 col-md-5 col-xs-12">
-										<div className="form-group">
-											<div className="search-category-container">
-												<label className="styled-select">
-													<select>
-														<option value="none">
-															Locations
-														</option>
-														<option value="none">
-															New York
-														</option>
-														<option value="none">
-															California
-														</option>
-														<option value="none">
-															Washington
-														</option>
-														<option value="none">
-															Birmingham
-														</option>
-														<option value="none">
-															Chicago
-														</option>
-														<option value="none">
-															Phoenix
-														</option>
-													</select>
-												</label>
-											</div>
-											<i className="lni-map-marker" />
-										</div>
-									</div>
-									<div className="col-lg-2 col-md-2 col-xs-12">
-										<button
-											type="submit"
-											className="button"
-										>
-											<i className="lni-search" />
-										</button>
-									</div>
-								</div>
-							</form>
+
+						<form className="jp-search" onSubmit={handleSearch}>
+							<div className="jp-search__field">
+								<label htmlFor="hero-query">Role</label>
+								<input
+									id="hero-query"
+									type="text"
+									placeholder="Job title or keyword"
+									value={query}
+									onChange={(e) => setQuery(e.target.value)}
+								/>
+							</div>
+							<div className="jp-search__field">
+								<label htmlFor="hero-location">Location</label>
+								<input
+									id="hero-location"
+									type="text"
+									placeholder="City or remote"
+									value={location}
+									onChange={(e) =>
+										setLocation(e.target.value)
+									}
+								/>
+							</div>
+							<button type="submit" className="jp-search__submit">
+								Search jobs
+							</button>
+						</form>
+
+						<div className="jp-hero__actions">
+							<Link className="jp-hero__ghost" to="/register">
+								Create account
+							</Link>
+							<Link className="jp-hero__ghost" to="/post-job">
+								Post a job
+							</Link>
 						</div>
 					</div>
-				</div>
-				<div className="col-lg-5 col-md-12 col-xs-12">
-					<div className="intro-img">
-						<img src="assets/img/intro.png" alt="" />
+
+					<div className="jp-hero__visual">
+						<img
+							src="/assets/img/intro.png"
+							alt="People exploring job opportunities"
+						/>
 					</div>
 				</div>
 			</div>
-		</div>
+		</section>
 	);
 };
 

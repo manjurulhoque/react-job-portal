@@ -1,94 +1,74 @@
 /* eslint-disable */
 import React, { FC, useContext } from "react";
-import { NavLink, useLocation, useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { AuthContext } from "../../contexts/AuthContext";
+import "../../assets/css/employer.css";
 
 interface Props {
 	children: React.ReactNode;
 	title?: string;
+	subtitle?: string;
+	action?: React.ReactNode;
 }
 
 const EmployerSidebarLayout: FC<Props> = ({
 	children,
 	title = "Dashboard",
+	subtitle,
+	action,
 }) => {
-	const location = useLocation();
 	const navigate = useNavigate();
-
 	const authContext = useContext(AuthContext);
-	const { isAuthenticated, user } = authContext.state;
 
 	const handleLogout = () => {
 		authContext.authDispatch({
 			type: authContext.ActionTypes.LOGOUT,
 			payload: {},
 		});
-
 		navigate("/", { replace: true });
 	};
 
-	const getActiveClass = (url: string) => {
-		return url === location.pathname ? "active" : "";
-	};
-
 	return (
-		<React.Fragment>
-			<div className="page-header">
-				<div className="container">
-					<div className="row">
-						<div className="col-lg-12">
-							<div className="inner-header">
-								<h3>{title}</h3>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+		<section className="employer-shell">
+			<div className="container">
+				<div className="employer-shell__inner">
+					<aside className="employer-side">
+						<h2 className="employer-side__title">Employer</h2>
+						<ul className="employer-side__nav">
+							<li>
+								<NavLink to="/employer/dashboard/">
+									Dashboard
+								</NavLink>
+							</li>
+							<li>
+								<NavLink to="/employer/applicants/">
+									Applicants
+								</NavLink>
+							</li>
+							<li>
+								<NavLink to="/post-job">Post a job</NavLink>
+							</li>
+							<li>
+								<button type="button" onClick={handleLogout}>
+									Log out
+								</button>
+							</li>
+						</ul>
+					</aside>
 
-			<div id="content">
-				<div className="container">
-					<div className="row">
-						<div className="col-lg-3 col-md-3 col-xs-12">
-							<div className="right-sideabr">
-								<h4>Manage Account</h4>
-								<ul className="list-item">
-									<li>
-										<NavLink
-											className={getActiveClass(
-												"/employer/dashboard/",
-											)}
-											to="/employer/dashboard/"
-										>
-											Dashboard
-										</NavLink>
-									</li>
-									<li>
-										<NavLink
-											className={getActiveClass(
-												"/employer/applicants/",
-											)}
-											to="/employer/applicants/"
-										>
-											Applicants
-										</NavLink>
-									</li>
-									<li>
-										<a href="#!">Change Password</a>
-									</li>
-									<li
-										onClick={handleLogout}
-										style={{ cursor: "pointer" }}
-									>
-										<a>Sing Out</a>
-									</li>
-								</ul>
+					<div className="employer-main">
+						<div className="employer-head">
+							<div>
+								<h1>{title}</h1>
+								{subtitle && <p>{subtitle}</p>}
 							</div>
+							{action}
 						</div>
 						{children}
 					</div>
 				</div>
 			</div>
-		</React.Fragment>
+		</section>
 	);
 };
 

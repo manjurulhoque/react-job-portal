@@ -1,0 +1,323 @@
+/* ===== Applied jobs page ===== */
+
+.applied-page {
+	padding: calc(var(--jp-nav-h) + 36px) 0 72px;
+	background:
+		radial-gradient(
+			ellipse 70% 40% at 0% 0%,
+			rgba(38, 174, 97, 0.08),
+			transparent 55%
+		),
+		var(--jp-bg);
+	min-height: 60vh;
+}
+
+.applied-page__head {
+	margin-bottom: 24px;
+}
+
+.applied-page__head h1 {
+	margin: 0 0 8px;
+	color: var(--jp-ink);
+	font-size: clamp(1.75rem, 3vw, 2.25rem);
+	font-weight: 800;
+	letter-spacing: -0.03em;
+	line-height: 1.2;
+	text-wrap: balance;
+}
+
+.applied-page__head p {
+	margin: 0;
+	max-width: 48ch;
+	color: var(--jp-muted);
+	font-size: 1rem;
+	line-height: 1.55;
+}
+
+.applied-page__toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: end;
+	gap: 12px;
+	margin-bottom: 20px;
+	padding: 14px;
+	background: var(--jp-surface);
+	border: 1px solid var(--jp-line);
+	border-radius: 16px;
+	box-shadow: var(--jp-shadow);
+}
+
+.applied-page__field {
+	flex: 1;
+	min-width: 180px;
+}
+
+.applied-page__field label {
+	display: block;
+	margin: 0 0 4px 6px;
+	font-size: 0.6875rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--jp-muted);
+}
+
+.applied-page__field select {
+	width: 100%;
+	height: 44px;
+	padding: 0 40px 0 12px;
+	border: 1.5px solid var(--jp-line);
+	border-radius: 10px;
+	background: #f8fafc
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235a6b78' d='M6 8L0 0h12z'/%3E%3C/svg%3E")
+		no-repeat right 14px center;
+	appearance: none;
+	color: var(--jp-ink);
+	font-size: 0.9375rem;
+	cursor: pointer;
+}
+
+.applied-page__field select:focus {
+	outline: none;
+	border-color: var(--jp-accent);
+	background-color: #fff;
+	box-shadow: 0 0 0 4px var(--jp-accent-soft);
+}
+
+.applied-page__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.applied-page__btn {
+	height: 44px;
+	padding: 0 16px;
+	border: none;
+	border-radius: 10px;
+	font-size: 0.875rem;
+	font-weight: 700;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.applied-page__btn--primary {
+	background: var(--jp-accent);
+	color: #fff;
+	box-shadow: 0 6px 14px rgba(38, 174, 97, 0.24);
+}
+
+.applied-page__btn--primary:hover {
+	background: var(--jp-accent-deep);
+}
+
+.applied-page__btn--ghost {
+	background: transparent;
+	color: var(--jp-muted);
+	border: 1.5px solid var(--jp-line);
+}
+
+.applied-page__btn--ghost:hover {
+	color: var(--jp-accent-deep);
+	border-color: rgba(38, 174, 97, 0.4);
+	background: var(--jp-accent-soft);
+}
+
+.applied-page__meta {
+	margin: 0 0 14px;
+	color: var(--jp-muted);
+	font-size: 0.875rem;
+	font-weight: 600;
+}
+
+.applied-page__list {
+	display: grid;
+	gap: 12px;
+}
+
+.applied-card {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1.4fr) repeat(3, auto);
+	gap: 16px;
+	align-items: center;
+	padding: 18px 20px;
+	background: var(--jp-surface);
+	border: 1px solid var(--jp-line);
+	border-radius: var(--jp-radius);
+	text-decoration: none !important;
+	color: inherit !important;
+	transition:
+		border-color 0.15s ease,
+		box-shadow 0.15s ease,
+		transform 0.15s ease;
+}
+
+.applied-card:hover {
+	border-color: rgba(38, 174, 97, 0.45);
+	box-shadow: var(--jp-shadow);
+	transform: translateY(-1px);
+}
+
+.applied-card__mark {
+	width: 48px;
+	height: 48px;
+	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--jp-accent-soft);
+	color: var(--jp-accent-deep);
+	font-size: 0.875rem;
+	font-weight: 800;
+}
+
+.applied-card__title {
+	margin: 0 0 4px;
+	color: var(--jp-ink);
+	font-size: 1.0625rem;
+	font-weight: 750;
+	letter-spacing: -0.02em;
+	line-height: 1.3;
+}
+
+.applied-card__company {
+	margin: 0;
+	color: var(--jp-muted);
+	font-size: 0.875rem;
+	font-weight: 600;
+}
+
+.applied-card__meta {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--jp-muted);
+	font-size: 0.8125rem;
+	white-space: nowrap;
+}
+
+.applied-card__meta i {
+	color: var(--jp-accent);
+}
+
+.applied-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 5px 10px;
+	border-radius: 999px;
+	font-size: 0.75rem;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+.applied-badge--pending {
+	background: rgba(180, 83, 9, 0.12);
+	color: #b45309;
+}
+
+.applied-badge--accepted {
+	background: var(--jp-accent-soft);
+	color: var(--jp-accent-deep);
+}
+
+.applied-badge--rejected {
+	background: rgba(185, 28, 28, 0.1);
+	color: #b91c1c;
+}
+
+.applied-badge--open {
+	background: rgba(37, 99, 235, 0.1);
+	color: #1d4ed8;
+}
+
+.applied-badge--filled {
+	background: #eef2f1;
+	color: var(--jp-muted);
+}
+
+.applied-badge--type {
+	background: #f1f5f4;
+	color: var(--jp-ink);
+}
+
+.applied-page__empty,
+.applied-page__error {
+	padding: 40px 24px;
+	text-align: center;
+	background: var(--jp-surface);
+	border: 1px solid var(--jp-line);
+	border-radius: var(--jp-radius);
+}
+
+.applied-page__empty h2,
+.applied-page__error h2 {
+	margin: 0 0 8px;
+	color: var(--jp-ink);
+	font-size: 1.25rem;
+	font-weight: 750;
+}
+
+.applied-page__empty p,
+.applied-page__error p {
+	margin: 0;
+	color: var(--jp-muted);
+	font-size: 0.9375rem;
+}
+
+.applied-page__empty a {
+	display: inline-flex;
+	margin-top: 16px;
+	color: var(--jp-accent-deep) !important;
+	font-weight: 700;
+	text-decoration: none !important;
+}
+
+.applied-page__empty a:hover {
+	text-decoration: underline !important;
+}
+
+.applied-card--skeleton {
+	pointer-events: none;
+}
+
+.applied-skel {
+	height: 14px;
+	border-radius: 8px;
+	background: linear-gradient(90deg, #eef2f1, #f7faf8, #eef2f1);
+	background-size: 200% 100%;
+	animation: applied-shimmer 1.2s ease infinite;
+}
+
+@keyframes applied-shimmer {
+	0% {
+		background-position: 100% 0;
+	}
+	100% {
+		background-position: -100% 0;
+	}
+}
+
+@media (max-width: 899.98px) {
+	.applied-card {
+		grid-template-columns: auto minmax(0, 1fr);
+		gap: 12px 14px;
+	}
+
+	.applied-card__meta,
+	.applied-card .applied-badge {
+		grid-column: 2;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.applied-card,
+	.applied-skel {
+		transition: none;
+		animation: none;
+	}
+
+	.applied-card:hover {
+		transform: none;
+	}
+}

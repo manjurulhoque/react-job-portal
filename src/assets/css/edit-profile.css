@@ -1,0 +1,311 @@
+/* ===== Employee Edit Profile ===== */
+
+.edit-profile {
+	--ep-ink: #0b2027;
+	--ep-muted: #5a6b78;
+	--ep-line: #e2e8ee;
+	--ep-surface: #ffffff;
+	--ep-surface-soft: #f4faf7;
+	--ep-accent: #26ae61;
+	--ep-accent-deep: #1e8f4e;
+	--ep-accent-soft: rgba(38, 174, 97, 0.12);
+	--ep-radius: 14px;
+	--ep-shadow: 0 12px 32px rgba(11, 32, 39, 0.08);
+}
+
+.edit-profile__section {
+	padding-top: 40px;
+	padding-bottom: 72px;
+	background:
+		radial-gradient(
+			ellipse 80% 50% at 10% 0%,
+			rgba(38, 174, 97, 0.08),
+			transparent 55%
+		),
+		radial-gradient(
+			ellipse 60% 40% at 100% 20%,
+			rgba(11, 32, 39, 0.04),
+			transparent 50%
+		),
+		#f7faf8;
+}
+
+.edit-profile__panel {
+	background: var(--ep-surface);
+	border: 1px solid var(--ep-line);
+	border-radius: var(--ep-radius);
+	box-shadow: var(--ep-shadow);
+	overflow: hidden;
+}
+
+.edit-profile__identity {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	padding: 28px 28px 24px;
+	background:
+		linear-gradient(
+			135deg,
+			rgba(38, 174, 97, 0.14) 0%,
+			rgba(38, 174, 97, 0.04) 48%,
+			transparent 100%
+		),
+		var(--ep-surface-soft);
+	border-bottom: 1px solid var(--ep-line);
+}
+
+.edit-profile__avatar {
+	flex-shrink: 0;
+	width: 64px;
+	height: 64px;
+	border-radius: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--ep-accent);
+	color: #fff;
+	font-size: 22px;
+	font-weight: 800;
+	letter-spacing: 0.02em;
+	box-shadow: 0 8px 20px rgba(38, 174, 97, 0.32);
+}
+
+.edit-profile__who {
+	min-width: 0;
+}
+
+.edit-profile__name {
+	margin: 0;
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: var(--ep-ink);
+	letter-spacing: -0.02em;
+	line-height: 1.25;
+	text-wrap: balance;
+}
+
+.edit-profile__meta {
+	margin: 4px 0 0;
+	font-size: 0.875rem;
+	color: var(--ep-muted);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.edit-profile__badge {
+	display: inline-block;
+	margin-top: 8px;
+	padding: 3px 10px;
+	border-radius: 999px;
+	background: var(--ep-accent-soft);
+	color: var(--ep-accent-deep);
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+}
+
+.edit-profile__body {
+	padding: 28px;
+}
+
+.edit-profile__intro {
+	margin: 0 0 22px;
+	max-width: 48ch;
+	font-size: 0.9375rem;
+	line-height: 1.55;
+	color: var(--ep-muted);
+	text-wrap: pretty;
+}
+
+.edit-profile__form .form-group {
+	margin-bottom: 18px;
+}
+
+.edit-profile__form .form-row-pair {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 16px;
+}
+
+.edit-profile__label {
+	display: block;
+	margin-bottom: 8px;
+	font-size: 0.8125rem;
+	font-weight: 650;
+	color: var(--ep-ink);
+}
+
+.edit-profile__input,
+.edit-profile__select {
+	display: block;
+	width: 100%;
+	height: 48px;
+	padding: 12px 14px;
+	border: 1.5px solid var(--ep-line);
+	border-radius: 12px;
+	background: #f8fafc;
+	color: var(--ep-ink);
+	font-size: 0.9375rem;
+	line-height: 1.4;
+	transition:
+		border-color 0.2s ease,
+		background-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.edit-profile__input::placeholder {
+	color: #7a8a99;
+}
+
+.edit-profile__input:hover,
+.edit-profile__select:hover {
+	border-color: #c9d4de;
+}
+
+.edit-profile__input:focus,
+.edit-profile__select:focus {
+	outline: none;
+	border-color: var(--ep-accent);
+	background: #fff;
+	box-shadow: 0 0 0 4px var(--ep-accent-soft);
+}
+
+.edit-profile__input.is-invalid,
+.edit-profile__select.is-invalid {
+	border-color: #d64545;
+	background: #fff8f8;
+}
+
+.edit-profile__input.is-invalid:focus,
+.edit-profile__select.is-invalid:focus {
+	box-shadow: 0 0 0 4px rgba(214, 69, 69, 0.14);
+}
+
+.edit-profile__select {
+	appearance: none;
+	padding-right: 40px;
+	cursor: pointer;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235a6b78' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 14px center;
+}
+
+.edit-profile__error {
+	display: block;
+	margin-top: 6px;
+	font-size: 0.8125rem;
+	color: #b42318;
+}
+
+.edit-profile__actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+	margin-top: 8px;
+	padding-top: 8px;
+}
+
+.edit-profile__submit {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	min-width: 160px;
+	height: 48px;
+	padding: 0 22px;
+	border: none;
+	border-radius: 12px;
+	background: var(--ep-accent);
+	color: #fff;
+	font-size: 0.9375rem;
+	font-weight: 700;
+	cursor: pointer;
+	box-shadow: 0 8px 18px rgba(38, 174, 97, 0.28);
+	transition:
+		transform 0.15s ease,
+		background-color 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.edit-profile__submit:hover:not(:disabled) {
+	background: var(--ep-accent-deep);
+	transform: translateY(-1px);
+	box-shadow: 0 10px 22px rgba(38, 174, 97, 0.36);
+}
+
+.edit-profile__submit:active:not(:disabled) {
+	transform: translateY(0);
+}
+
+.edit-profile__submit:focus-visible {
+	outline: none;
+	box-shadow:
+		0 0 0 4px var(--ep-accent-soft),
+		0 8px 18px rgba(38, 174, 97, 0.28);
+}
+
+.edit-profile__submit:disabled {
+	opacity: 0.72;
+	cursor: not-allowed;
+	box-shadow: none;
+}
+
+.edit-profile__secondary {
+	display: inline-flex;
+	align-items: center;
+	height: 48px;
+	padding: 0 14px;
+	border-radius: 12px;
+	color: var(--ep-muted);
+	font-size: 0.875rem;
+	font-weight: 600;
+	text-decoration: none;
+	transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.edit-profile__secondary:hover {
+	color: var(--ep-accent-deep);
+	background: var(--ep-accent-soft);
+	text-decoration: none;
+}
+
+@media (max-width: 575.98px) {
+	.edit-profile__identity {
+		padding: 22px 20px 20px;
+	}
+
+	.edit-profile__body {
+		padding: 22px 20px 24px;
+	}
+
+	.edit-profile__form .form-row-pair {
+		grid-template-columns: 1fr;
+		gap: 0;
+	}
+
+	.edit-profile__actions {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.edit-profile__submit,
+	.edit-profile__secondary {
+		width: 100%;
+		justify-content: center;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.edit-profile__input,
+	.edit-profile__select,
+	.edit-profile__submit,
+	.edit-profile__secondary {
+		transition: none;
+	}
+
+	.edit-profile__submit:hover:not(:disabled) {
+		transform: none;
+	}
+}

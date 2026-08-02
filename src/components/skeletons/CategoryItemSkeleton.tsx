@@ -2,20 +2,20 @@
 import React, { FC } from "react";
 import Skeleton from "react-loading-skeleton";
 
-const CategoryItemSkeleton: FC<any> = (props: any) => {
+const CategoryItemSkeleton: FC = () => {
 	return (
-		<div className="col-lg-4 col-md-6 col-xs-12 f-category">
-			<a href="#">
-				<div className="icon">
-					<Skeleton circle={true} height={50} width={50} />
-				</div>
+		<div className="jp-category" aria-hidden="true">
+			<span className="jp-category__icon">
+				<Skeleton circle height={28} width={28} />
+			</span>
+			<span className="jp-category__body" style={{ flex: 1 }}>
 				<h3>
-					<Skeleton height={10} />
+					<Skeleton height={14} width="70%" />
 				</h3>
 				<p>
-					<Skeleton height={10} />
+					<Skeleton height={12} width="40%" />
 				</p>
-			</a>
+			</span>
 		</div>
 	);
 };

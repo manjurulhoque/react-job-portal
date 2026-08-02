@@ -14,33 +14,50 @@ interface IJwtPayload extends JwtPayload {
 	user: any;
 }
 
+type FieldErrors = {
+	email?: string;
+	password?: string;
+};
+
 const LoginPage: FC = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [submitted, setSubmitted] = useState(false);
+	const [errors, setErrors] = useState<FieldErrors>({});
 	const authContext = useContext(AuthContext);
 	const navigate = useNavigate();
 	const _isMounted = useRef(true);
 
 	useEffect(() => {
 		return () => {
-			// ComponentWillUnmount in Class Component
 			_isMounted.current = false;
 		};
 	}, []);
 
+	const validate = (): FieldErrors => {
+		const next: FieldErrors = {};
+		if (!email.trim()) next.email = "Email is required";
+		else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+			next.email = "Enter a valid email address";
+		}
+		if (!password) next.password = "Password is required";
+		return next;
+	};
+
 	const handleSubmit: React.FormEventHandler<HTMLFormElement> = (evt) => {
 		evt.preventDefault();
-		setSubmitted(true);
+		const nextErrors = validate();
+		setErrors(nextErrors);
 
-		if (!email && !password) {
-			setSubmitted(false);
-			alert("All fields are required");
-			return true;
+		if (Object.keys(nextErrors).length > 0) {
+			toast.error("Please fill in all required fields");
+			return;
 		}
 
+		setSubmitted(true);
+
 		const postData = {
-			email: email,
+			email: email.trim(),
 			password: password,
 		};
 
@@ -63,7 +80,8 @@ const LoginPage: FC = () => {
 				}
 			} catch (err: any) {
 				if (err.response && err.response.status === 401) {
-					console.log(err.response);
+					toast.error("Login failed");
+				} else {
 					toast.error("Login failed");
 				}
 				setSubmitted(false);
@@ -76,6 +94,7 @@ const LoginPage: FC = () => {
 	if (authContext.state.isAuthenticated) {
 		return <Navigate to="/" replace />;
 	}
+
 	return (
 		<React.Fragment>
 			<Header />
@@ -84,92 +103,144 @@ const LoginPage: FC = () => {
 			</Helmet>
 
 			<div className="auth-page">
-				<div className="auth-card">
-					<div className="auth-brand">
-						<span className="auth-logo">J</span>
-						<span className="auth-logo-text">Job Portal</span>
-					</div>
-					<h2 className="auth-title">Welcome back</h2>
-					<p className="auth-subtitle">
-						Sign in to continue to your account
-					</p>
+				<div className="auth-shell">
+					<aside className="auth-aside" aria-hidden="true">
+						<div className="auth-aside__brand">
+							<span className="auth-aside__mark">J</span>
+							<span className="auth-aside__brand-text">
+								Job Portal
+							</span>
+						</div>
+						<div className="auth-aside__copy">
+							<h2>Find work that fits you</h2>
+							<p>
+								Sign in to track applications, update your
+								profile, and keep your job search moving.
+							</p>
+						</div>
+						<ul className="auth-aside__points">
+							<li>Browse open roles across companies</li>
+							<li>Apply and track your status in one place</li>
+							<li>Keep your profile ready for employers</li>
+						</ul>
+					</aside>
 
-					<div className="auth-social">
-						{/* <FacebookSocialAuth />
-						<GoogleSocialAuth /> */}
-					</div>
+					<div className="auth-panel">
+						<div className="auth-panel__header">
+							<h1>Welcome back</h1>
+							<p>Sign in with your email to continue.</p>
+						</div>
 
-					<div className="auth-divider">Sign in with email</div>
-
-					<form className="auth-form" onSubmit={handleSubmit}>
-						<div className="form-group">
-							<div className="input-icon">
-								<i className="lni-user" />
+						<form
+							className="auth-form"
+							onSubmit={handleSubmit}
+							noValidate
+						>
+							<div className="form-group">
+								<label className="auth-label" htmlFor="email">
+									Email
+								</label>
 								<input
 									type="email"
-									id="sender-email"
-									className="form-control"
+									id="email"
+									className={`auth-input${
+										errors.email ? " is-invalid" : ""
+									}`}
 									name="email"
-									placeholder="Email address"
+									autoComplete="email"
 									value={email}
-									onChange={(e) => setEmail(e.target.value)}
+									aria-invalid={Boolean(errors.email)}
+									aria-describedby={
+										errors.email
+											? "email-error"
+											: undefined
+									}
+									onChange={(e) => {
+										setEmail(e.target.value);
+										if (errors.email) {
+											setErrors((prev) => ({
+												...prev,
+												email: undefined,
+											}));
+										}
+									}}
 								/>
+								{errors.email && (
+									<span
+										id="email-error"
+										className="auth-error"
+									>
+										{errors.email}
+									</span>
+								)}
 							</div>
-						</div>
-						<div className="form-group">
-							<div className="input-icon">
-								<i className="lni-lock" />
+
+							<div className="form-group">
+								<label
+									className="auth-label"
+									htmlFor="password"
+								>
+									Password
+								</label>
 								<input
 									type="password"
-									className="form-control"
-									placeholder="Password"
+									id="password"
+									className={`auth-input${
+										errors.password ? " is-invalid" : ""
+									}`}
+									autoComplete="current-password"
 									value={password}
-									onChange={(e) =>
-										setPassword(e.target.value)
+									aria-invalid={Boolean(errors.password)}
+									aria-describedby={
+										errors.password
+											? "password-error"
+											: undefined
 									}
+									onChange={(e) => {
+										setPassword(e.target.value);
+										if (errors.password) {
+											setErrors((prev) => ({
+												...prev,
+												password: undefined,
+											}));
+										}
+									}}
 								/>
-							</div>
-						</div>
-						<div className="auth-options">
-							<div className="form-check">
-								<input
-									type="checkbox"
-									className="form-check-input"
-									id="exampleCheck1"
-								/>
-								<label
-									className="form-check-label"
-									htmlFor="exampleCheck1"
-								>
-									Keep Me Signed In
-								</label>
-							</div>
-							<a href="#">Forgot password?</a>
-						</div>
-						<button
-							type="submit"
-							disabled={submitted}
-							className="auth-submit"
-						>
-							{submitted ? (
-								<>
+								{errors.password && (
 									<span
-										className="spinner-border spinner-border-sm me-2"
-										role="status"
-										aria-hidden="true"
-									/>
-									Signing in...
-								</>
-							) : (
-								"Sign In"
-							)}
-						</button>
-					</form>
+										id="password-error"
+										className="auth-error"
+									>
+										{errors.password}
+									</span>
+								)}
+							</div>
 
-					<p className="auth-switch">
-						Don't have an account?{" "}
-						<NavLink to="/register">Create one</NavLink>
-					</p>
+							<button
+								type="submit"
+								disabled={submitted}
+								className="auth-submit"
+							>
+								{submitted ? (
+									<>
+										<span
+											className="spinner-border spinner-border-sm"
+											role="status"
+											aria-hidden="true"
+										/>
+										Signing in...
+									</>
+								) : (
+									"Sign in"
+								)}
+							</button>
+						</form>
+
+						<p className="auth-switch">
+							Don&apos;t have an account?{" "}
+							<NavLink to="/register">Create one</NavLink>
+						</p>
+					</div>
 				</div>
 			</div>
 		</React.Fragment>

@@ -2,369 +2,405 @@
 import React, { useState, useEffect, useContext } from "react";
 import AxiosConfig from "../AxiosConfig";
 import dayjs from "dayjs";
-import { Helmet } from "react-helmet-async";
-import { useParams, useNavigate } from "react-router";
-import Header from "../components/Header";
-import { AuthContext } from "../contexts/AuthContext";
+import { Link, useParams, useNavigate } from "react-router";
+import toast from "react-hot-toast";
 import Swal from "sweetalert2";
-
+import BaseLayout from "../components/BaseLayout";
+import { AuthContext } from "../contexts/AuthContext";
 import { IJob } from "../interfaces";
+import "../assets/css/job-details.css";
 
-interface Props {}
+const TYPE_LABELS: Record<string, string> = {
+	"1": "Full time",
+	"2": "Part time",
+	"3": "Internship",
+};
 
-const JobDetailsPage = (props: Props) => {
-	const [job, setJob] = useState<IJob>(Object);
+const TYPE_CLASS: Record<string, string> = {
+	"1": "",
+	"2": "is-part",
+	"3": "is-intern",
+};
+
+const JobDetailsPage = () => {
+	const [job, setJob] = useState<IJob | null>(null);
 	const [isApplied, setIsApplied] = useState(false);
-	let { id } = useParams<{ id: string | undefined }>();
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState("");
+	const [applying, setApplying] = useState(false);
+	const [copied, setCopied] = useState(false);
+	const { id } = useParams<{ id: string }>();
 	const authContext = useContext(AuthContext);
-	const { token, isAuthenticated } = authContext.state;
+	const { token, isAuthenticated, user } = authContext.state;
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		getJobDetails().then();
-	}, []);
+		let active = true;
 
-	const getJobDetails = async () => {
-		const config = {
-			headers: { Authorization: `Bearer ${token}` },
-		};
+		const load = async () => {
+			setLoading(true);
+			setError("");
+			try {
+				const { data } = await AxiosConfig.get(`jobs/${id}/`);
+				if (!active) return;
+				setJob(data);
 
-		const { data } = await AxiosConfig.get(`jobs/${id}/`).then(
-			(res) => res,
-		);
-
-		setJob(data);
-
-		if (isAuthenticated) {
-			const { data } = await AxiosConfig.get(
-				`applied-for-job/${id}/`,
-				config,
-			).then((res) => res);
-
-			setIsApplied(data.is_applied);
-		}
-	};
-
-	const applyJobHandle: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-		e.preventDefault();
-		const config = {
-			headers: { Authorization: `Bearer ${token}` },
-		};
-		if (isAuthenticated) {
-			Swal.fire({
-				title: "Are you sure?",
-				text: "Once applied, you will not be able to remove it!",
-				icon: "warning",
-				showCancelButton: true,
-				confirmButtonColor: "#d33",
-				cancelButtonColor: "#3085d6",
-				confirmButtonText: "Yes, apply!",
-			}).then((result) => {
-				if (result.isConfirmed) {
-					AxiosConfig.post(`apply-job/${id}/`, { job: id }, config)
-						.then((res) => {
-							setIsApplied(true);
-							Swal.fire(
-								"Successfully applied for this position",
-								"",
-								"success",
-							);
-						})
-						.catch((err) => {
-							Swal.fire("Something went wrong", "", "error");
-						});
+				if (isAuthenticated && token) {
+					const config = {
+						headers: { Authorization: `Bearer ${token}` },
+					};
+					try {
+						const applied = await AxiosConfig.get(
+							`applied-for-job/${id}/`,
+							config,
+						);
+						if (active) setIsApplied(!!applied.data.is_applied);
+					} catch {
+						if (active) setIsApplied(false);
+					}
+				} else if (active) {
+					setIsApplied(false);
 				}
-			});
-		} else {
+			} catch {
+				if (active) {
+					setJob(null);
+					setError("This job could not be loaded.");
+				}
+			} finally {
+				if (active) setLoading(false);
+			}
+		};
+
+		load();
+		return () => {
+			active = false;
+		};
+	}, [id, isAuthenticated, token]);
+
+	const company = job?.company_name || "Company";
+	const initials = company
+		.split(/\s+/)
+		.filter(Boolean)
+		.slice(0, 2)
+		.map((part) => part.charAt(0).toUpperCase())
+		.join("");
+
+	const typeKey = String(job?.type ?? "");
+	const typeLabel = TYPE_LABELS[typeKey] || "Job";
+	const typeClass = TYPE_CLASS[typeKey] || "";
+	const pageUrl = typeof window !== "undefined" ? window.location.href : "";
+	const canApply =
+		!isAuthenticated || (user && user.role === "employee");
+
+	const applyJobHandle = async () => {
+		if (!isAuthenticated) {
 			navigate("/login");
+			return;
+		}
+
+		if (user?.role !== "employee") {
+			toast.error("Only job seekers can apply for roles");
+			return;
+		}
+
+		const result = await Swal.fire({
+			title: "Apply for this role?",
+			text: "You will not be able to withdraw the application from here.",
+			icon: "question",
+			showCancelButton: true,
+			confirmButtonColor: "#26ae61",
+			cancelButtonColor: "#5a6b78",
+			confirmButtonText: "Yes, apply",
+		});
+
+		if (!result.isConfirmed) return;
+
+		setApplying(true);
+		const config = {
+			headers: { Authorization: `Bearer ${token}` },
+		};
+
+		try {
+			await AxiosConfig.post(`apply-job/${id}/`, { job: id }, config);
+			setIsApplied(true);
+			toast.success("Application submitted");
+		} catch {
+			toast.error("Failed to apply for this job");
+		} finally {
+			setApplying(false);
 		}
 	};
+
+	const copyLink = async () => {
+		try {
+			await navigator.clipboard.writeText(pageUrl);
+			setCopied(true);
+			toast.success("Link copied");
+			setTimeout(() => setCopied(false), 2000);
+		} catch {
+			toast.error("Could not copy link");
+		}
+	};
+
+	const pageTitle = job?.title ? `${job.title} | Job details` : "Job details";
 
 	return (
-		<React.Fragment>
-			<Header />
-			<Helmet>
-				<title>Job details</title>
-			</Helmet>
-
-			<div className="page-header">
+		<BaseLayout title={pageTitle}>
+			<section className="job-details-page">
 				<div className="container">
-					<div className="row">
-						<div className="col-lg-8 col-md-6 col-xs-12">
-							<div className="breadcrumb-wrapper">
-								<div className="img-wrapper">
-									<img
-										src="/assets/img/about/company-logo.png"
-										alt=""
-									/>
+					<Link className="job-details-page__back" to="/jobs">
+						← Back to jobs
+					</Link>
+
+					{loading && (
+						<div className="job-details-page__layout">
+							<div className="job-details-page__main">
+								<div className="jd-panel">
+									<div className="jd-skeleton-line" style={{ width: "55%", height: 28 }} />
+									<div className="jd-skeleton-line" style={{ width: "30%" }} />
+									<div className="jd-skeleton-line" style={{ width: "70%" }} />
 								</div>
-								<div className="content">
-									<h3 className="product-title">
-										{job.title}
-									</h3>
-									<p className="brand">{job.company_name}</p>
-									<div className="tags">
-										<span>
-											<i className="lni-map-marker" />{" "}
-											{job.location}
-										</span>
-										<span>
-											<i className="lni-calendar" />{" "}
-											Posted{" "}
-											{dayjs(job.created_at).format(
-												"MM-DD-YY",
-											)}
-										</span>
-									</div>
+								<div className="jd-panel">
+									<div className="jd-skeleton-line" style={{ width: "40%", height: 20 }} />
+									<div className="jd-skeleton-line" />
+									<div className="jd-skeleton-line" />
+									<div className="jd-skeleton-line" style={{ width: "80%" }} />
+								</div>
+							</div>
+							<div className="job-details-page__aside">
+								<div className="jd-panel">
+									<div className="jd-skeleton-line" style={{ width: "50%" }} />
+									<div className="jd-skeleton-line" />
+									<div className="jd-skeleton-line" />
+									<div className="jd-skeleton-line" style={{ height: 48 }} />
 								</div>
 							</div>
 						</div>
-						<div className="col-lg-4 col-md-6 col-xs-12">
-							<div className="month-price">
-								<span className="year">Monthly</span>
-								<div className="price">{job.salary} Tk</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+					)}
 
-			<section className="job-detail section">
-				<div className="container">
-					<div className="row justify-content-between">
-						<div className="col-lg-8 col-md-12 col-xs-12">
-							<div className="content-area">
-								<h4>Job Description</h4>
-								<p>{job.description}</p>
-								{/* <h5>What You Need for this Position</h5>
-                                <ul>
-                                    <li>- Objective-C</li>
-                                    <li>- iOS SDK</li>
-                                    <li>- XCode</li>
-                                    <li>- Cocoa</li>
-                                    <li>- ClojureScript</li>
-                                </ul> */}
-								{!isApplied && (
-									<>
-										<h5>How To Apply</h5>
-										<p>
-											Proin gravida nibh vel velit auctor
-											aliquet. Aenean sollicitudin, lorem
-											quis bibendum auctor, nisi elit
-											consequat ipsum, nec sagittis sem
-											nibh id elit. Duis sed odio sit amet
-											nibh vulputate cursus a sit amet
-											mauris.
+					{!loading && error && (
+						<div className="jd-state" role="alert">
+							<h2>Job not found</h2>
+							<p>{error}</p>
+						</div>
+					)}
+
+					{!loading && !error && job && (
+						<div className="job-details-page__layout">
+							<div className="job-details-page__main">
+								<div className="jd-panel jd-hero">
+									<span
+										className="jd-hero__mark"
+										aria-hidden="true"
+									>
+										{initials || "JP"}
+									</span>
+									<div className="jd-hero__body">
+										<span
+											className={`jd-type ${typeClass}`.trim()}
+										>
+											{typeLabel}
+										</span>
+										<h1>{job.title}</h1>
+										<p className="jd-hero__company">
+											{company}
 										</p>
-										<button
-											onClick={applyJobHandle}
-											className="btn btn-common"
-										>
-											Apply job
-										</button>
-									</>
-								)}
-								{isApplied && (
-									<a href="#!" className="btn btn-primary">
-										Already applied
-									</a>
-								)}
-							</div>
-						</div>
-						<div className="col-lg-4 col-md-12 col-xs-12">
-							<div className="sideber">
-								<div className="widghet">
-									<h3>Job Location</h3>
-									<div className="maps">
-										<div id="map" className="map-full">
-											<iframe
-												src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d405691.57240383344!2d-122.3212843181106!3d37.40247298383319!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb68ad0cfc739%3A0x7eb356b66bd4b50e!2sSilicon+Valley%2C+CA%2C+USA!5e0!3m2!1sen!2sbd!4v1538319316724"
-												allowFullScreen={true}
-											/>
+										<div className="jd-hero__meta">
+											{job.location && (
+												<span>
+													<i
+														className="lni-map-marker"
+														aria-hidden="true"
+													/>
+													{job.location}
+												</span>
+											)}
+											{job.created_at && (
+												<span>
+													<i
+														className="lni-calendar"
+														aria-hidden="true"
+													/>
+													Posted{" "}
+													{dayjs(
+														job.created_at,
+													).format("MMM D, YYYY")}
+												</span>
+											)}
+											{job.category && (
+												<span>
+													<i
+														className="lni-tag"
+														aria-hidden="true"
+													/>
+													{job.category}
+												</span>
+											)}
 										</div>
 									</div>
 								</div>
-								<div className="widghet">
-									<h3>Share This Job</h3>
-									<div className="share-job">
-										<form
-											method="post"
-											className="subscribe-form"
-										>
-											<div className="form-group">
-												<input
-													type="email"
-													name="Email"
-													className="form-control"
-													placeholder={
-														window.location.href
-													}
-													required={true}
-												/>
-												<button
-													type="submit"
-													name="subscribe"
-													className="btn btn-common sub-btn"
-												>
-													<i className="lni-files" />
-												</button>
-												<div className="clearfix" />
-											</div>
-										</form>
-										<ul className="mt-4 footer-social">
-											<li>
-												<a
-													className="facebook"
-													href="#"
-												>
-													<i className="lni-facebook-filled" />
-												</a>
-											</li>
-											<li>
-												<a className="twitter" href="#">
-													<i className="lni-twitter-filled" />
-												</a>
-											</li>
-											<li>
-												<a
-													className="linkedin"
-													href="#"
-												>
-													<i className="lni-linkedin-fill" />
-												</a>
-											</li>
-											<li>
-												<a
-													className="google-plus"
-													href="#"
-												>
-													<i className="lni-google-plus" />
-												</a>
-											</li>
-										</ul>
-										<div className="meta-tag">
-											<span className="meta-part">
-												<a href="#">
-													<i className="lni-star" />{" "}
-													Write a Review
-												</a>
-											</span>
-											<span className="meta-part">
-												<a href="#">
-													<i className="lni-warning" />{" "}
-													Reports
-												</a>
-											</span>
-											<span className="meta-part">
-												<a href="#">
-													<i className="lni-share" />{" "}
-													Share
-												</a>
-											</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
 
-			<section id="featured" className="section bg-gray pb-45">
-				<div className="container">
-					<h4 className="small-title text-left">Similar Jobs</h4>
-					<div className="row">
-						<div className="col-lg-4 col-md-6 col-xs-12">
-							<div className="job-featured">
-								<div className="icon">
-									<img
-										src="assets/img/features/img1.png"
-										alt=""
-									/>
+								<div className="jd-panel jd-section">
+									<h2>Job description</h2>
+									<p>
+										{job.description ||
+											"No description provided for this role."}
+									</p>
+									{job.job_tags && job.job_tags.length > 0 && (
+										<div className="jd-tags">
+											{job.job_tags.map((tag) => (
+												<span
+													className="jd-tag"
+													key={tag.id}
+												>
+													{tag.name}
+												</span>
+											))}
+										</div>
+									)}
 								</div>
-								<div className="content">
-									<h3>
-										<a href="job-page.html">
-											Software Engineer
-										</a>
-									</h3>
-									<p className="brand">MizTech</p>
-									<div className="tags">
-										<span>
-											<i className="lni-map-marker" /> New
-											York
-										</span>
-										<span>
-											<i className="lni-user" />
-											John Smith
-										</span>
+
+								{job.company_description && (
+									<div className="jd-panel jd-section jd-company">
+										<h2>About the company</h2>
+										<p>{job.company_description}</p>
+										{job.website && (
+											<a
+												href={
+													job.website.startsWith(
+														"http",
+													)
+														? job.website
+														: `https://${job.website}`
+												}
+												target="_blank"
+												rel="noreferrer"
+											>
+												Visit website
+											</a>
+										)}
 									</div>
-									<span className="full-time">Full Time</span>
-								</div>
+								)}
 							</div>
-						</div>
-						<div className="col-lg-4 col-md-6 col-xs-12">
-							<div className="job-featured">
-								<div className="icon">
-									<img
-										src="assets/img/features/img2.png"
-										alt=""
-									/>
-								</div>
-								<div className="content">
-									<h3>
-										<a href="job-page.html">
-											Graphic Designer
-										</a>
+
+							<aside className="job-details-page__aside">
+								<div className="jd-panel">
+									{job.salary != null &&
+										Number(job.salary) > 0 && (
+											<div className="jd-salary">
+												<span className="jd-salary__label">
+													Salary
+												</span>
+												<span className="jd-salary__value">
+													{Number(
+														job.salary,
+													).toLocaleString()}{" "}
+													Tk
+												</span>
+											</div>
+										)}
+
+									<h3 className="jd-aside__title">
+										Job details
 									</h3>
-									<p className="brand">Hunter Inc.</p>
-									<div className="tags">
-										<span>
-											<i className="lni-map-marker" /> New
-											York
-										</span>
-										<span>
-											<i className="lni-user" />
-											John Smith
-										</span>
-									</div>
-									<span className="part-time">Part Time</span>
+									<ul className="jd-facts">
+										<li>
+											<span className="label">Type</span>
+											<span className="value">
+												{typeLabel}
+											</span>
+										</li>
+										{job.location && (
+											<li>
+												<span className="label">
+													Location
+												</span>
+												<span className="value">
+													{job.location}
+												</span>
+											</li>
+										)}
+										{job.last_date && (
+											<li>
+												<span className="label">
+													Apply by
+												</span>
+												<span className="value">
+													{dayjs(
+														job.last_date,
+													).format("MMM D, YYYY")}
+												</span>
+											</li>
+										)}
+										{job.category && (
+											<li>
+												<span className="label">
+													Category
+												</span>
+												<span className="value">
+													{job.category}
+												</span>
+											</li>
+										)}
+									</ul>
+
+									{canApply && (
+										<>
+											{isApplied ? (
+												<button
+													type="button"
+													className="jd-apply is-done"
+													disabled
+												>
+													Already applied
+												</button>
+											) : (
+												<button
+													type="button"
+													className="jd-apply"
+													onClick={applyJobHandle}
+													disabled={applying}
+												>
+													{applying
+														? "Applying..."
+														: isAuthenticated
+															? "Apply for this job"
+															: "Sign in to apply"}
+												</button>
+											)}
+											{!isAuthenticated && (
+												<p className="jd-apply-note">
+													You need a job seeker
+													account to submit an
+													application.
+												</p>
+											)}
+										</>
+									)}
 								</div>
-							</div>
-						</div>
-						<div className="col-lg-4 col-md-6 col-xs-12">
-							<div className="job-featured">
-								<div className="icon">
-									<img
-										src="assets/img/features/img3.png"
-										alt=""
-									/>
-								</div>
-								<div className="content">
-									<h3>
-										<a href="job-page.html">
-											Managing Director
-										</a>
+
+								<div className="jd-panel">
+									<h3 className="jd-aside__title">
+										Share this job
 									</h3>
-									<p className="brand">MagNews</p>
-									<div className="tags">
-										<span>
-											<i className="lni-map-marker" /> New
-											York
-										</span>
-										<span>
-											<i className="lni-user" />
-											John Smith
-										</span>
+									<div className="jd-share">
+										<input
+											type="text"
+											readOnly
+											value={pageUrl}
+											aria-label="Job link"
+										/>
+										<button type="button" onClick={copyLink}>
+											{copied ? "Copied" : "Copy"}
+										</button>
 									</div>
-									<span className="full-time">Full Time</span>
 								</div>
-							</div>
+							</aside>
 						</div>
-					</div>
+					)}
 				</div>
 			</section>
-		</React.Fragment>
+		</BaseLayout>
 	);
 };
 

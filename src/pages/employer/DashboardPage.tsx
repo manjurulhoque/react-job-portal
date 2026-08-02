@@ -1,191 +1,138 @@
 /* eslint-disable */
 import React, { useContext, useEffect, useState } from "react";
+import { Link } from "react-router";
 import EmployerSidebarLayout from "../../components/employer-dashboard/EmployerSidebarLayout";
 import BaseLayout from "../../components/BaseLayout";
 import AxiosConfig from "../../AxiosConfig";
 import { AuthContext } from "../../contexts/AuthContext";
-import { Link } from "react-router";
 import { IJob } from "../../interfaces";
-import { Grid as Loader } from "react-loader-spinner";
+
+const TYPE_LABELS: Record<string, string> = {
+	"1": "Full time",
+	"2": "Part time",
+	"3": "Internship",
+};
 
 const DashboardPage = () => {
 	const [jobs, setJobs] = useState<IJob[]>([]);
 	const authContext = useContext(AuthContext);
-	const { token, isAuthenticated } = authContext.state;
+	const { token } = authContext.state;
 	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState("");
 
 	useEffect(() => {
 		const config = {
 			headers: { Authorization: `Bearer ${token}` },
 		};
 
-		const fetchJobs = async () => {
-			try {
-				const res = await AxiosConfig.get(
-					"employer/dashboard/",
-					config,
-				);
-				setJobs(res.data);
-				setLoading(false);
-			} catch (e) {
-				setLoading(false);
-				console.log(e);
-			}
-		};
-
-		fetchJobs().then();
-	}, []);
-
-	const get_type = (type: string) => {
-		const types: any = {
-			"1": "Full Time",
-			"2": "Part Time",
-			"3": "Internship",
-		};
-		return types[type];
-	};
-
-	const get_class = (type: string) => {
-		const class_name: any = {
-			"1": "Full Time",
-			"2": "Part Time",
-			"3": "Internship",
-		}[type];
-
-		return class_name
-			.toLowerCase()
-			.replace(/ /g, "-")
-			.replace(/[^\w-]+/g, "");
-	};
+		AxiosConfig.get("employer/dashboard/", config)
+			.then((res) => {
+				setJobs(res.data || []);
+				setError("");
+			})
+			.catch(() => setError("Failed to load your jobs."))
+			.finally(() => setLoading(false));
+	}, [token]);
 
 	return (
 		<BaseLayout title={"Dashboard"}>
-			<EmployerSidebarLayout>
-				{loading && (
-					<div className="col-lg-9 col-md-9 col-xs-12">
-						<div className="row">
-							<div className="col-md-6 mx-auto">
-								<Loader
-									color="#00BFFF"
-									// style={{textAlign: 'center'}}
-									height={100}
-									width={100}
-								/>
-							</div>
+			<EmployerSidebarLayout
+				title="Manage jobs"
+				subtitle="Review openings you posted and jump into applicants for each role."
+				action={
+					<Link className="employer-head__cta" to="/post-job">
+						Post a job
+					</Link>
+				}
+			>
+				<div className="employer-panel">
+					{loading && (
+						<div className="employer-loading" aria-hidden="true">
+							<div className="employer-skel" />
+							<div className="employer-skel" style={{ width: "70%" }} />
+							<div className="employer-skel" style={{ width: "55%" }} />
 						</div>
-					</div>
-				)}
-				{!loading && (
-					<div className="col-lg-9 col-md-9 col-xs-12">
-						<div className="job-alerts-item candidates">
-							<h3 className="alerts-title">Manage Jobs</h3>
-							<div className="alerts-list">
-								<div className="row">
-									<div className="col-lg-3 col-md-3 col-xs-12">
-										<p>Name</p>
+					)}
+
+					{!loading && error && (
+						<div className="employer-error" role="alert">
+							<h2>Something went wrong</h2>
+							<p>{error}</p>
+						</div>
+					)}
+
+					{!loading && !error && jobs.length === 0 && (
+						<div className="employer-empty">
+							<h2>No jobs posted yet</h2>
+							<p>Create your first opening to start receiving applicants.</p>
+						</div>
+					)}
+
+					{!loading && !error && jobs.length > 0 && (
+						<>
+							<div className="employer-table-head employer-row--jobs">
+								<span>Job</span>
+								<span>Type</span>
+								<span>Tags</span>
+								<span>Candidates</span>
+							</div>
+							{jobs.map((job) => (
+								<div
+									className="employer-row employer-row--jobs"
+									key={job.id}
+								>
+									<div>
+										<h3 className="employer-job__title">
+											<Link to={`/jobs/${job.id}`}>
+												{job.title}
+											</Link>
+										</h3>
+										<p className="employer-job__meta">
+											<i
+												className="lni-map-marker"
+												aria-hidden="true"
+											/>
+											{job.location || "Location n/a"}
+										</p>
 									</div>
-									<div className="col-lg-3 col-md-3 col-xs-12">
-										<p>Type</p>
+									<div>
+										<span className="employer-badge employer-badge--type">
+											{TYPE_LABELS[String(job.type)] ||
+												"Job"}
+										</span>
 									</div>
-									<div className="col-lg-3 col-md-3 col-xs-12">
-										<p>Tags</p>
+									<div className="employer-tags">
+										{job.job_tags?.length
+											? job.job_tags.map((tag) => (
+													<span
+														className="employer-tag"
+														key={tag.id}
+													>
+														{tag.name}
+													</span>
+												))
+											: (
+												<span className="employer-job__meta">
+													No tags
+												</span>
+											)}
 									</div>
-									<div className="col-lg-3 col-md-3 col-xs-12">
-										<p>Total candidates</p>
+									<div>
+										<Link
+											className="employer-link"
+											to={`/employer/applicants/${job.id}`}
+										>
+											{job.total_candidates ?? 0}{" "}
+											{(job.total_candidates ?? 0) === 1
+												? "candidate"
+												: "candidates"}
+										</Link>
 									</div>
 								</div>
-							</div>
-							{jobs.map((job) => {
-								return (
-									<React.Fragment key={job.id}>
-										<div className="alerts-content">
-											<div className="row">
-												<div className="col-lg-3 col-md-5 col-xs-12">
-													<h3>
-														<Link
-															to={`/jobs/${job.id}`}
-														>
-															{job.title}
-														</Link>
-													</h3>
-													<span className="location">
-														<i className="lni-map-marker" />{" "}
-														{job.location}
-													</span>
-												</div>
-												<div className="col-lg-3 col-md-3 col-xs-12">
-													<p>
-														<span
-															className={get_class(
-																String(
-																	job.type,
-																),
-															)}
-														>
-															{get_type(
-																String(
-																	job.type,
-																),
-															)}
-														</span>
-													</p>
-												</div>
-												<div className="col-lg-3 col-md-2 col-xs-12">
-													<div className="can-img">
-														{job.job_tags?.map(
-															(tag) => {
-																return (
-																	<span
-																		key={
-																			tag.id
-																		}
-																		style={{
-																			color: "#fff",
-																			backgroundColor:
-																				"#000",
-																		}}
-																		className="full-time"
-																	>
-																		{
-																			tag.name
-																		}
-																	</span>
-																);
-															},
-														)}
-													</div>
-												</div>
-												<div className="col-lg-3 col-md-2 col-xs-12">
-													<p>
-														<Link
-															to={`/employer/applicants/${job.id}`}
-														>
-															{
-																job.total_candidates
-															}{" "}
-															candidates
-														</Link>
-													</p>
-												</div>
-											</div>
-										</div>
-									</React.Fragment>
-								);
-							})}
-							<br />
-
-							{/*<ul className="pagination">*/}
-							{/*    <li className="active"><a href="#" className="btn-prev"><i className="lni-angle-left"/> prev</a></li>*/}
-							{/*    <li><a href="#">1</a></li>*/}
-							{/*    <li><a href="#">2</a></li>*/}
-							{/*    <li><a href="#">3</a></li>*/}
-							{/*    <li><a href="#">4</a></li>*/}
-							{/*    <li><a href="#">5</a></li>*/}
-							{/*    <li className="active"><a href="#" className="btn-next">Next <i className="lni-angle-right"/></a></li>*/}
-							{/*</ul>*/}
-						</div>
-					</div>
-				)}
+							))}
+						</>
+					)}
+				</div>
 			</EmployerSidebarLayout>
 		</BaseLayout>
 	);
