@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Routes } from "react-router";
 import HomePage from "./pages/HomePage";
 import JobDetailsPage from "./pages/JobDetailsPage";
 import JobsPage from "./pages/JobsPage";
@@ -15,26 +15,68 @@ import ApplicantsPage from "./pages/employer/ApplicantsPage";
 import ApplicantsPerJobPage from "./pages/employer/ApplicantsPerJobPage";
 
 const BaseRouter = () => {
-    return (
-        <div>
-            <Switch>
-                <Route exact path="/" component={HomePage} />
-                <Route exact path="/jobs" component={JobsPage} />
-                <Route exact path="/jobs/:id" component={JobDetailsPage} />
-                <Route exact path="/login" component={LoginPage} />
-                <Route exact path="/register" component={RegisterPage} />
-                {/* Employer routes */}
-                <EmployerPrivateRoute exact path="/post-job/" component={PostJobPage} />
-                <EmployerPrivateRoute exact path="/employer/dashboard/" component={DashboardPage} />
-                <EmployerPrivateRoute exact path="/employer/applicants/" component={ApplicantsPage} />
-                <EmployerPrivateRoute exact path="/employer/applicants/:job_id" component={ApplicantsPerJobPage} />
+  return (
+    <div>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/jobs" element={<JobsPage />} />
+        <Route path="/jobs/:id" element={<JobDetailsPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        {/* Employer routes */}
+        <Route
+          path="/post-job/"
+          element={
+            <EmployerPrivateRoute>
+              <PostJobPage />
+            </EmployerPrivateRoute>
+          }
+        />
+        <Route
+          path="/employer/dashboard/"
+          element={
+            <EmployerPrivateRoute>
+              <DashboardPage />
+            </EmployerPrivateRoute>
+          }
+        />
+        <Route
+          path="/employer/applicants/"
+          element={
+            <EmployerPrivateRoute>
+              <ApplicantsPage />
+            </EmployerPrivateRoute>
+          }
+        />
+        <Route
+          path="/employer/applicants/:job_id"
+          element={
+            <EmployerPrivateRoute>
+              <ApplicantsPerJobPage />
+            </EmployerPrivateRoute>
+          }
+        />
 
-                {/* Employee routes */}
-                <EmployeePrivateRoute exact path="/edit-profile/" component={EditProfilePage} />
-                <EmployeePrivateRoute exact path="/applied-jobs/" component={AppliedJobsPage} />
-            </Switch>
-        </div>
-    );
+        {/* Employee routes */}
+        <Route
+          path="/edit-profile/"
+          element={
+            <EmployeePrivateRoute>
+              <EditProfilePage />
+            </EmployeePrivateRoute>
+          }
+        />
+        <Route
+          path="/applied-jobs/"
+          element={
+            <EmployeePrivateRoute>
+              <AppliedJobsPage />
+            </EmployeePrivateRoute>
+          }
+        />
+      </Routes>
+    </div>
+  );
 };
 
 export default BaseRouter;

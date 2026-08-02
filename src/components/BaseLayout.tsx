@@ -2,26 +2,26 @@
 import React, { FC } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 interface Props {
-    children: React.ReactNode
-    title: string | undefined
+  children: React.ReactNode;
+  title: string | undefined;
 }
 
-const BaseLayout: FC<Props> = ({children, title}) => {
-    return (
-        <React.Fragment>
-            <Header/>
-            <Helmet>
-                <title>{title}</title>
-            </Helmet>
+const BaseLayout: FC<Props> = ({ children, title }) => {
+  return (
+    <React.Fragment>
+      <Header />
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
 
-            {children}
+      {children}
 
-            <Footer/>
-        </React.Fragment>
-    )
+      <Footer />
+    </React.Fragment>
+  );
 };
 
 export default BaseLayout;

@@ -1,3 +1,5 @@
-import { createBrowserHistory } from 'history';
-const history = createBrowserHistory()
+import { UNSAFE_createBrowserHistory } from "react-router";
+
+const history = UNSAFE_createBrowserHistory();
+
 export default history;
