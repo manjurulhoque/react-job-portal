@@ -8,8 +8,7 @@ import { NavLink, Navigate, useNavigate } from "react-router";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import toast from "react-hot-toast";
 
-import GoogleSocialAuth from "../components/social/GoogleSocialAuth";
-import FacebookSocialAuth from "../components/social/FacebookSocialAuth";
+import "../assets/css/auth.css";
 
 interface IJwtPayload extends JwtPayload {
 	user: any;
@@ -84,110 +83,95 @@ const LoginPage: FC = () => {
 				<title>Login</title>
 			</Helmet>
 
-			<div className="page-header">
-				<div className="container">
-					<div className="row">
-						<div className="col-lg-12">
-							<div className="inner-header">
-								<h3>Login</h3>
+			<div className="auth-page">
+				<div className="auth-card">
+					<div className="auth-brand">
+						<span className="auth-logo">J</span>
+						<span className="auth-logo-text">Job Portal</span>
+					</div>
+					<h2 className="auth-title">Welcome back</h2>
+					<p className="auth-subtitle">
+						Sign in to continue to your account
+					</p>
+
+					<div className="auth-social">
+						{/* <FacebookSocialAuth />
+						<GoogleSocialAuth /> */}
+					</div>
+
+					<div className="auth-divider">Sign in with email</div>
+
+					<form className="auth-form" onSubmit={handleSubmit}>
+						<div className="form-group">
+							<div className="input-icon">
+								<i className="lni-user" />
+								<input
+									type="email"
+									id="sender-email"
+									className="form-control"
+									name="email"
+									placeholder="Email address"
+									value={email}
+									onChange={(e) => setEmail(e.target.value)}
+								/>
 							</div>
 						</div>
-					</div>
+						<div className="form-group">
+							<div className="input-icon">
+								<i className="lni-lock" />
+								<input
+									type="password"
+									className="form-control"
+									placeholder="Password"
+									value={password}
+									onChange={(e) =>
+										setPassword(e.target.value)
+									}
+								/>
+							</div>
+						</div>
+						<div className="auth-options">
+							<div className="form-check">
+								<input
+									type="checkbox"
+									className="form-check-input"
+									id="exampleCheck1"
+								/>
+								<label
+									className="form-check-label"
+									htmlFor="exampleCheck1"
+								>
+									Keep Me Signed In
+								</label>
+							</div>
+							<a href="#">Forgot password?</a>
+						</div>
+						<button
+							type="submit"
+							disabled={submitted}
+							className="auth-submit"
+						>
+							{submitted ? (
+								<>
+									<span
+										className="spinner-border spinner-border-sm me-2"
+										role="status"
+										aria-hidden="true"
+									/>
+									Signing in...
+								</>
+							) : (
+								"Sign In"
+							)}
+						</button>
+					</form>
+
+					<p className="auth-switch">
+						Don't have an account?{" "}
+						<NavLink to="/register">Create one</NavLink>
+					</p>
 				</div>
 			</div>
-
-			<section id="content" className="section-padding">
-				<div className="container">
-					<div className="row justify-content-center">
-						<div className="col-lg-5 col-md-6 col-xs-12">
-							<div className="page-login-form box">
-								<form
-									className="login-form"
-									onSubmit={handleSubmit}
-								>
-									<div className="form-group">
-										<div className="input-icon">
-											<i className="lni-user" />
-											<input
-												type="email"
-												id="sender-email"
-												className="form-control"
-												name="email"
-												placeholder="Email"
-												value={email}
-												onChange={(e) =>
-													setEmail(e.target.value)
-												}
-											/>
-										</div>
-									</div>
-									<div className="form-group">
-										<div className="input-icon">
-											<i className="lni-lock" />
-											<input
-												type="password"
-												className="form-control"
-												placeholder="Password"
-												value={password}
-												onChange={(e) =>
-													setPassword(e.target.value)
-												}
-											/>
-										</div>
-									</div>
-									<div className="form-group form-check">
-										<input
-											type="checkbox"
-											className="form-check-input"
-											id="exampleCheck1"
-										/>
-										<label
-											className="form-check-label"
-											htmlFor="exampleCheck1"
-										>
-											Keep Me Signed In
-										</label>
-									</div>
-									<button
-										type="submit"
-										hidden={submitted}
-										className="btn btn-primary log-btn"
-									>
-										Login
-									</button>
-									<button
-										type="submit"
-										hidden={!submitted}
-										className="btn btn-primary log-btn"
-									>
-										<span
-											className="spinner-border spinner-border-sm"
-											role="status"
-											aria-hidden="true"
-										/>
-										Loading...
-									</button>
-								</form>
-								<ul className="form-links">
-									<li className="text-center">
-										<NavLink to="/register">
-											Don't have an account?
-										</NavLink>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div className="row justify-content-center my-2">
-						<div className="col-md-4">
-							<FacebookSocialAuth />
-						</div>
-						<div className="col-md-4">
-							<GoogleSocialAuth />
-						</div>
-					</div>
-				</div>
-			</section>
 		</React.Fragment>
 	);
 };
