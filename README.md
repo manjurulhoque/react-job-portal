@@ -6,7 +6,15 @@
 
 ## Home page
 
-<img src="screenshots/one.png" height="800">
+<img src="screenshots/home.png">
+
+## Jobs page
+
+<img src="screenshots/jobs.png">
+
+## Companies page
+
+<img src="screenshots/companies.png">
 
 ## Available Scripts
 
