@@ -1,84 +1,113 @@
-## Job Portal using Reactjs
+# Job Portal
 
-#### An open source online job portal.
+A modern job portal application built with React, TypeScript, and a Django REST API backend. The app supports both job seekers and employers with separate protected routes, search and listing flows, profile management, and recruitment workflows.
 
-### Screenshots
+## Screenshots
 
-## Home page
+### Home page
 
-<img src="screenshots/home.png">
+<img src="screenshots/home.png" alt="Home page">
 
-## Jobs page
+### Jobs page
 
-<img src="screenshots/jobs.png">
+<img src="screenshots/jobs.png" alt="Jobs page">
 
-## Companies page
+### Companies page
 
-<img src="screenshots/companies.png">
+<img src="screenshots/companies.png" alt="Companies page">
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+### Job seeker features
+
+- Browse and search jobs by keyword, location, and category
+- View detailed job listings and company information
+- Apply to jobs and track applied positions
+- View all applied jobs in one place
+- Edit personal profile data such as first name, last name, and gender
+- Search and browse companies
+
+### Employer features
+
+- Post new jobs
+- Manage employer dashboard
+- Review applicants for all jobs
+- View applicants for a specific job
+- Manage employer company profiles and related data
+
+### Authentication and access control
+
+- Register and log in with email/password
+- Sign in using Google and Facebook social auth
+- JWT-based authentication flow with token handling
+- Protected employee and employer routes
+- Logout flow with route redirect
+
+### User experience
+
+- Responsive navigation and mobile-friendly layout
+- i18n support with English and Bengali translations
+- Loading skeletons and spinners for async data
+- Toast notifications for success and error feedback
+- URL-driven filtering and pagination for job search results
+
+## Tech stack
+
+- React 19
+- TypeScript
+- react-router 8
+- Axios
+- Bootstrap 5
+- i18next
+- react-hot-toast
+- react-helmet-async
+- JWT decode utilities
+- Create React App / react-scripts
+
+## Requirements
+
+- Node.js 22.22.0 or newer
+- A running backend API for the job portal endpoints
+
+## Getting started
+
+1. Install dependencies:
+
+    ```bash
+    npm install
+    ```
+
+2. Start the app:
+
+    ```bash
+    npm start
+    ```
+
+3. Open the app in your browser:
+    ```text
+    http://localhost:3001
+    ```
+
+> The project is configured to run on port 3001 in the local development setup.
+
+## Available scripts
 
 ### `npm start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Runs the app in development mode.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runner in interactive watch mode.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Creates a production build in the `build` folder.
 
 ### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Removes the default CRA setup and exposes the underlying build configuration.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Project notes
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+This application is designed as a full-stack job portal frontend with clear separation between employee and employer experiences. It emphasizes a clean, practical user flow and role-based access to keep recruitment and job search experiences focused and straightforward.
