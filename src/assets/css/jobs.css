@@ -282,6 +282,52 @@
 	font-size: 0.9375rem;
 }
 
+.jobs-page__pagination {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	margin-top: 28px;
+}
+
+.jobs-page__page-btn {
+	height: 42px;
+	padding: 0 16px;
+	border: 1.5px solid var(--jp-line);
+	border-radius: 10px;
+	background: var(--jp-surface);
+	color: var(--jp-ink);
+	font-size: 0.875rem;
+	font-weight: 700;
+	cursor: pointer;
+	transition:
+		border-color 0.15s ease,
+		background-color 0.15s ease,
+		color 0.15s ease;
+}
+
+.jobs-page__page-btn:hover:not(:disabled) {
+	border-color: rgba(38, 174, 97, 0.45);
+	background: var(--jp-accent-soft);
+	color: var(--jp-accent-deep);
+}
+
+.jobs-page__page-btn:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+.jobs-page__page-btn:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 4px var(--jp-accent-soft);
+}
+
+.jobs-page__page-status {
+	color: var(--jp-muted);
+	font-size: 0.875rem;
+	font-weight: 650;
+}
+
 .job-card--skeleton {
 	pointer-events: none;
 }

@@ -41,6 +41,11 @@ const EmployerSidebarLayout: FC<Props> = ({
 								</NavLink>
 							</li>
 							<li>
+								<NavLink to="/employer/companies/">
+									Companies
+								</NavLink>
+							</li>
+							<li>
 								<NavLink to="/employer/applicants/">
 									Applicants
 								</NavLink>

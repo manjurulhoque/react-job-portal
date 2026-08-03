@@ -103,6 +103,15 @@ const Header: FC = () => {
 								Jobs
 							</NavLink>
 						</li>
+						<li>
+							<NavLink
+								className="jp-nav__link"
+								to="/companies"
+								onClick={closeMenu}
+							>
+								Companies
+							</NavLink>
+						</li>
 
 						{!isAuthenticated && (
 							<>

@@ -37,7 +37,7 @@
 .applied-page__toolbar {
 	display: flex;
 	flex-wrap: wrap;
-	align-items: end;
+	align-items: flex-end;
 	gap: 12px;
 	margin-bottom: 20px;
 	padding: 14px;

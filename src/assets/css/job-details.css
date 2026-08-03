@@ -91,6 +91,15 @@
 	font-weight: 650;
 }
 
+.jd-hero__company a {
+	color: var(--jp-accent-deep) !important;
+	text-decoration: none !important;
+}
+
+.jd-hero__company a:hover {
+	text-decoration: underline !important;
+}
+
 .jd-hero__meta {
 	display: flex;
 	flex-wrap: wrap;

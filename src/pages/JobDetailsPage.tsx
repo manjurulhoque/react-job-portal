@@ -77,8 +77,9 @@ const JobDetailsPage = () => {
 		};
 	}, [id, isAuthenticated, token]);
 
-	const company = job?.company_name || "Company";
-	const initials = company
+	const companyName =
+		job?.company?.name || job?.company_name || "Company";
+	const initials = companyName
 		.split(/\s+/)
 		.filter(Boolean)
 		.slice(0, 2)
@@ -86,11 +87,13 @@ const JobDetailsPage = () => {
 		.join("");
 
 	const typeKey = String(job?.type ?? "");
-	const typeLabel = TYPE_LABELS[typeKey] || "Job";
+	const typeLabel = job?.type_display || TYPE_LABELS[typeKey] || "Job";
 	const typeClass = TYPE_CLASS[typeKey] || "";
 	const pageUrl = typeof window !== "undefined" ? window.location.href : "";
 	const canApply =
 		!isAuthenticated || (user && user.role === "employee");
+	const deadline =
+		job?.application_deadline || job?.last_date || null;
 
 	const applyJobHandle = async () => {
 		if (!isAuthenticated) {
@@ -203,7 +206,13 @@ const JobDetailsPage = () => {
 										</span>
 										<h1>{job.title}</h1>
 										<p className="jd-hero__company">
-											{company}
+											{job.company?.id ? (
+												<Link to={`/companies/${job.company.id}`}>
+													{companyName}
+												</Link>
+											) : (
+												companyName
+											)}
 										</p>
 										<div className="jd-hero__meta">
 											{job.location && (
@@ -227,13 +236,14 @@ const JobDetailsPage = () => {
 													).format("MMM D, YYYY")}
 												</span>
 											)}
-											{job.category && (
+											{job.workplace_type_display && (
 												<span>
-													<i
-														className="lni-tag"
-														aria-hidden="true"
-													/>
-													{job.category}
+													{job.workplace_type_display}
+												</span>
+											)}
+											{job.experience_level_display && (
+												<span>
+													{job.experience_level_display}
 												</span>
 											)}
 										</div>
@@ -260,21 +270,57 @@ const JobDetailsPage = () => {
 									)}
 								</div>
 
-								{job.company_description && (
+								{job.responsibilities && (
+									<div className="jd-panel jd-section">
+										<h2>Responsibilities</h2>
+										<p>{job.responsibilities}</p>
+									</div>
+								)}
+
+								{job.requirements && (
+									<div className="jd-panel jd-section">
+										<h2>Requirements</h2>
+										<p>{job.requirements}</p>
+									</div>
+								)}
+
+								{(job.company?.description ||
+									job.company_description) && (
 									<div className="jd-panel jd-section jd-company">
 										<h2>About the company</h2>
-										<p>{job.company_description}</p>
-										{job.website && (
+										<p>
+											{job.company?.description ||
+												job.company_description}
+										</p>
+										{job.company?.id && (
+											<Link
+												to={`/companies/${job.company.id}`}
+											>
+												View company profile
+											</Link>
+										)}
+										{(job.company?.website ||
+											job.website) && (
 											<a
-												href={
-													job.website.startsWith(
-														"http",
-													)
-														? job.website
-														: `https://${job.website}`
-												}
+												href={(
+													job.company?.website ||
+													job.website ||
+													""
+												).startsWith("http")
+													? job.company?.website ||
+														job.website ||
+														"#"
+													: `https://${
+															job.company
+																?.website ||
+															job.website
+														}`}
 												target="_blank"
 												rel="noreferrer"
+												style={{
+													display: "block",
+													marginTop: 10,
+												}}
 											>
 												Visit website
 											</a>
@@ -295,7 +341,8 @@ const JobDetailsPage = () => {
 													{Number(
 														job.salary,
 													).toLocaleString()}{" "}
-													Tk
+													{job.salary_currency ||
+														"BDT"}
 												</span>
 											</div>
 										)}
@@ -320,25 +367,39 @@ const JobDetailsPage = () => {
 												</span>
 											</li>
 										)}
-										{job.last_date && (
+										{job.workplace_type_display && (
+											<li>
+												<span className="label">
+													Workplace
+												</span>
+												<span className="value">
+													{
+														job.workplace_type_display
+													}
+												</span>
+											</li>
+										)}
+										{deadline && (
 											<li>
 												<span className="label">
 													Apply by
 												</span>
 												<span className="value">
-													{dayjs(
-														job.last_date,
-													).format("MMM D, YYYY")}
+													{dayjs(deadline).format(
+														"MMM D, YYYY",
+													)}
 												</span>
 											</li>
 										)}
-										{job.category && (
+										{job.experience_level_display && (
 											<li>
 												<span className="label">
-													Category
+													Experience
 												</span>
 												<span className="value">
-													{job.category}
+													{
+														job.experience_level_display
+													}
 												</span>
 											</li>
 										)}

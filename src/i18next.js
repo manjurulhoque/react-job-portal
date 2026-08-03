@@ -20,18 +20,32 @@ const resources = {
 	},
 };
 
+const toSupportedLanguage = (lng = "") => {
+	const base = String(lng).toLowerCase().split("-")[0];
+	return Languages.includes(base) ? base : "en";
+};
+
 export default i18n
 	.use(LanguageDetector)
 	.use(initReactI18next)
 	.init({
 		fallbackLng: "en",
-		debug: true,
+		debug: false,
 		supportedLngs: Languages,
+		nonExplicitSupportedLngs: true,
+		load: "languageOnly",
 		interpolation: {
 			escapeValue: false,
 		},
 		ns: ["common", "employee"],
-		// Set default namespace
 		defaultNS: "common",
 		resources,
+		detection: {
+			order: ["localStorage", "navigator", "htmlTag"],
+			caches: ["localStorage"],
+			convertDetectedLanguage: toSupportedLanguage,
+		},
+		react: {
+			useSuspense: false,
+		},
 	});

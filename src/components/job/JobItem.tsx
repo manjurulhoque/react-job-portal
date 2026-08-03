@@ -17,9 +17,9 @@ const TYPE_CLASS: Record<string, string> = {
 
 const JobItem = ({ job }: { job: IJob }) => {
 	const typeKey = String(job.type);
-	const typeLabel = TYPE_LABELS[typeKey] || "Job";
+	const typeLabel = job.type_display || TYPE_LABELS[typeKey] || "Job";
 	const typeClass = TYPE_CLASS[typeKey] || "";
-	const company = job.company_name || "Company";
+	const company = job.company?.name || job.company_name || "Company";
 	const initials = company
 		.split(/\s+/)
 		.filter(Boolean)
@@ -30,9 +30,18 @@ const JobItem = ({ job }: { job: IJob }) => {
 	return (
 		<Link className="job-card" to={`/jobs/${job.id}`}>
 			<div className="job-card__top">
-				<span className="job-card__mark" aria-hidden="true">
-					{initials || "JP"}
-				</span>
+				{job.company?.logo ? (
+					<img
+						className="job-card__mark"
+						src={job.company.logo}
+						alt=""
+						style={{ objectFit: "cover", padding: 0 }}
+					/>
+				) : (
+					<span className="job-card__mark" aria-hidden="true">
+						{initials || "JP"}
+					</span>
+				)}
 				<span className={`job-card__type ${typeClass}`.trim()}>
 					{typeLabel}
 				</span>
@@ -40,7 +49,13 @@ const JobItem = ({ job }: { job: IJob }) => {
 
 			<div>
 				<h3 className="job-card__title">{job.title}</h3>
-				<p className="job-card__company">{company}</p>
+				<p className="job-card__company">
+					{job.company?.id ? (
+						<span>{company}</span>
+					) : (
+						company
+					)}
+				</p>
 			</div>
 
 			{job.job_tags && job.job_tags.length > 0 && (
@@ -60,10 +75,14 @@ const JobItem = ({ job }: { job: IJob }) => {
 						{job.location}
 					</span>
 				)}
+				{job.workplace_type_display && (
+					<span>{job.workplace_type_display}</span>
+				)}
 				{job.salary != null && Number(job.salary) > 0 && (
 					<span>
 						<i className="lni-briefcase" aria-hidden="true" />
-						{Number(job.salary).toLocaleString()}
+						{Number(job.salary).toLocaleString()}{" "}
+						{job.salary_currency || ""}
 					</span>
 				)}
 			</div>

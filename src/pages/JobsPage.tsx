@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import AxiosConfig from "../AxiosConfig";
 import JobItem from "../components/job/JobItem";
@@ -8,78 +8,126 @@ import BaseLayout from "../components/BaseLayout";
 import { IJob } from "../interfaces";
 import "../assets/css/jobs.css";
 
+interface PaginatedJobs {
+	count: number;
+	next: string | null;
+	previous: string | null;
+	results: IJob[];
+}
+
+const getPageFromUrl = (url: string | null): number | null => {
+	if (!url) return null;
+	try {
+		const parsed = new URL(url, window.location.origin);
+		const page = Number(parsed.searchParams.get("page") || "1");
+		return Number.isFinite(page) && page > 0 ? page : null;
+	} catch {
+		return null;
+	}
+};
+
 const JobsPage = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [jobs, setJobs] = useState<IJob[]>([]);
+	const [count, setCount] = useState(0);
+	const [next, setNext] = useState<string | null>(null);
+	const [previous, setPrevious] = useState<string | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
+
+	const page = Math.max(1, Number(searchParams.get("page") || 1) || 1);
 	const [position, setPosition] = useState(searchParams.get("q") || "");
 	const [location, setLocation] = useState(
 		searchParams.get("location") || "",
 	);
-	const [appliedQuery, setAppliedQuery] = useState({
+	const appliedQuery = {
 		q: searchParams.get("q") || "",
 		location: searchParams.get("location") || "",
-	});
+	};
 
 	useEffect(() => {
+		const controller = new AbortController();
 		setLoading(true);
-		AxiosConfig.get("jobs/")
+
+		const params: Record<string, string | number> = { page };
+		if (appliedQuery.q.trim()) params.q = appliedQuery.q.trim();
+		if (appliedQuery.location.trim()) {
+			params.location = appliedQuery.location.trim();
+		}
+
+		AxiosConfig.get<PaginatedJobs>("jobs/", {
+			params,
+			signal: controller.signal,
+		})
 			.then((res) => {
-				setJobs(res.data || []);
+				const data = res.data;
+				setJobs(data.results || []);
+				setCount(data.count || 0);
+				setNext(data.next ?? null);
+				setPrevious(data.previous ?? null);
 				setError("");
 			})
-			.catch(() => setError("Failed to load jobs. Please try again."))
-			.finally(() => setLoading(false));
-	}, []);
+			.catch((err) => {
+				if (err?.code === "ERR_CANCELED") return;
+				setError("Failed to load jobs. Please try again.");
+				setJobs([]);
+				setCount(0);
+				setNext(null);
+				setPrevious(null);
+			})
+			.finally(() => {
+				if (!controller.signal.aborted) setLoading(false);
+			});
 
-	const filteredJobs = useMemo(() => {
-		const q = appliedQuery.q.trim().toLowerCase();
-		const loc = appliedQuery.location.trim().toLowerCase();
+		return () => controller.abort();
+	}, [page, appliedQuery.q, appliedQuery.location]);
 
-		return jobs.filter((job) => {
-			const haystack = [
-				job.title,
-				job.company_name,
-				job.category,
-				job.description,
-			]
-				.filter(Boolean)
-				.join(" ")
-				.toLowerCase();
-
-			const matchesQuery = !q || haystack.includes(q);
-			const matchesLocation =
-				!loc || (job.location || "").toLowerCase().includes(loc);
-
-			return matchesQuery && matchesLocation;
-		});
-	}, [jobs, appliedQuery]);
-
-	const applySearch = (q: string, loc: string) => {
-		const next = { q: q.trim(), location: loc.trim() };
-		setAppliedQuery(next);
-
+	const updateParams = (updates: {
+		q?: string;
+		location?: string;
+		page?: number;
+	}) => {
 		const params = new URLSearchParams();
-		if (next.q) params.set("q", next.q);
-		if (next.location) params.set("location", next.location);
+		const q = updates.q ?? appliedQuery.q;
+		const loc = updates.location ?? appliedQuery.location;
+		const nextPage = updates.page ?? page;
+
+		if (q.trim()) params.set("q", q.trim());
+		if (loc.trim()) params.set("location", loc.trim());
+		if (nextPage > 1) params.set("page", String(nextPage));
+
 		setSearchParams(params, { replace: true });
 	};
 
 	const handleSearch = (e: FormEvent) => {
 		e.preventDefault();
-		applySearch(position, location);
+		setPosition(position.trim());
+		setLocation(location.trim());
+		updateParams({
+			q: position,
+			location,
+			page: 1,
+		});
 	};
 
 	const handleClear = () => {
 		setPosition("");
 		setLocation("");
-		applySearch("", "");
+		updateParams({ q: "", location: "", page: 1 });
+	};
+
+	const goToPage = (target: number | null) => {
+		if (!target || target < 1) return;
+		updateParams({ page: target });
+		window.scrollTo({ top: 0, behavior: "smooth" });
 	};
 
 	const hasFilters = Boolean(
 		appliedQuery.q.trim() || appliedQuery.location.trim(),
 	);
+	const hasPagination = Boolean(previous || next);
+	const prevPage = getPageFromUrl(previous) ?? (previous ? page - 1 : null);
+	const nextPage = getPageFromUrl(next) ?? (next ? page + 1 : null);
 
 	return (
 		<BaseLayout title={"All jobs"}>
@@ -122,10 +170,8 @@ const JobsPage = () => {
 					{!loading && !error && (
 						<div className="jobs-page__meta">
 							<p className="jobs-page__count">
-								{filteredJobs.length}{" "}
-								{filteredJobs.length === 1
-									? "job found"
-									: "jobs found"}
+								{count} {count === 1 ? "job found" : "jobs found"}
+								{hasPagination ? ` · Page ${page}` : ""}
 							</p>
 							{hasFilters && (
 								<button
@@ -156,7 +202,7 @@ const JobsPage = () => {
 						</div>
 					)}
 
-					{!loading && !error && filteredJobs.length === 0 && (
+					{!loading && !error && jobs.length === 0 && (
 						<div className="jobs-page__empty">
 							<h2>No jobs match your search</h2>
 							<p>
@@ -166,12 +212,41 @@ const JobsPage = () => {
 						</div>
 					)}
 
-					{!loading && !error && filteredJobs.length > 0 && (
-						<div className="jobs-page__grid">
-							{filteredJobs.map((job) => (
-								<JobItem job={job} key={job.id} />
-							))}
-						</div>
+					{!loading && !error && jobs.length > 0 && (
+						<>
+							<div className="jobs-page__grid">
+								{jobs.map((job) => (
+									<JobItem job={job} key={job.id} />
+								))}
+							</div>
+
+							{hasPagination && (
+								<nav
+									className="jobs-page__pagination"
+									aria-label="Jobs pagination"
+								>
+									<button
+										type="button"
+										className="jobs-page__page-btn"
+										disabled={!previous}
+										onClick={() => goToPage(prevPage)}
+									>
+										Previous
+									</button>
+									<span className="jobs-page__page-status">
+										Page {page}
+									</span>
+									<button
+										type="button"
+										className="jobs-page__page-btn"
+										disabled={!next}
+										onClick={() => goToPage(nextPage)}
+									>
+										Next
+									</button>
+								</nav>
+							)}
+						</>
 					)}
 				</div>
 			</section>

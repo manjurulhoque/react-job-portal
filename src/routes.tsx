@@ -3,6 +3,8 @@ import { Route, Routes } from "react-router";
 import HomePage from "./pages/HomePage";
 import JobDetailsPage from "./pages/JobDetailsPage";
 import JobsPage from "./pages/JobsPage";
+import CompaniesPage from "./pages/CompaniesPage";
+import CompanyDetailsPage from "./pages/CompanyDetailsPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import EmployerPrivateRoute from "./commons/EmployerPrivateRoute";
@@ -13,6 +15,8 @@ import EditProfilePage from "./pages/employee/EditProfilePage";
 import DashboardPage from "./pages/employer/DashboardPage";
 import ApplicantsPage from "./pages/employer/ApplicantsPage";
 import ApplicantsPerJobPage from "./pages/employer/ApplicantsPerJobPage";
+import EmployerCompaniesPage from "./pages/employer/EmployerCompaniesPage";
+import EmployerCompanyEditPage from "./pages/employer/EmployerCompanyEditPage";
 
 const BaseRouter = () => {
 	return (
@@ -21,6 +25,11 @@ const BaseRouter = () => {
 				<Route path="/" element={<HomePage />} />
 				<Route path="/jobs" element={<JobsPage />} />
 				<Route path="/jobs/:id" element={<JobDetailsPage />} />
+				<Route path="/companies" element={<CompaniesPage />} />
+				<Route
+					path="/companies/:id"
+					element={<CompanyDetailsPage />}
+				/>
 				<Route path="/login" element={<LoginPage />} />
 				<Route path="/register" element={<RegisterPage />} />
 				{/* Employer routes */}
@@ -37,6 +46,22 @@ const BaseRouter = () => {
 					element={
 						<EmployerPrivateRoute>
 							<DashboardPage />
+						</EmployerPrivateRoute>
+					}
+				/>
+				<Route
+					path="/employer/companies/"
+					element={
+						<EmployerPrivateRoute>
+							<EmployerCompaniesPage />
+						</EmployerPrivateRoute>
+					}
+				/>
+				<Route
+					path="/employer/companies/:id"
+					element={
+						<EmployerPrivateRoute>
+							<EmployerCompanyEditPage />
 						</EmployerPrivateRoute>
 					}
 				/>

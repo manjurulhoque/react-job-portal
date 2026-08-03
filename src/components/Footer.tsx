@@ -24,6 +24,9 @@ const Footer: FC = () => {
 								<Link to="/jobs">Browse jobs</Link>
 							</li>
 							<li>
+								<Link to="/companies">Companies</Link>
+							</li>
+							<li>
 								<Link to="/register">Create account</Link>
 							</li>
 							<li>
