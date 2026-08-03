@@ -215,6 +215,15 @@ const JobDetailsPage = () => {
 											)}
 										</p>
 										<div className="jd-hero__meta">
+											{job.category?.name && (
+												<span>
+													<i
+														className="lni-list"
+														aria-hidden="true"
+													/>
+													{job.category.name}
+												</span>
+											)}
 											{job.location && (
 												<span>
 													<i
@@ -357,6 +366,24 @@ const JobDetailsPage = () => {
 												{typeLabel}
 											</span>
 										</li>
+										{job.category?.name && (
+											<li>
+												<span className="label">
+													Category
+												</span>
+												<span className="value">
+													{job.category.id ? (
+														<Link
+															to={`/jobs?category=${job.category.id}`}
+														>
+															{job.category.name}
+														</Link>
+													) : (
+														job.category.name
+													)}
+												</span>
+											</li>
+										)}
 										{job.location && (
 											<li>
 												<span className="label">

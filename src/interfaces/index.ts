@@ -62,7 +62,7 @@ export interface IJob {
 	workplace_type_display?: string;
 	experience_level?: string;
 	experience_level_display?: string;
-	category?: string;
+	category?: ICategory | null;
 	application_deadline?: string | Date;
 	last_date?: Date;
 	company?: ICompany | null;
@@ -89,11 +89,12 @@ export interface IJob {
 }
 
 export interface ICategory {
-	id: number | undefined;
+	id: number;
 	name: string;
 	slug: string;
-	icon: string;
-	total_jobs: number;
+	description?: string;
+	icon?: string;
+	total_jobs?: number;
 }
 
 export interface IPaginated<T> {

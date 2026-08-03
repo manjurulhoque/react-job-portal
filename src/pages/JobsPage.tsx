@@ -5,7 +5,7 @@ import AxiosConfig from "../AxiosConfig";
 import JobItem from "../components/job/JobItem";
 import JobItemSkeleton from "../components/skeletons/JobItemSkeleton";
 import BaseLayout from "../components/BaseLayout";
-import { IJob } from "../interfaces";
+import { ICategory, IJob } from "../interfaces";
 import "../assets/css/jobs.css";
 
 interface PaginatedJobs {
@@ -29,6 +29,7 @@ const getPageFromUrl = (url: string | null): number | null => {
 const JobsPage = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const [jobs, setJobs] = useState<IJob[]>([]);
+	const [categories, setCategories] = useState<ICategory[]>([]);
 	const [count, setCount] = useState(0);
 	const [next, setNext] = useState<string | null>(null);
 	const [previous, setPrevious] = useState<string | null>(null);
@@ -40,10 +41,31 @@ const JobsPage = () => {
 	const [location, setLocation] = useState(
 		searchParams.get("location") || "",
 	);
+	const [category, setCategory] = useState(
+		searchParams.get("category") || "",
+	);
 	const appliedQuery = {
 		q: searchParams.get("q") || "",
 		location: searchParams.get("location") || "",
+		category: searchParams.get("category") || "",
 	};
+
+	useEffect(() => {
+		AxiosConfig.get<ICategory[]>("categories/")
+			.then((res) => {
+				const list = Array.isArray(res.data)
+					? res.data
+					: (res.data as any).results || [];
+				setCategories(list);
+			})
+			.catch(() => setCategories([]));
+	}, []);
+
+	useEffect(() => {
+		setPosition(appliedQuery.q);
+		setLocation(appliedQuery.location);
+		setCategory(appliedQuery.category);
+	}, [appliedQuery.q, appliedQuery.location, appliedQuery.category]);
 
 	useEffect(() => {
 		const controller = new AbortController();
@@ -53,6 +75,9 @@ const JobsPage = () => {
 		if (appliedQuery.q.trim()) params.q = appliedQuery.q.trim();
 		if (appliedQuery.location.trim()) {
 			params.location = appliedQuery.location.trim();
+		}
+		if (appliedQuery.category.trim()) {
+			params.category = appliedQuery.category.trim();
 		}
 
 		AxiosConfig.get<PaginatedJobs>("jobs/", {
@@ -80,20 +105,23 @@ const JobsPage = () => {
 			});
 
 		return () => controller.abort();
-	}, [page, appliedQuery.q, appliedQuery.location]);
+	}, [page, appliedQuery.q, appliedQuery.location, appliedQuery.category]);
 
 	const updateParams = (updates: {
 		q?: string;
 		location?: string;
+		category?: string;
 		page?: number;
 	}) => {
 		const params = new URLSearchParams();
 		const q = updates.q ?? appliedQuery.q;
 		const loc = updates.location ?? appliedQuery.location;
+		const cat = updates.category ?? appliedQuery.category;
 		const nextPage = updates.page ?? page;
 
 		if (q.trim()) params.set("q", q.trim());
 		if (loc.trim()) params.set("location", loc.trim());
+		if (cat.trim()) params.set("category", cat.trim());
 		if (nextPage > 1) params.set("page", String(nextPage));
 
 		setSearchParams(params, { replace: true });
@@ -101,11 +129,10 @@ const JobsPage = () => {
 
 	const handleSearch = (e: FormEvent) => {
 		e.preventDefault();
-		setPosition(position.trim());
-		setLocation(location.trim());
 		updateParams({
 			q: position,
 			location,
+			category,
 			page: 1,
 		});
 	};
@@ -113,7 +140,8 @@ const JobsPage = () => {
 	const handleClear = () => {
 		setPosition("");
 		setLocation("");
-		updateParams({ q: "", location: "", page: 1 });
+		setCategory("");
+		updateParams({ q: "", location: "", category: "", page: 1 });
 	};
 
 	const goToPage = (target: number | null) => {
@@ -122,8 +150,15 @@ const JobsPage = () => {
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	};
 
+	const selectedCategory = categories.find(
+		(item) =>
+			String(item.id) === appliedQuery.category ||
+			item.slug === appliedQuery.category,
+	);
 	const hasFilters = Boolean(
-		appliedQuery.q.trim() || appliedQuery.location.trim(),
+		appliedQuery.q.trim() ||
+			appliedQuery.location.trim() ||
+			appliedQuery.category.trim(),
 	);
 	const hasPagination = Boolean(previous || next);
 	const prevPage = getPageFromUrl(previous) ?? (previous ? page - 1 : null);
@@ -136,8 +171,8 @@ const JobsPage = () => {
 					<div className="jobs-page__head">
 						<h1>Find your next role</h1>
 						<p>
-							Browse open positions and filter by title or
-							location.
+							Browse open positions and filter by title, location,
+							or category.
 						</p>
 					</div>
 
@@ -162,6 +197,21 @@ const JobsPage = () => {
 								onChange={(e) => setLocation(e.target.value)}
 							/>
 						</div>
+						<div className="jobs-page__field">
+							<label htmlFor="jobs-category">Category</label>
+							<select
+								id="jobs-category"
+								value={category}
+								onChange={(e) => setCategory(e.target.value)}
+							>
+								<option value="">All categories</option>
+								{categories.map((item) => (
+									<option key={item.id} value={item.id}>
+										{item.name}
+									</option>
+								))}
+							</select>
+						</div>
 						<button type="submit" className="jobs-page__submit">
 							Search
 						</button>
@@ -170,7 +220,11 @@ const JobsPage = () => {
 					{!loading && !error && (
 						<div className="jobs-page__meta">
 							<p className="jobs-page__count">
-								{count} {count === 1 ? "job found" : "jobs found"}
+								{count}{" "}
+								{count === 1 ? "job found" : "jobs found"}
+								{selectedCategory
+									? ` in ${selectedCategory.name}`
+									: ""}
 								{hasPagination ? ` · Page ${page}` : ""}
 							</p>
 							{hasFilters && (
@@ -206,8 +260,8 @@ const JobsPage = () => {
 						<div className="jobs-page__empty">
 							<h2>No jobs match your search</h2>
 							<p>
-								Try a different title or location, or clear the
-								filters to see all openings.
+								Try a different title, location, or category, or
+								clear the filters to see all openings.
 							</p>
 						</div>
 					)}

@@ -8,7 +8,7 @@ import BaseLayout from "../../components/BaseLayout";
 import EmployerSidebarLayout from "../../components/employer-dashboard/EmployerSidebarLayout";
 import AxiosConfig from "../../AxiosConfig";
 import { AuthContext } from "../../contexts/AuthContext";
-import { ICompany, ITag } from "../../interfaces";
+import { ICategory, ICompany, ITag } from "../../interfaces";
 import "../../assets/css/employer.css";
 
 interface Option {
@@ -64,9 +64,11 @@ const PostJobPage: FC = () => {
 	const [submitted, setSubmitted] = useState(false);
 	const [redirect, setRedirect] = useState(false);
 	const [companies, setCompanies] = useState<Option[]>([]);
+	const [categories, setCategories] = useState<Option[]>([]);
 	const [tags, setTags] = useState<Option[]>([]);
 
 	const [company, setCompany] = useState<number | "">("");
+	const [category, setCategory] = useState<number | "">("");
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [responsibilities, setResponsibilities] = useState("");
@@ -92,14 +94,24 @@ const PostJobPage: FC = () => {
 	useEffect(() => {
 		Promise.all([
 			AxiosConfig.get<ICompany[]>("employer/companies/", config),
+			AxiosConfig.get<ICategory[]>("categories/"),
 			AxiosConfig.get("tags/"),
 		])
-			.then(([companiesRes, tagsRes]) => {
+			.then(([companiesRes, categoriesRes, tagsRes]) => {
 				const companyList = Array.isArray(companiesRes.data)
 					? companiesRes.data
 					: (companiesRes.data as any).results || [];
 				setCompanies(
 					companyList.map((item: ICompany) => ({
+						value: item.id,
+						label: item.name,
+					})),
+				);
+				const categoryList = Array.isArray(categoriesRes.data)
+					? categoriesRes.data
+					: (categoriesRes.data as any).results || [];
+				setCategories(
+					categoryList.map((item: ICategory) => ({
 						value: item.id,
 						label: item.name,
 					})),
@@ -133,6 +145,10 @@ const PostJobPage: FC = () => {
 			toast.error("Select a company profile");
 			return;
 		}
+		if (!category) {
+			toast.error("Select a category");
+			return;
+		}
 		if (!application_deadline) {
 			toast.error("Set an application deadline");
 			return;
@@ -141,6 +157,7 @@ const PostJobPage: FC = () => {
 		setSubmitted(true);
 		const payload = {
 			company,
+			category,
 			title,
 			description,
 			responsibilities,
@@ -224,30 +241,61 @@ const PostJobPage: FC = () => {
 							className="post-job-form"
 							onSubmit={handleSubmit}
 						>
-							<div className="form-group">
-								<label htmlFor="job-company">Company</label>
-								<select
-									id="job-company"
-									value={company}
-									onChange={(e) =>
-										setCompany(
-											e.target.value === ""
-												? ""
-												: Number(e.target.value),
-										)
-									}
-									required
-								>
-									<option value="">Select company</option>
-									{companies.map((item) => (
-										<option
-											key={item.value}
-											value={item.value}
-										>
-											{item.label}
+							<div className="form-row-pair">
+								<div className="form-group">
+									<label htmlFor="job-company">Company</label>
+									<select
+										id="job-company"
+										value={company}
+										onChange={(e) =>
+											setCompany(
+												e.target.value === ""
+													? ""
+													: Number(e.target.value),
+											)
+										}
+										required
+									>
+										<option value="">Select company</option>
+										{companies.map((item) => (
+											<option
+												key={item.value}
+												value={item.value}
+											>
+												{item.label}
+											</option>
+										))}
+									</select>
+								</div>
+								<div className="form-group">
+									<label htmlFor="job-category">
+										Category
+									</label>
+									<select
+										id="job-category"
+										value={category}
+										onChange={(e) =>
+											setCategory(
+												e.target.value === ""
+													? ""
+													: Number(e.target.value),
+											)
+										}
+										required
+									>
+										<option value="">
+											Select category
 										</option>
-									))}
-								</select>
+										{categories.map((item) => (
+											<option
+												key={item.value}
+												value={item.value}
+											>
+												{item.label}
+											</option>
+										))}
+									</select>
+								</div>
 							</div>
 
 							<div className="form-group">

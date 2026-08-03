@@ -69,6 +69,7 @@ const JobItem = ({ job }: { job: IJob }) => {
 			)}
 
 			<div className="job-card__meta">
+				{job.category?.name && <span>{job.category.name}</span>}
 				{job.location && (
 					<span>
 						<i className="lni-map-marker" aria-hidden="true" />
