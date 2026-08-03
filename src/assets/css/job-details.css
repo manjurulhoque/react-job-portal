@@ -216,6 +216,15 @@
 	text-align: right;
 }
 
+.jd-facts .value a {
+	color: var(--jp-accent-deep) !important;
+	text-decoration: none !important;
+}
+
+.jd-facts .value a:hover {
+	text-decoration: underline !important;
+}
+
 .jd-salary {
 	margin: 0 0 16px;
 	padding: 14px 16px;
